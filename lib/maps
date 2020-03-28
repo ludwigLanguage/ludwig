@@ -1,0 +1,63 @@
+Map = struct {
+    __init__ = func() {
+        self.keys = []
+        self.values = []
+    } 
+
+    addEntry = func(k, v) {
+        self.keys = self.keys + [k]
+        self.values = self.values + [v]
+    }
+
+    getValueFor = func(key) {
+        getKeyIter = func(iter) {
+            if (len(self.keys) == iter) {
+                nil
+            } else if (self.keys[iter] == key) {
+                iter
+            } else {
+                recurse(iter + 1)
+            }
+        }
+
+        iterOfValue = getKeyIter(0)
+
+        if (iterOfValue == nil) {
+            nil
+        } else {
+            self.values[iterOfValue]
+        }
+    }
+
+    getKeyFor = func(value) {
+        getValueIter = func(iter) {
+            if (len(self.values) == iter) {
+                nil
+            } else if (self.values[iter] == value) {
+                iter
+            } else {
+                recurse(iter + 1)
+            }
+        }
+
+        iterOfValue = getValueIter(0)
+
+        if (iterOfValue == nil) {
+            nil
+        } else {
+            self.keys[iterOfValue]
+        }
+    }
+
+    printAll = func() {
+        loop = func(iter) {
+            if (iter < len(self.keys)) {
+                print(self.keys[iter])
+                print(" : ")
+                println(self.values[iter])
+                recurse(iter + 1)
+            }
+        }
+        loop(0)
+    }
+}

@@ -1,0 +1,13 @@
+
+#Returns a slice out of a list from a start point
+#to an end point
+range = func(list, start, end) {
+    loop = func(currIter, builtList) {
+        if (currIter - 1 == end) {
+            builtList
+        } else {
+            recurse(currIter + 1, builtList + [list[currIter]])
+        }
+    }
+    loop(start, [])
+}

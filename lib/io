@@ -1,0 +1,13 @@
+|#
+TODO:
+    1) format() 
+    2) print(<text>)
+       - prints text
+    3) println(<text>)
+       - Prints text with a newline
+    4) readText(<marker>)
+       - Reads text from console until a given marker is the last
+         value of the input
+    5) readln(<text>)
+       - Prints given text, and reads until carriage return
+#|
