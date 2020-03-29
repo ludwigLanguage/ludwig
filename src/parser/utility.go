@@ -19,6 +19,5 @@ func (p *Parser) parseArgs() []ast.Node {
 		p.lxr.MoveUp() //Move over comma
 		lst = append(lst, p.parseExpr(0))
 	}
-
 	return lst
 }

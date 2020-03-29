@@ -57,16 +57,12 @@ func NewWithStr(contents string, filename string) *Source {
 	 *    become s.CurChar, and s.NextChar so that we do not
 	 *    fail out when we try to assign those
 	 */
-	s.contents = "("+ contents +")"
+	s.contents = contents
 
-	s.LineNo = 1
-	s.ColumnNo = 1
+	s.curIter = -1
+	s.nextIter = 0
 
-	s.curIter = 0
-	s.nextIter = 1
-
-	s.CurChar = s.contents[s.curIter]
-	s.NextChar = s.contents[s.nextIter]
+	s.MoveUp()
 
 	return s
 }

@@ -11,3 +11,25 @@ TODO:
     5) readln(<text>)
        - Prints given text, and reads until carriage return
 #|
+
+
+
+print = func(args)... {
+   (func(iter){
+      if iter != len(args) {
+         system(true, "prinf", "-n", args[iter] + " ")
+         recurse(iter + 1)
+      }
+   })(0)
+}
+
+println = func(args)... {
+    (func(iter) {
+        if iter != len(args) {
+            system(true, "printf", "-n", args[iter] + " ")
+            recurse(iter + 1)
+        } else {
+            system(true, "printf")
+        }
+    })(0)
+}

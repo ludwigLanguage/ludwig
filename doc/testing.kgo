@@ -1,0 +1,3 @@
+io = import("../lib/io")
+
+io.println("Hello, World")

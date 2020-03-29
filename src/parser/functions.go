@@ -39,9 +39,27 @@ func (p *Parser) parseFunction() ast.Node {
 	}
 	p.lxr.MoveUp()
 
+	isVariadic := false 
+	if p.lxr.CurTok.Alias == tokens.DOT {
+		p.lxr.MoveUp()
+		if p.lxr.CurTok.Alias != tokens.DOT {
+			p.raiseError("Syntax", "Expected '.'")
+		}
+		p.lxr.MoveUp()
+		if p.lxr.CurTok.Alias != tokens.DOT {
+			p.raiseError("Syntax", "Expected '.'")
+		}
+		p.lxr.MoveUp()
+		isVariadic = true
+	}
+
+	if isVariadic && (len(argv) == 0) {
+		p.raiseError("Syntax", "Cannot have variadic function with no arguments")
+	}
+
 	expr := p.parseExpr(0)
 
-	return &ast.Function{argv, expr, tok}
+	return &ast.Function{argv, expr, isVariadic, tok}
 }
 
 /////////////////////////////////////////////////

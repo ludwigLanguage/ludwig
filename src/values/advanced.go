@@ -8,10 +8,11 @@ import (
 )
 
 type Function struct {
-	Args   []*ast.Identifier
-	Expr   ast.Node
-	Consts *SymTab
-	Tok    tokens.Token
+	Args   		[]*ast.Identifier
+	Expr   		ast.Node
+	Consts		*SymTab
+	IsVariadic 	bool
+	Tok    		tokens.Token
 }
 
 func (f *Function) Stringify() string {

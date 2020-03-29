@@ -12,7 +12,7 @@ func evalFunc(n *ast.Function, consts *values.SymTab) values.Value {
 	fnC := values.NewSymTab()
 	fnC.AddValsFrom(consts)
 
-	return &values.Function{n.Args, n.DoExpr, fnC, n.GetTok()}
+	return &values.Function{n.Args, n.DoExpr, fnC, n.IsVariadic, n.GetTok()}
 }
 
 func evalCall(n *ast.Call, consts *values.SymTab) values.Value {
@@ -38,16 +38,35 @@ func evalFnCall(fn *values.Function, call *ast.Call, consts *values.SymTab) valu
 
 	//Insert 'recurse' function for tail recursion
 	newC := newSymTabCopy(newFnC)
-	newFn := &values.Function{fn.Args, fn.Expr, newC, fn.GetTok()}
+	newFn := &values.Function{fn.Args, fn.Expr, newC, fn.IsVariadic, fn.GetTok()}
 	newFnC.SetVal("recurse", newFn)
 	//
 
-	if len(fn.Args) != len(call.Args) {
+	if (len(fn.Args) != len(call.Args)) && !fn.IsVariadic {
 		message.RaiseError("Argument", "Expected "+strconv.Itoa(len(fn.Args))+" argument(s)", call.Tok)
+	} else if !(len(call.Args) >= len(fn.Args)) {
+		message.RaiseError("Argument", "Expected at least "+strconv.Itoa(len(fn.Args))+" argument(s)", call.Tok)
 	}
 
-	for c, i := range fn.Args {
-		newFnC.SetVal(i.Value, EvalExpr(call.Args[c],  consts))
+	if !fn.IsVariadic {
+		for c, i := range fn.Args {
+			newFnC.SetVal(i.Value, EvalExpr(call.Args[c],  consts))
+		}
+	} else {
+		for c, i := range fn.Args[:len(fn.Args)-1] {
+			newFnC.SetVal(i.Value, EvalExpr(call.Args[c], consts))
+		}
+
+		//Make a list containing the remaining args, and insert
+		//it into the function's symbol table with the proper identifier
+		id := fn.Args[len(fn.Args)-1]
+		lst := &values.List{[]values.Value{}, call.GetTok()}
+		for _, i := range call.Args[len(fn.Args)-1:] {
+			val := EvalExpr(i, consts)
+			lst.Values = append(lst.Values, val)
+		}
+
+		newFnC.SetVal(id.Value, lst)
 	}
 
 	return EvalExpr(fn.Expr, newFnC)

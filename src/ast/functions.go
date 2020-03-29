@@ -7,13 +7,21 @@ import (
 )
 
 type Function struct {
-	Args   []*Identifier
-	DoExpr Node
-	Tok    tokens.Token
+	Args  		[]*Identifier
+	DoExpr 		Node
+	IsVariadic	bool
+	Tok    		tokens.Token
 }
 
 func (f *Function) PrintAll(tab string) {
 	fmt.Println(tab, "<Function>")
+
+	if f.IsVariadic {
+		fmt.Println(tab, "<Is Variadic=true>")
+	} else {
+		fmt.Println(tab, "<Is Variadic=false>")
+	}
+
 	fmt.Println(tab, "<Args>")
 
 	for c, i := range f.Args {
