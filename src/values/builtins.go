@@ -145,7 +145,6 @@ func osCall(v []Value) Value {
 	
 	typeOfArg1 := fmt.Sprintf("%T", v[0])
 	if typeOfArg1 != "*values.Boolean" {
-		fmt.Println(typeOfArg1)
 		message.RaiseError("Type", "First argument of 'os' must be a boolean", v[0].GetTok())
 	}
 	shouldDisplayOutput := v[0].(*Boolean).Value
@@ -189,6 +188,23 @@ func osCall(v []Value) Value {
 
 /////////////////////////////////////////////////
 
+func osExit(v []Value) Value {
+	if len(v) != 1 {
+		message.RaiseError("Argument", "'exit' must have only one argument", TOK)
+	}
+	
+	typeOfArg1 := fmt.Sprintf("%T", v[0])
+	if typeOfArg1 != "*values.Number" {
+		message.RaiseError("Type", "First argument of 'exit' must be a number", v[0].GetTok())
+	}
+	var exitCode int = int(v[0].(*Number).Value)
+	os.Exit(exitCode)
+	return nil
+
+}
+
+////////////////////////////////////////////////
+
 var BuiltinsMap = map[string]Value{
 	"println": &Builtin{writeln},
 	"print":   &Builtin{write},
@@ -198,4 +214,5 @@ var BuiltinsMap = map[string]Value{
 	"num":     &Builtin{num},
 	"len":     &Builtin{length},
 	"system":  &Builtin{osCall},
+	"exit":	   &Builtin{osExit},
 }

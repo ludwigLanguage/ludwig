@@ -57,7 +57,7 @@ func NewWithStr(contents string, filename string) *Source {
 	 *    become s.CurChar, and s.NextChar so that we do not
 	 *    fail out when we try to assign those
 	 */
-	s.contents = contents
+	s.contents = "(" + contents + ")"
 
 	s.curIter = -1
 	s.nextIter = 0

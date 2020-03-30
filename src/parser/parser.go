@@ -33,7 +33,7 @@ type (
 
 type Parser struct {
 	lxr  *lexer.Lexer
-	Tree *ast.Block
+	Tree ast.Node
 
 	prefixParseFns map[byte]prefixFn
 	infixParseFns  map[byte]infixFn
@@ -80,14 +80,7 @@ func (p *Parser) raiseError(n, m string) {
 }
 
 func (p *Parser) ParseProgram() {
-	p.Tree = &ast.Block{}
-	p.Tree.IsScoped = true
-	p.Tree.Tok = p.lxr.CurTok
-	p.Tree.Body = []ast.Node{}
-
-	for !(p.lxr.IsDone()) {
-		p.Tree.Body = append(p.Tree.Body, p.parseExpr(0))
-	}
+	p.Tree = p.parseExpr(0)
 }
 
 func (p *Parser) parseExpr(prec int) ast.Node {
