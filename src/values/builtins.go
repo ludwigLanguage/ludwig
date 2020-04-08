@@ -9,10 +9,11 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"path/filepath"
 )
 
 var (
-	TOK       = tokens.Token{"ludwig/src/evaluator", 0, 0, "", tokens.RBRACK}
+	TOK tokens.Token = tokens.Token{"ludwig/src/evaluator", 0, 0, "", tokens.RBRACK}
 	NILRTRN Value = &Nil{ TOK}
 )
 
@@ -190,11 +191,10 @@ func osCall(v []Value) Value {
 
 func osExit(v []Value) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "'exit' must have only one argument", TOK)
+		message.RaiseError("Argument", "'exit' must have exactly one argument", TOK)
 	}
 	
-	typeOfArg1 := fmt.Sprintf("%T", v[0])
-	if typeOfArg1 != "*values.Number" {
+	if v[0].Type() != "Number" {
 		message.RaiseError("Type", "First argument of 'exit' must be a number", v[0].GetTok())
 	}
 	var exitCode int = int(v[0].(*Number).Value)
@@ -205,6 +205,58 @@ func osExit(v []Value) Value {
 
 ////////////////////////////////////////////////
 
+func integrate(v []Value) Value {
+	if len(v) != 2 {
+		message.RaiseError("Argument", "This function requires two arguments", TOK)
+	}
+
+	if v[0].Type() != "String" {
+		message.RaiseError("Type", "Argument to 'integrate' function must be a string", v[0].GetTok())
+
+	} else if v[1].Type() != "Boolean" {
+		message.RaiseError("Type", "Second argument to 'integrate' must be bool", v[0].GetTok())
+	}
+
+	shouldPrint := v[1].(*Boolean).Value
+
+	path, err := filepath.Abs(v[0].(*String).Value)
+	if err != nil {
+		message.RaiseError("File", "Could not parse path", v[0].GetTok())
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		message.RaiseError("File", "No such file or directory", v[0].GetTok())
+	}
+
+	var rtrnVal Value
+	if info.IsDir() {
+		executables := []*Exec{}
+		walkFn := func(path string, info os.FileInfo, err error) error {
+			if !info.IsDir() {
+				executables = append(executables, &Exec {path, shouldPrint, v[0].GetTok()})
+			}
+			return err
+		}
+
+		filepath.Walk(path, walkFn)
+
+		objST := NewSymTab()
+		for _, i := range executables {
+			_, exName := filepath.Split(i.Location)
+			objST.SetVal(exName, i)
+		}
+
+		rtrnVal = &Object {objST, v[0].GetTok()}
+	} else {
+		rtrnVal = &Exec {path, shouldPrint, v[0].GetTok()}
+
+	}
+
+	return rtrnVal
+}
+
+///////////////////////////////////////////////
 var BuiltinsMap = map[string]Value{
 	"println": &Builtin{writeln},
 	"print":   &Builtin{write},
@@ -215,4 +267,5 @@ var BuiltinsMap = map[string]Value{
 	"len":     &Builtin{length},
 	"system":  &Builtin{osCall},
 	"exit":	   &Builtin{osExit},
+	"integrate": &Builtin{integrate},
 }

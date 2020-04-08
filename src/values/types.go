@@ -10,4 +10,5 @@ const (
 	STRUCT  string = "Structure"
 	OBJ		string = "Object"
 	BUILTIN string = "Builtin function"
+	EXEC    string = "Executable"
 )
