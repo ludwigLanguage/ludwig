@@ -177,7 +177,7 @@ func osCall(v []Value) Value {
 	cmdOutputVal := &String {string(output), v[0].GetTok()}
 
 	if shouldDisplayOutput {
-		fmt.Printf(string(output))
+		fmt.Print(string(output))
 	}
 
 	objSymTab := NewSymTab()

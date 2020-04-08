@@ -108,7 +108,7 @@ func evalExecCall(ex *values.Exec, call *ast.Call, consts *values.SymTab) values
 	output, err := exec.Command(ex.Location, args...).CombinedOutput()
 
 	if ex.ShouldPrint {
-		fmt.Println(string(output))
+		fmt.Print(string(output))
 	}
 
 	var cmdErrVal values.Value

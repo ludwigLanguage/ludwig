@@ -98,6 +98,23 @@ arguments list<br/>
     stdout and stderr values from that command as strings
 10) `import(<string>)`
     Returns an object produced from the given file.
+11) `integrate(<string>, <bool>)`
+    If the given string is the location of an executable, it returns a function that, when called,
+    will execute the executable with the arguments provided in the function call.
+    If the given string is the location of a folder, then it will return an object containing all
+    the executables as functions.
+    The boolean will determine if the function(s) returned will alow the executable to print its
+    output to stdout and stderr
+
+    Example (Linux & macOS):
+    ```
+    echo = integrate("/bin/echo", true)
+    echo("Hello, World!") ##Prints Hello World! to the screen
+
+    ls = integrate("/bin/ls", false)
+    binContents = ls("/bin").Output ##The return of cat is not printed here upon execution
+    println(binContents) ##It is printed here when we choose to
+    ```
 
 ## Compound Expression:
 ### Scoped Compound Expression:
