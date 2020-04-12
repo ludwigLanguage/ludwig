@@ -13,7 +13,7 @@ $ bash ./install.sh
 
 ## Usage
 ```
-ludwig -e <filename>.kgo #executes the the file
+ludwig -e <filename>.ldg #executes the the file
 ```
 
 ## Hello World Program
@@ -22,15 +22,7 @@ println("Hello, World!")
 ```
 A more advanced version of a greeter program might run as such:
 ```
-mkGreeter = func(prefix) {
-  func(name) {
-    println(prefix, ", ", name)
-  }
-}
-
-sayHello = mkGreeter("Hello")
-name = readln("Enter your name: ")
-sayHello(name)
+//TODO
 ```
 
 ## License

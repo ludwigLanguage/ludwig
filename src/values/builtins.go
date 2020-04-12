@@ -3,13 +3,10 @@ package values
 import (
 	"ludwig/src/message"
 	"ludwig/src/tokens"
-
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
-	"path/filepath"
 )
 
 var (
@@ -35,37 +32,33 @@ func (b *Builtin) Type() string {
 	return BUILTIN
 }
 
-/////////////////////////////////////////////////
+////////////////////////////////////////////
 
-func write(v []Value) Value {
-	for _, i := range v {
-		fmt.Printf("%v", i.Stringify())
+func print(v []Value) Value {
+	if !(len(v) >= 1) {
+		message.RaiseError("Argument", "Must have at least one argument to 'print'", TOK)
+	} 
+
+	var rtrn string
+	for j, i := range v {
+		rtrn += i.Stringify()
+		fmt.Print(i.Stringify())
+
+		if j != len(v)-1 {
+			rtrn += " "
+			fmt.Print(" ")
+		}
 	}
 
-	return NILRTRN
+	return &String {rtrn, v[0].GetTok()}
 }
 
-/////////////////////////////////////////////////
-
-func writeln(v []Value) Value {
-	write(v)
-	fmt.Println() //For the newline
-
-	return NILRTRN
+////////////////////////////////////
+func println(v []Value) Value {
+	values := append(v, &String {"\n", TOK})
+	return print(values)
 }
-
-/////////////////////////////////////////////////
-
-func readln(v []Value) Value {
-	write(v)
-
-	reader := bufio.NewReader(os.Stdin)
-	text, _ := reader.ReadString('\n')
-
-	return &String{text[:len(text)-1], TOK} //Cut '\n' off
-}
-
-/////////////////////////////////////////////////
+///////////////////////////////////
 
 func typeOf(v []Value) Value {
 	if len(v) != 1 {
@@ -141,12 +134,12 @@ func length(v []Value) Value {
 /////////////////////////////////////////////////
 func osCall(v []Value) Value {
 	if len(v) < 2 {
-		message.RaiseError("Argument", "'os' must have two arguments", TOK)
+		message.RaiseError("Argument", "'system' must have two arguments", TOK)
 	}
 	
 	typeOfArg1 := fmt.Sprintf("%T", v[0])
 	if typeOfArg1 != "*values.Boolean" {
-		message.RaiseError("Type", "First argument of 'os' must be a boolean", v[0].GetTok())
+		message.RaiseError("Type", "First argument of 'system' must be a boolean", v[0].GetTok())
 	}
 	shouldDisplayOutput := v[0].(*Boolean).Value
 
@@ -165,24 +158,25 @@ func osCall(v []Value) Value {
 		}
 	}
 	cmd := exec.Command(commandName, commandArgs...)
-	output, err := cmd.CombinedOutput()
 
-	var cmdErrVal Value
-	if err == nil {
-		cmdErrVal = &Nil {v[0].GetTok()}
+	rawOut, rawErr := cmd.CombinedOutput()
+
+	var out, err string
+	out = string(rawOut)
+
+	if rawErr == nil {
+		err = ""
 	} else {
-		cmdErrVal = &String {err.Error(), v[0].GetTok()}
-	}
-
-	cmdOutputVal := &String {string(output), v[0].GetTok()}
-
-	if shouldDisplayOutput {
-		fmt.Print(string(output))
+		err = rawErr.Error()
 	}
 
 	objSymTab := NewSymTab()
-	objSymTab.SetVal("Output", cmdOutputVal)
-	objSymTab.SetVal("Error", cmdErrVal)
+	objSymTab.SetVal("output", &String { out, v[0].GetTok() })
+	objSymTab.SetVal("error", &String { err, v[0].GetTok() })
+
+	if shouldDisplayOutput {
+		fmt.Print(out, err)
+	}
 
 	return &Object {objSymTab, v[0].GetTok()}
 }
@@ -203,69 +197,14 @@ func osExit(v []Value) Value {
 
 }
 
-////////////////////////////////////////////////
-
-func integrate(v []Value) Value {
-	if len(v) != 2 {
-		message.RaiseError("Argument", "This function requires two arguments", TOK)
-	}
-
-	if v[0].Type() != "String" {
-		message.RaiseError("Type", "Argument to 'integrate' function must be a string", v[0].GetTok())
-
-	} else if v[1].Type() != "Boolean" {
-		message.RaiseError("Type", "Second argument to 'integrate' must be bool", v[0].GetTok())
-	}
-
-	shouldPrint := v[1].(*Boolean).Value
-
-	path, err := filepath.Abs(v[0].(*String).Value)
-	if err != nil {
-		message.RaiseError("File", "Could not parse path", v[0].GetTok())
-	}
-
-	info, err := os.Stat(path)
-	if err != nil {
-		message.RaiseError("File", "No such file or directory", v[0].GetTok())
-	}
-
-	var rtrnVal Value
-	if info.IsDir() {
-		executables := []*Exec{}
-		walkFn := func(path string, info os.FileInfo, err error) error {
-			if !info.IsDir() {
-				executables = append(executables, &Exec {path, shouldPrint, v[0].GetTok()})
-			}
-			return err
-		}
-
-		filepath.Walk(path, walkFn)
-
-		objST := NewSymTab()
-		for _, i := range executables {
-			_, exName := filepath.Split(i.Location)
-			objST.SetVal(exName, i)
-		}
-
-		rtrnVal = &Object {objST, v[0].GetTok()}
-	} else {
-		rtrnVal = &Exec {path, shouldPrint, v[0].GetTok()}
-
-	}
-
-	return rtrnVal
-}
-
 ///////////////////////////////////////////////
-var BuiltinsMap = map[string]Value{
-	"println": &Builtin{writeln},
-	"print":   &Builtin{write},
-	"read":    &Builtin{readln},
+var BuiltinsMap = map[string]Value{ 
+	"print":   &Builtin{print},
+	"println": &Builtin{println},
 	"typeOf":  &Builtin{typeOf},
 	"str":     &Builtin{str},
 	"num":     &Builtin{num},
 	"len":     &Builtin{length},
 	"system":  &Builtin{osCall},
 	"exit":	   &Builtin{osExit},
-	"integrate": &Builtin{integrate},
 }

@@ -80,24 +80,3 @@ func (o *Object) GetTok() tokens.Token {
 }
 
 //////////////////////////////////////////////
-type Exec struct {
-	Location string
-	ShouldPrint bool
-	Tok tokens.Token
-}
-
-func (e *Exec) Stringify() string {
-	shouldPrint := "Non-Printing Executable"
-	if e.ShouldPrint {
-		shouldPrint = "Printing Executable"
-	}
-	return "Executable ( " + e.Location + ", " + shouldPrint + " )"
-}
-
-func (e *Exec) Type() string {
-	return EXEC 
-}
-
-func (e *Exec) GetTok() tokens.Token {
-	return e.Tok
-}

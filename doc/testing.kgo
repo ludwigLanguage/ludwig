@@ -1,6 +1,0 @@
-echo = integrate("/bin/echo", true)
-echo("Hello, World!") ##Prints Hello World! to the screen
-
-ls = integrate("/bin/ls", false)
-binContents = ls("/bin").Output ##The return of cat is not printed here upon execution
-println(binContents) ##It is printed here when we choose to

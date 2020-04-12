@@ -6,7 +6,7 @@ import (
 	"ludwig/src/values"
 	"strconv"
 	"fmt"
-	"os/exec"
+
 )
 
 func evalFunc(n *ast.Function, consts *values.SymTab) values.Value {
@@ -27,8 +27,6 @@ func evalCall(n *ast.Call, consts *values.SymTab) values.Value {
 		return evalBuiltinCall(calledVal, n, consts)
 	case *values.Struct:
 		return evalStructCall(calledVal, n, consts)
-	case *values.Exec:
-		return evalExecCall(calledVal, n, consts)
 	default:
 		Type := fmt.Sprintf("%T", calledVal)
 		message.RaiseError("Type", "Cannot call type '" + Type + "'", calledVal.GetTok())
@@ -97,32 +95,3 @@ func evalStructCall(strct *values.Struct, call *ast.Call, consts *values.SymTab)
 	return &values.Object {strct.Consts, strct.GetTok()}
 }
 
-func evalExecCall(ex *values.Exec, call *ast.Call, consts *values.SymTab) values.Value {
-	args := []string {}
-
-	for _, i := range call.Args {
-		val := EvalExpr(i, consts)
-		args = append(args, val.Stringify())
-	}
-
-	output, err := exec.Command(ex.Location, args...).CombinedOutput()
-
-	if ex.ShouldPrint {
-		fmt.Print(string(output))
-	}
-
-	var cmdErrVal values.Value
-	if err == nil {
-		cmdErrVal = &values.Nil {call.GetTok()}
-	} else {
-		cmdErrVal = &values.String {err.Error(), call.GetTok()}
-	}
-
-	cmdOutputVal := &values.String {string(output), call.GetTok()}
-
-	objSymTab := values.NewSymTab()
-	objSymTab.SetVal("Output", cmdOutputVal)
-	objSymTab.SetVal("Error", cmdErrVal)
-
-	return &values.Object {objSymTab, call.GetTok()}
-}

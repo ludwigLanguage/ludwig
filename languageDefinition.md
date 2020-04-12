@@ -75,46 +75,21 @@ arguments list<br/>
 2) Every function will have the __recurse()__ function, which can be used for tail recursion
 
 ## Built In Functions
-1) `print(<expr>, <expr>...)`    
-    Prints the given values exactly as written
-
-2) `println(<expr>, <expr>...)`  
-    Prints given values followed by a newline
-
-3) `read(<expr>, <expr>...)`     
-    Prints given values and returns an input line
-    
-4) `typeOf(<expr>)`              
+1) `typeOf(<expr>)`              
     Returns the type of a given value
-5) `str(<expr>)`   
+2) `str(<expr>)`   
     Converts the given expression into a string
-6) `num(<string>)`   
+3) `num(<string>)`   
     Converts the given string into a number
-7) `len(<expr>)`  
+4) `len(<expr>)`  
     Returns the length of the given string or list
-9) `system(<bool>, <string>...)`  
+5) `system(<bool>, <string>...)`  
     Executes the given command, and then prints the output if the boolean given is 'true'
     Returns an object containing the 'Error' and the 'Output' variables which contain the
     stdout and stderr values from that command as strings
-10) `import(<string>)`
+6) `import(<string>)`
     Returns an object produced from the given file.
-11) `integrate(<string>, <bool>)`
-    If the given string is the location of an executable, it returns a function that, when called,
-    will execute the executable with the arguments provided in the function call.
-    If the given string is the location of a folder, then it will return an object containing all
-    the executables as functions.
-    The boolean will determine if the function(s) returned will alow the executable to print its
-    output to stdout and stderr
 
-    Example (Linux & macOS):
-    ```
-    echo = integrate("/bin/echo", true)
-    echo("Hello, World!") ##Prints Hello World! to the screen
-
-    ls = integrate("/bin/ls", false)
-    binContents = ls("/bin").Output ##The return of cat is not printed here upon execution
-    println(binContents) ##It is printed here when we choose to
-    ```
 
 ## Compound Expression:
 ### Scoped Compound Expression:
