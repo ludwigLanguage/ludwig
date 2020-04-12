@@ -11,7 +11,10 @@ type Number struct {
 }
 
 func (n *Number) PrintAll(tab string) {
-	fmt.Printf("%s<Number value=%f>\n", tab, n.Value)
+	fmt.Print(n.Stringify(tab))
+}
+func (n *Number) Stringify(tab string) string {
+	return fmt.Sprintf("%s<Number value=%f>\n", tab, n.Value)
 }
 
 func (n *Number) GetTok() tokens.Token {
@@ -26,7 +29,10 @@ type String struct {
 }
 
 func (s *String) PrintAll(tab string) {
-	fmt.Printf("%s<String value='%s'>\n", tab, s.Value)
+	fmt.Print(s.Stringify(tab))
+}
+func (s *String) Stringify(tab string) string {
+	return fmt.Sprintf("%s<String value='%s'>\n", tab, s.Value)
 }
 
 func (s *String) GetTok() tokens.Token {
@@ -41,7 +47,10 @@ type Boolean struct {
 }
 
 func (b *Boolean) PrintAll(tab string) {
-	fmt.Printf("%s<Boolean value=%v>\n", tab, b.Value)
+	fmt.Print(b.Stringify(tab))
+}
+func (b *Boolean) Stringify(tab string) string {
+	return fmt.Sprintf("%s<Boolean value=%v>\n", tab, b.Value)
 }
 
 func (b *Boolean) GetTok() tokens.Token {
@@ -56,7 +65,11 @@ type Identifier struct {
 }
 
 func (i *Identifier) PrintAll(tab string) {
-	fmt.Printf("%s<Identifier value=%s>\n", tab, i.Value)
+	fmt.Print(i.Stringify(tab))
+}
+
+func (i *Identifier) Stringify(tab string) string {
+	return fmt.Sprintf("%s<Identifier value=%s>\n", tab, i.Value)
 }
 
 func (i *Identifier) GetTok() tokens.Token {
@@ -70,7 +83,11 @@ type Nil struct {
 }
 
 func (n *Nil) PrintAll(tab string) {
-	fmt.Println(tab + "<nil>")
+	fmt.Print(n.Stringify(tab))
+}
+
+func (n *Nil) Stringify(tab string) string {
+	return tab + "<nil>"
 }
 
 func (n *Nil) GetTok() tokens.Token {

@@ -154,14 +154,14 @@ Syntax:
             - The do function will still be scoped if the '{' is used
 
         Calling Macros:
-            @<macro>
+            <macro>
 
-            @for i in [1, 2, 3] do
+            for i in [1, 2, 3] do
                 println(i)
             end
 
             a = 10
-            @switch a
+            switch a
                 case 10:
                     println("a == 10")
                 case 5:

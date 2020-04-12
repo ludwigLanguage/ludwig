@@ -13,28 +13,36 @@ type Function struct {
 	Tok    		tokens.Token
 }
 
-func (f *Function) PrintAll(tab string) {
-	fmt.Println(tab, "<Function>")
+func (f *Function) Stringify(tab string) string {
+	rtrnStr := ""
+	
+	rtrnStr += tab + "<Function>\n"
 
 	if f.IsVariadic {
-		fmt.Println(tab, "<Is Variadic=true>")
+		rtrnStr += tab + "<Is Variadic=true>\n"
 	} else {
-		fmt.Println(tab, "<Is Variadic=false>")
+		rtrnStr += tab + "<Is Variadic=false>\n"
 	}
 
-	fmt.Println(tab, "<Args>")
+	rtrnStr += tab + "<Args>\n"
 
 	for c, i := range f.Args {
-		fmt.Printf("%v <Arg%v>\n", tab, c)
-		i.PrintAll(tab + "\t")
-		fmt.Printf("%v <\\Arg%v>\n", tab, c)
+		rtrnStr += fmt.Sprintf("%v<Arg%v>\n", tab + "\t", c)
+		rtrnStr += i.Stringify(tab + "\t")
+		rtrnStr += fmt.Sprintf("%v<\\Arg%v>\n", tab + "\t", c)
 	}
-	fmt.Println(tab, "<\\Args>")
+	rtrnStr += tab + "<\\Args>\n"
 
-	fmt.Println(tab, "<Do>")
-	f.DoExpr.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Do>")
-	fmt.Println(tab, "<\\Function>")
+	rtrnStr += tab + "<Do>\n"
+	rtrnStr += f.DoExpr.Stringify(tab + "\t")
+	rtrnStr += tab + "<\\Do>\n"
+	rtrnStr += tab + "<\\Function>\n"
+
+	return rtrnStr 
+}
+
+func (f *Function) PrintAll(tab string) {
+	fmt.Print(f.Stringify(tab))
 }
 
 func (f *Function) GetTok() tokens.Token {
@@ -50,20 +58,25 @@ type Call struct {
 }
 
 func (c *Call) PrintAll(tab string) {
-	fmt.Println(tab, "<Call>")
+	fmt.Print(c.Stringify(tab))
+}
+func (c *Call) Stringify(tab string) string {
+	rtrnStr :=  ""
 
-	fmt.Println(tab, "<CalledValue>")
-	c.CalledVal.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\CalledValue>")
+	rtrnStr += tab + "<Call>\n"
 
-	fmt.Println(tab, "<Args>")
+	rtrnStr += tab + "<CalledValue>\n"
+	c.CalledVal.Stringify(tab + "\t")
+	rtrnStr += tab + "<\\CalledValue>\n"
+
+	rtrnStr += tab + "<Args>\n"
 	for c, i := range c.Args {
-		fmt.Printf("%v <Arg%v>\n", tab, c)
-		i.PrintAll(tab + "\t")
-		fmt.Printf("%v <\\Arg%v>\n", tab, c)
+		rtrnStr += fmt.Sprintf("%v<Arg%v>\n", tab, c)
+		rtrnStr += i.Stringify(tab + "\t")
+		rtrnStr += fmt.Sprintf("%v<\\Arg%v>\n", tab, c)
 	}
-	fmt.Println(tab, "<\\Args>")
-
+	rtrnStr += tab + "<\\Args>\n"
+	return rtrnStr
 }
 
 func (c *Call) GetTok() tokens.Token {

@@ -83,7 +83,7 @@ func evalBuiltinCall(builtin *values.Builtin, call *ast.Call, consts *values.Sym
 		vals = append(vals, EvalExpr(i, consts))
 	}
 
-	return builtin.Fn(vals)
+	return builtin.Fn(vals, call.GetTok())
 }
 
 func evalStructCall(strct *values.Struct, call *ast.Call, consts *values.SymTab) values.Value {
@@ -98,4 +98,5 @@ func evalStructCall(strct *values.Struct, call *ast.Call, consts *values.SymTab)
 
 	return &values.Object {strct.Consts, strct.GetTok()}
 }
+
 

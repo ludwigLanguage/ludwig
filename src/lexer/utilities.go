@@ -50,7 +50,7 @@ func isDigit(ch byte) bool {
 }
 
 func isQuote(ch byte) bool {
-	return (ch == '"') || (string(ch) == "'")
+	return (ch == '"') || (string(ch) == "'") || (ch == '`')
 }
 
 func (l *Lexer) buildIdent() string {

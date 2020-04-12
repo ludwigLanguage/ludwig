@@ -4,9 +4,6 @@ import (
 	"ludwig/src/ast"
 	"ludwig/src/message"
 	"ludwig/src/values"
-	"ludwig/src/source"
-	"ludwig/src/lexer"
-	"ludwig/src/parser"
 )
 
 func evalPrefix(n *ast.PrefixExpr, consts *values.SymTab) values.Value {
@@ -15,8 +12,6 @@ func evalPrefix(n *ast.PrefixExpr, consts *values.SymTab) values.Value {
 		return evalNot(EvalExpr(n.Expr, consts))
 	case "-":
 		return evalNegative(EvalExpr(n.Expr, consts))
-	case "$":
-		return evalDollar(EvalExpr(n.Expr, consts), consts)
 	default:
 		message.RaiseError("Operator", "Cannot use this operator as a prefix", n.GetTok())
 	}
@@ -37,17 +32,4 @@ func evalNegative(v values.Value) values.Value {
 	}
 
 	return &values.Number{-v.(*values.Number).Value, v.GetTok()}
-}
-
-func evalDollar(val values.Value, consts *values.SymTab) values.Value {
-	if val.Type() != values.STR {
-		message.RaiseError("Type", "Must have a string for '$'", val.GetTok())
-	}
-
-	src := source.NewWithStr(val.(*values.String).Value, val.GetTok().Filename)
-	lxr := lexer.New(src)
-	prs := parser.New(lxr)
-	prs.ParseProgram()
-
-	return EvalExpr(prs.Tree, consts)
 }

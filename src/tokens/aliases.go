@@ -39,4 +39,6 @@ const (
 	IMPORT
 	DO
 	END
+	QUOTE
+	UNQUOTE
 )

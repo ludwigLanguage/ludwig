@@ -13,7 +13,6 @@ var singleChar = map[string]byte{
 	"\n":      tokens.EOL,
 	";":       tokens.EOL,
 	"!":       tokens.POP,
-	"$":       tokens.POP,
 	"=":       tokens.OP5,
 	"[":       tokens.LBRACK,
 	"]":       tokens.RBRACK,
@@ -53,4 +52,6 @@ var keywords = map[string]byte{
 	"import": tokens.IMPORT,
 	"do"	: tokens.DO,
 	"end"	: tokens.END,
+	"quote" : tokens.QUOTE,
+	"unquote": tokens.UNQUOTE,
 }

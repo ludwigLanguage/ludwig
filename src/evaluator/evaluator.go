@@ -51,6 +51,10 @@ func EvalExpr(n ast.Node, consts *values.SymTab) values.Value {
 		return evalStruct(n, consts)
 	case *ast.Import:
 		return evalImport(n, consts)
+	case *ast.Quote:
+		return evalQuote(n, consts)
+	case *ast.UnQuote:
+		return evalUnQuote(n, consts)
 	default:
 		message.RaiseError("Eval", "Cannot evaluate this expression", n.GetTok())
 	}

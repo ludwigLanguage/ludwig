@@ -12,13 +12,16 @@ type Struct struct {
 }
 
 func (c *Struct) PrintAll(tab string) {
-	fmt.Println(tab, "<Struct>")
+	fmt.Print(c.Stringify(tab))
+}
+func (s *Struct) Stringify(tab string) string {
+	rtrnVal := tab + "<Struct>\n"
 
-	fmt.Println(tab, "<Body>")
-	c.Body.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Body>")
+	rtrnVal += tab + "<Body>\n"
+	rtrnVal += s.Body.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\Body>\n"
 
-	fmt.Println(tab, "<\\Struct>")
+	return rtrnVal + tab+ "<\\Struct>\n"
 }
 
 func (c *Struct) GetTok() tokens.Token {

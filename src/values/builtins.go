@@ -9,19 +9,14 @@ import (
 	"strconv"
 )
 
-var (
-	TOK tokens.Token = tokens.Token{"ludwig/src/evaluator", 0, 0, "", tokens.RBRACK}
-	NILRTRN Value = &Nil{ TOK}
-)
-
 /////////////////////////////////////////////////
 
 type Builtin struct {
-	Fn func([]Value) Value
+	Fn func([]Value, tokens.Token) Value
 }
 
 func (b *Builtin) GetTok() tokens.Token {
-	return TOK
+	return tokens.Token{"ludwig/src/evaluator", 0, 0, "", tokens.RBRACK}
 }
 
 func (b *Builtin) Stringify() string {
@@ -34,9 +29,9 @@ func (b *Builtin) Type() string {
 
 ////////////////////////////////////////////
 
-func print(v []Value) Value {
+func print(v []Value, tok tokens.Token) Value {
 	if !(len(v) >= 1) {
-		message.RaiseError("Argument", "Must have at least one argument to 'print'", TOK)
+		message.RaiseError("Argument", "Must have at least one argument to 'print'", tok)
 	} 
 
 	var rtrn string
@@ -50,73 +45,56 @@ func print(v []Value) Value {
 		}
 	}
 
-	return &String {rtrn, v[0].GetTok()}
+	return &String {rtrn, tok}
 }
 
 ////////////////////////////////////
-func println(v []Value) Value {
-	values := append(v, &String {"\n", TOK})
-	return print(values)
+func println(v []Value, tok tokens.Token) Value {
+	values := append(v, &String {"\n", tok})
+	return print(values, tok)
 }
 ///////////////////////////////////
 
-func typeOf(v []Value) Value {
+func typeOf(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
-		message.Error(
-			"Unknown.ludwig",
-			"Builtin",
-			"'typeOf' must have 1 argument",
-			0, 0)
+		message.RaiseError("Argument", "typeOf() Must have exactly one argument", tok)
 	}
-
-	return &String{v[0].Type(), v[0].GetTok()}
+	return &String{v[0].Type(), tok}
 }
 
 /////////////////////////////////////////////////
 
-func str(v []Value) Value {
+func str(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
-		message.Error(
-			"Unknown.ludwig",
-			"Builtin",
-			"'str' must have 1 argument",
-			0, 0)
+		message.RaiseError("Argument", "str() must have exactly one argument", tok)
 	}
 
-	return &String{v[0].Stringify(), TOK}
+	return &String{v[0].Stringify(), tok}
 }
 
 /////////////////////////////////////////////////
 
-func num(v []Value) Value {
+func num(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
-		message.Error(
-			"Unknown.ludwig",
-			"Builtin",
-			"'num' must have 1 argument",
-			0, 0)
+		message.RaiseError("Argument", "num() must have exactly one argument", tok)
 	} else if v[0].Type() != STR {
-		message.Error(
-			"Unknown.ludwig",
-			"Builtin",
-			"'num' argument must be a string",
-			0, 0)
+		message.RaiseError("Type", "num() must have a string as the argument", tok)
 	}
 
 	flt, err := strconv.ParseFloat(v[0].(*String).Value, 64)
 
 	if err != nil {
-		message.RaiseError("Type", "Cannot convert this into a number", v[0].GetTok())
+		message.RaiseError("Type", "Cannot convert this into a number", tok)
 	}
 
-	return &Number{flt, v[0].GetTok()}
+	return &Number{flt, tok}
 }
 
 /////////////////////////////////////////////////
 
-func length(v []Value) Value {
+func length(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "'len' must have one argument", TOK)
+		message.RaiseError("Argument", "'len' must have one argument", tok)
 	}
 
 	switch val := v[0].(type) {
@@ -128,13 +106,13 @@ func length(v []Value) Value {
 		message.RaiseError("Type", "Expected list or string on 'len' call", val.GetTok())
 	}
 
-	return NILRTRN
+	return &Nil {tok}
 }
 
 /////////////////////////////////////////////////
-func osCall(v []Value) Value {
+func osCall(v []Value, tok tokens.Token) Value {
 	if len(v) < 2 {
-		message.RaiseError("Argument", "'system' must have two arguments", TOK)
+		message.RaiseError("Argument", "'system' must have two arguments", tok)
 	}
 	
 	typeOfArg1 := fmt.Sprintf("%T", v[0])
@@ -183,9 +161,9 @@ func osCall(v []Value) Value {
 
 /////////////////////////////////////////////////
 
-func osExit(v []Value) Value {
+func osExit(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "'exit' must have exactly one argument", TOK)
+		message.RaiseError("Argument", "'exit' must have exactly one argument", tok)
 	}
 	
 	if v[0].Type() != "Number" {
@@ -198,7 +176,9 @@ func osExit(v []Value) Value {
 }
 
 ///////////////////////////////////////////////
-var BuiltinsMap = map[string]Value{ 
+
+///////////////////////////////////////////////
+var BuiltinsMap = map[string]Value { 
 	"print":   &Builtin{print},
 	"println": &Builtin{println},
 	"typeOf":  &Builtin{typeOf},

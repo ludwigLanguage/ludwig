@@ -1,44 +1,42 @@
 package ast
 
-/*
-	Example:
-		for = macro
-		syntax: for <ident> in <node> <node>
-		do: func(pool) do
-			utilFn = func(iter) do
-				if !(iter > len(quote(pool[1])) do
-					block = quote(do nil end)
-					body = 
-						if pool[2].Type() == "<block>"
-							pool[2].GetBody()
-						else
-							quote(do nil end).GetBody()
+import(
+	"fmt"
+	"ludwig/src/tokens"
+)
 
-					block.SetBody([ quote( unquote(pool[0]) = unquote(pool[1][iter]) ) ] + body)
-					unquote(block)
-				end
-			end
-			utilFn()
-		end
-
-		@for i in [1, 2, 3] do
-			println(i)
-		end
-
-	Notes:
-		We can just parse the do function like a normal function
-		The syntax must be parsed with a speacial procedure. It will
-		generate a list outlining the syntax (ie: [for, identNode, in, node, node])
-*/
-
-
-// <node_type>
-type CarrotNode struct {
-	NodeType string
+type Quote struct {
+	Expr Node
+	Tok tokens.Token
 }
 
-type MacroDef struct {
-	Syntax []Node
-	Function 
+func (q *Quote) PrintAll(tab string) {
+	fmt.Print(q.Stringify(tab))
 }
 
+func (q *Quote) Stringify(tab string) string {
+	return q.Expr.Stringify(tab)
+}
+
+func (q *Quote) GetTok() tokens.Token {
+	return q.Tok
+}
+
+//////////////////////////////////////////
+
+type UnQuote struct {
+	Expr Node
+	Tok tokens.Token
+}
+
+func (q *UnQuote) PrintAll(tab string) {
+	fmt.Print(q.Stringify(tab))
+}
+
+func (q *UnQuote) Stringify(tab string) string {
+	return q.Expr.Stringify(tab)
+}
+
+func (q *UnQuote) GetTok() tokens.Token {
+	return q.Tok
+}

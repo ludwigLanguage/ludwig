@@ -9,5 +9,6 @@ import (
 
 type Node interface {
 	PrintAll(string)
+	Stringify(string) string
 	GetTok() tokens.Token
 }

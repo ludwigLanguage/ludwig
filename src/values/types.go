@@ -9,5 +9,6 @@ const (
 	FUNC    string = "Function"
 	STRUCT  string = "Structure"
 	OBJ		string = "Object"
-	BUILTIN string = "Builtin function"
+	BUILTIN string = "Builtin Function"
+	QUOTE   string = "Quoted Expression"
 )

@@ -58,6 +58,8 @@ func New(lexer *lexer.Lexer) *Parser {
 		tokens.FN:     p.parseFunction,
 		tokens.STRUCT: p.parseStruct,
 		tokens.IMPORT: p.parseImport,
+		tokens.QUOTE: p.parseQuoteOrUnquote,
+		tokens.UNQUOTE: p.parseQuoteOrUnquote,
 	}
 
 	p.infixParseFns = map[byte]infixFn{

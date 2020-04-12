@@ -11,14 +11,19 @@ type PrefixExpr struct {
 	Tok  tokens.Token
 }
 
-func (q *PrefixExpr) PrintAll(tab string) {
-	fmt.Printf("%s<Prefix Expression Operator='%s'>\n", tab, q.Op)
-	q.Expr.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Prefix Expression>")
+func (p *PrefixExpr) PrintAll(tab string) {
+	fmt.Print(p.Stringify(tab))
+}
+func (p *PrefixExpr) Stringify(tab string) string {
+	rtrnVal := ""
+	rtrnVal += fmt.Sprintf("%s<Prefix Expression Operator='%s'>\n", tab, p.Op)
+	rtrnVal += p.Expr.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\Prefix Expression>\n"
+	return rtrnVal
 }
 
-func (q *PrefixExpr) GetTok() tokens.Token {
-	return q.Tok
+func (p *PrefixExpr) GetTok() tokens.Token {
+	return p.Tok
 }
 
 /////////////////////////////////////////////////
@@ -31,17 +36,21 @@ type InfixExpr struct {
 }
 
 func (i *InfixExpr) PrintAll(tab string) {
-	fmt.Printf("%s<Infix Expression Operator='%s'>\n", tab, i.Op)
+	fmt.Print(i.Stringify(tab))
+}
+func (i *InfixExpr) Stringify(tab string) string {
+	rtrnStr := fmt.Sprintf("%s<Infix Expression Operator='%s'>\n", tab, i.Op)
 
-	fmt.Println(tab, "<Left>")
-	i.Left.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Left>")
+	rtrnStr += tab + "<Left>\n"
+	rtrnStr += i.Left.Stringify(tab + "\t")
+	rtrnStr += tab + "<\\Left>\n"
 
-	fmt.Println(tab, "<Right>")
-	i.Right.PrintAll(tab + "\t ")
-	fmt.Println(tab, "<\\Right>")
+	rtrnStr += tab + "<Right>\n"
+	rtrnStr += i.Right.Stringify(tab + "\t")
+	rtrnStr += tab + "<\\Right>\n"
 
-	fmt.Println(tab, "<\\Infix Expression>")
+	rtrnStr += tab + "<\\Infix Expression>\n"
+	return rtrnStr
 }
 
 func (i *InfixExpr) GetTok() tokens.Token {

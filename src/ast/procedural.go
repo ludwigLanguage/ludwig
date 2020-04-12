@@ -3,6 +3,7 @@ package ast
 import (
 	"ludwig/src/tokens"
 	"fmt"
+	"strconv"
 )
 
 type Block struct {
@@ -12,13 +13,20 @@ type Block struct {
 }
 
 func (b *Block) PrintAll(tab string) {
-	fmt.Println(tab, "<Block>")
+	fmt.Print(b.Stringify(tab))
+}
+func (b *Block) Stringify(tab string) string {
+	rtrnVal := ""
+	rtrnVal += tab + "<Block>\n"
+
+	rtrnVal += tab + "<IsScoped?=" + strconv.FormatBool(b.IsScoped) + ">\n"
 
 	for _, i := range b.Body {
-		i.PrintAll(tab + "\t")
+		rtrnVal += i.Stringify(tab + "\t")
 	}
 
-	fmt.Println(tab, "</Block>")
+	rtrnVal += tab + "</Block>\n"
+	return rtrnVal
 }
 
 func (b *Block) GetTok() tokens.Token {
@@ -35,21 +43,26 @@ type IfEl struct {
 }
 
 func (i *IfEl) PrintAll(tab string) {
-	fmt.Println(tab, "<IfEl>")
+	fmt.Print(i.Stringify(tab))
+}
 
-	fmt.Println(tab, "<Cond>")
-	i.Cond.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Cond>")
+func (i *IfEl) Stringify(tab string) string {
+	rtrnVal := ""
+	rtrnVal += tab + "<IfEl>\n"
 
-	fmt.Println(tab, "<Do>")
-	i.Do.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Do>")
+	rtrnVal += tab + "<Cond>\n"
+	rtrnVal += i.Cond.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\Cond>\n"
 
-	fmt.Println(tab, "<Else>")
-	i.ElseExpr.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Else>")
+	rtrnVal += tab + "<Do>\n"
+	rtrnVal += i.Do.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\Do>\n"
 
-	fmt.Println(tab, "<\\IfEl>")
+	rtrnVal += tab + "<Else>\n"
+	rtrnVal += i.ElseExpr.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\Else>\n"
+
+	return rtrnVal + tab + "<\\IfEl>\n"
 }
 
 func (i *IfEl) GetTok() tokens.Token {
@@ -64,11 +77,18 @@ type Import struct {
 }
 
 func (i *Import) PrintAll(tab string) {
-	fmt.Println(tab + "<import>")
-	i.Filename.PrintAll("\t"+tab)
-	fmt.Println("<\\import>")
+	fmt.Print(i.Stringify(tab))
+}
+
+func (i *Import) Stringify(tab string) string {
+ 	rtrnVal := ""
+	rtrnVal += tab + "<import>\n"
+	rtrnVal += i.Filename.Stringify("\t"+tab)
+	rtrnVal += "<\\import>\n"
+	return rtrnVal
 }
 
 func (i *Import) GetTok() tokens.Token {
 	return i.Tok 
 }
+

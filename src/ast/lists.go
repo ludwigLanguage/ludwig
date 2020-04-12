@@ -12,13 +12,19 @@ type List struct {
 }
 
 func (l *List) PrintAll(tab string) {
-	fmt.Println(tab, "<List>")
+	fmt.Print(l.Stringify(tab))
+}
+
+func (l *List) Stringify(tab string) string {
+	rtrnStr := ""
+	rtrnStr += tab + "<List>\n"
 
 	for _, i := range l.Entries {
-		i.PrintAll(tab + "\t")
+		rtrnStr += i.Stringify(tab + "\t")
 	}
 
-	fmt.Println(tab, "<\\List>")
+	rtrnStr += tab + "<\\List>"
+	return rtrnStr 
 }
 
 func (l *List) GetTok() tokens.Token {
@@ -34,13 +40,19 @@ type Index struct {
 }
 
 func (i *Index) PrintAll(tab string) {
-	fmt.Println(tab, "<Index>\n")
-	fmt.Println(tab, "<Source>")
-	i.Src.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Source>")
-	fmt.Println(tab, "<Value>")
-	i.Index.PrintAll(tab + "\t")
-	fmt.Println(tab, "<\\Value>")
+	fmt.Print(i.Stringify(tab))
+}
+func (i *Index) Stringify(tab string) string {
+	rtrnStr := ""
+	rtrnStr += tab + "<Index>\n"
+	rtrnStr += tab + "<Source>\n"
+	rtrnStr += i.Src.Stringify(tab + "\t")
+	rtrnStr += tab + "<\\Source>\n"
+	rtrnStr += tab + "<Value>\n"
+	rtrnStr += i.Index.Stringify(tab + "\t")
+	rtrnStr += tab + "<\\Value>\n"
+
+	return rtrnStr
 }
 
 func (i *Index) GetTok() tokens.Token {
