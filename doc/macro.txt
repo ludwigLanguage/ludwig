@@ -164,6 +164,8 @@ Syntax:
             @switch a
                 case 10:
                     println("a == 10")
+                case 5:
+                    println("a == 5")
                 default:
                     println("a != 10")
             end

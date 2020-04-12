@@ -1,10 +1,10 @@
-a = 11
 
-addTen = func(x) do
+
+addTen = func(x) {
     a = 10
     a + x
-end
+}
 
-
+a = 11
 
 println(addTen(2), a)
