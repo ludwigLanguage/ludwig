@@ -1,0 +1,10 @@
+a = 11
+
+addTen = func(x) do
+    a = 10
+    a + x
+end
+
+
+
+println(addTen(2), a)

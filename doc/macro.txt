@@ -1,0 +1,162 @@
+Ast Nodes & Manipulation Functions:
+Note: All arguments will be quoted upon input, and all returns will be quoted unless otherwise stated
+Syntax: <quotedExpr>.<call> 
+
+    <node>
+        Manipulation Functions:
+            PrintAll() || Executes the PrintAll() function within the node with no indent
+            Type()     || Returns the type of node it is
+        
+        Note:
+            All other nodes will have the manipulation functions gifted to <node>
+
+    <func>
+        Manipulation Functions:
+            GetArgs()               || Returns a list of the quoted arguments
+            SetArgs(list of idents) || Sets argument(s) to a function definition
+            GetDo()                 || Returns the quoted do node
+            SetDo(node)             || Sets the do node
+            IsVariadic()            || Returns whether or not the function is variadic
+            SetVariadic(bool)       || Sets whether or not a function is variadic
+
+    <call>
+        Manipulation Functions:
+            GetSource()             || Returns the quoted value called by the call
+            SetSource(node)         || Sets value called by the call
+            GetArgs()               || Returns list of the quoted arguments
+            SetArgs(list)           || Sets the arguments
+
+    <list>
+        Manipulation Functions:
+            GetEntries()     || Returns list of quoted entries
+            SetEntries(list) || Quotes input nodes, and sets the entries equal to them
+
+    <index>
+        Manipulation Functions:
+            GetSource()       || Returns the quoted source of the index
+            SetSource(node)   || Sets quotes the argument, and sets the source equal to it
+            GetIndex()        || Returns the quoted value of the index
+            SetIndex(node)    || Sets the quoted index
+
+    <prefixExpr>
+        Manipulation Functions:
+            GetRight()            || returns the quoted right side of the prefix node
+            SetRight(node)  || sets the right side to the node
+            Op()                  || returns an unquoted string with the operator inside
+            SetOp(string)         || sets the operator of the prefix node        
+
+    <infixExpr>
+        Manipulation Functions:
+            GetRight()              || Returns quoted right side of the node
+            SetRight(node)          || Sets right side to quoted version of input node
+            GetLeft()               || Returns left side of node
+            SetLeft(node)           || Sets left side to quoted version of input node
+            Op()                    || Returns string representing the operator
+            SetOp(string)           || sets the operator of the infix node
+
+    <number>
+        Manipulation Functions:
+            SetVal(number) || Sets the value of the number to the input 
+
+    <string>
+        Manipulation Functions:
+            SetVal(string) || Sets value of the string to the input
+
+    <bool>
+        Manipulation Functions:
+            SetVal(bool) || Sets value of the boolean to the input
+
+    <ident>
+        Manipulation Functions:
+            SetVal(ident) || Sets value of identifier to it the input
+    
+    <nil>
+        Nil will have no manipulation functions outside of those inhereted from <node>
+
+    <block>
+        Manipulation Functions:
+            GetBody()       || Returns a list containg the quoted nodes from the block
+            SetBody(list)   || Sets body to the given list of quoted nodes
+            IsScoped()      || return unquoted boolean indicating if the expression is scoped 
+            SetScoped(bool) || sets the IsScoped variable to the given boolean
+
+    <ifel>
+        Manipulation Functions:
+            GetConditional()     || Returns quoted condional of the if statement
+            SetConditional(node) || Sets conditional statement to input
+            GetIfTrueNode()      || Returns if true node
+            SetIfTrueNode(node)  || Sets if true node
+            GetElseNode()        || Returns Else Node
+
+    <import>
+        Manipulation Functions:
+            GetArgs()               || Returns list of the quoted arguments
+            SetArgs(list)           || Sets the arguments
+            
+
+    <struct>
+        GetBody()     || Returns quoted struct body
+        SetBody(list) || Sets body to the given list of quoted nodes
+
+Syntax:
+    Builtin Functions:
+        quote(<expr>)   || Returns quoted expression
+        unquote(<expr>) || evaluates quoted expression
+
+    Macros:
+
+        Macro Definitions:
+            macro
+                syntax:
+                    <syntax_rules>
+
+                do:
+                    <func>
+
+
+        Syntax Rules:
+            macro
+                syntax: for <ident> in <node> <node>
+                do:
+                    func(pool) {}
+
+            macro
+                syntax: switch <node>
+                            ...
+                            case <node>:
+                                <node>
+                            ...
+                            default:
+                                <node>
+                        end
+                do: 
+                    func(pool) {nil} 
+
+            - Any code surrounded by '...' my be repeated when applying the macro until an ending token
+            that will follow the final ...
+
+            - Any code surrounded by '<' and '>' will indacate that some given type of node must be present in
+            that location.
+
+            - Any other code that is not surrounded by carrots or ... must be replicated exactly when using the macro
+
+        Do Function:
+            - Do functions will have exaxtly one argument, it will be a list containing the 
+            quoted values of the input
+            - It may return whatever it wants, and do whatever it wants with the input values
+            - The do function will still be scoped if the '{' is used
+
+        Calling Macros:
+            @<macro>
+
+            @for i in [1, 2, 3] do
+                println(i)
+            end
+
+            a = 10
+            @switch a
+                case 10:
+                    println("a == 10")
+                default:
+                    println("a != 10")
+            end

@@ -70,7 +70,11 @@ func evalFnCall(fn *values.Function, call *ast.Call, consts *values.SymTab) valu
 		newFnC.SetVal(id.Value, lst)
 	}
 
-	return EvalExpr(fn.Expr, newFnC)
+	rtrnVal := EvalExpr(fn.Expr, newFnC)
+	newFnC.RmVal("recurse")
+	consts.AddValsFrom(newFnC)
+
+	return rtrnVal
 }
 
 func evalBuiltinCall(builtin *values.Builtin, call *ast.Call, consts *values.SymTab) values.Value {
