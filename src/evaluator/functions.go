@@ -72,7 +72,8 @@ func evalFnCall(fn *values.Function, call *ast.Call, consts *values.SymTab) valu
 
 	rtrnVal := EvalExpr(fn.Expr, newFnC)
 	newFnC.RmVal("recurse")
-	consts.AddValsFrom(newFnC)
+	consts.AddValsFromExcept(newFnC, fn.Args) //Remove all values that are not explicitly created in function
+	consts.PrintAll()
 
 	return rtrnVal
 }

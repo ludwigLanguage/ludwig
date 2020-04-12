@@ -118,7 +118,14 @@ Syntax:
             macro
                 syntax: for <ident> in <node> <node>
                 do:
-                    func(pool) {}
+                    func(pool) do
+                        utilFn = func(iter) do
+                            if !(iter > len(pool[1]) - 1) do
+                                unquote(<ident>) = <node>[iter]
+                                <node>
+                            end
+                        end
+                    end
 
             macro
                 syntax: switch <node>
@@ -130,7 +137,7 @@ Syntax:
                                 <node>
                         end
                 do: 
-                    func(pool) {nil} 
+                    func(pool) do ... end
 
             - Any code surrounded by '...' my be repeated when applying the macro until an ending token
             that will follow the final ...

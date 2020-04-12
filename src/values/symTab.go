@@ -2,6 +2,7 @@ package values
 
 import (
 	"fmt"
+	"ludwig/src/ast"
 )
 
 type SymTab struct {
@@ -37,5 +38,20 @@ func (s *SymTab) PrintAll() {
 func (s *SymTab) AddValsFrom(newSt *SymTab) {
 	for k, v := range newSt.values {
 		s.values[k] = v
+	}
+}
+
+func (s *SymTab) AddValsFromExcept(newSt *SymTab, names []*ast.Identifier) {
+	for k, v := range newSt.values {
+		isInNames := false
+		for _, i := range names {
+			if i.Value == k {
+				isInNames = true
+			}
+		}
+
+		if !isInNames {
+			s.values[k] = v
+		}
 	}
 }
