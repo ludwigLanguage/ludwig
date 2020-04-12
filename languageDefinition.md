@@ -111,15 +111,15 @@ Note: Any variables created will NOT be available outside the compound expressio
 
 ### Un-scoped Compound Expression:
 ```
-( <expr> <expr>)
+do <expr> <expr> end
 ```
 Example:
 ```
-(
+do
     a = 10
     b = 2
     a + b
-)
+end
 ```
 Note: Any variables created will be available outside the compound expression
 

@@ -37,4 +37,6 @@ const (
 	FN
 	STRUCT
 	IMPORT
+	DO
+	END
 )

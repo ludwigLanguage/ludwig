@@ -51,7 +51,7 @@ func New(lexer *lexer.Lexer) *Parser {
 		tokens.LBRACK: p.parseList,
 		tokens.POP:    p.parsePrefix,
 		tokens.OP1:    p.parsePrefix,
-		tokens.LPAREN: p.parseBlock,
+		tokens.DO: 	   p.parseBlock,
 		tokens.NIL:    p.parseNil,
 		tokens.LCURL:  p.parseBlock,
 		tokens.IF:     p.parseIfEl,

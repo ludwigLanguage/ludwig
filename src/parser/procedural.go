@@ -13,8 +13,8 @@ func (p *Parser) parseBlock() ast.Node {
 
 	tok := p.lxr.CurTok
 	closer := "}"
-	if p.lxr.CurTok.Value == "(" {
-		closer = ")"
+	if p.lxr.CurTok.Value == "do" {
+		closer = "end"
 	}
 	isScoped := p.lxr.CurTok.Value == "{"
 

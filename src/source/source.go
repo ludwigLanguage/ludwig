@@ -49,7 +49,7 @@ func NewWithStr(contents string, filename string) *Source {
 	s := &Source {}
 	s.Filename = filename
 
-	/* The addition of the parentheses serves two purposes
+	/* The addition of the do...end block serves two purposes
 	 * 1) It allows the parser to process the file as a 
 	 *    block of expressions so that we dont have to
 	 *    create any speacial protocol to process a program
@@ -57,7 +57,7 @@ func NewWithStr(contents string, filename string) *Source {
 	 *    become s.CurChar, and s.NextChar so that we do not
 	 *    fail out when we try to assign those
 	 */
-	s.contents = "(" + contents + ")"
+	s.contents = "do\n" + contents + "\nend"
 
 	s.curIter = -1
 	s.nextIter = 0
