@@ -3,6 +3,7 @@ package values
 import (
 	"ludwig/src/message"
 	"ludwig/src/tokens"
+	"ludwig/src/ast"
 	"fmt"
 	"os"
 	"os/exec"
@@ -25,6 +26,10 @@ func (b *Builtin) Stringify() string {
 
 func (b *Builtin) Type() string {
 	return BUILTIN
+}
+
+func (b *Builtin) ConvertToAst() ast.Node {
+	return &ast.Nil {tokens.Token{"ludwig/src/evaluator", 0, 0, "", tokens.RBRACK}}
 }
 
 ////////////////////////////////////////////

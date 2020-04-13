@@ -1,14 +1,2 @@
 
-
-addTen = func(x) {
-    a = 10
-    a + x
-}
-
-a = 11
-
-b = quote(addTen)
-print(b)
-
-c = unquote(b)
-println(c)
+quote(unquote(a) + a)

@@ -21,6 +21,10 @@ func (n *Number) GetTok() tokens.Token {
 	return n.Tok
 }
 
+func (n *Number) Type() string {
+	return NUM
+}
+
 /////////////////////////////////////////////////
 
 type String struct {
@@ -37,6 +41,10 @@ func (s *String) Stringify(tab string) string {
 
 func (s *String) GetTok() tokens.Token {
 	return s.Tok
+}
+
+func (s *String) Type() string {
+	return STR
 }
 
 /////////////////////////////////////////////////
@@ -57,6 +65,9 @@ func (b *Boolean) GetTok() tokens.Token {
 	return b.Tok
 }
 
+func (b *Boolean) Type() string {
+	return BOOL
+}
 /////////////////////////////////////////////////
 
 type Identifier struct {
@@ -76,6 +87,10 @@ func (i *Identifier) GetTok() tokens.Token {
 	return i.Tok
 }
 
+func (i *Identifier) Type() string {
+	return IDENT
+}
+
 ////////////////////////////////////////////////
 
 type Nil struct {
@@ -92,4 +107,8 @@ func (n *Nil) Stringify(tab string) string {
 
 func (n *Nil) GetTok() tokens.Token {
 	return n.Tok
+}
+
+func (n *Nil) Type() string {
+	return NIL
 }

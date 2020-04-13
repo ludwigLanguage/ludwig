@@ -33,6 +33,10 @@ func (b *Block) GetTok() tokens.Token {
 	return b.Tok
 }
 
+func (b *Block) Type() string {
+	return BLOCK
+}
+
 /////////////////////////////////////////////////
 
 type IfEl struct {
@@ -69,6 +73,10 @@ func (i *IfEl) GetTok() tokens.Token {
 	return i.Tok
 }
 
+func (i *IfEl) Type() string {
+	return IFEL
+}
+
 //////////////////////////////////////////////
 
 type Import struct {
@@ -92,3 +100,6 @@ func (i *Import) GetTok() tokens.Token {
 	return i.Tok 
 }
 
+func (i *Import) Type() string {
+	return IMPRT
+}

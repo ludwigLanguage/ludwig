@@ -27,3 +27,7 @@ func (s *Struct) Stringify(tab string) string {
 func (c *Struct) GetTok() tokens.Token {
 	return c.Tok
 }
+
+func (c *Struct) Type() string {
+	return STRCT
+}

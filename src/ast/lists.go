@@ -31,6 +31,10 @@ func (l *List) GetTok() tokens.Token {
 	return l.Tok
 }
 
+func (l *List) Type() string {
+	return LIST 
+}
+
 /////////////////////////////////////////////////
 
 type Index struct {
@@ -57,4 +61,8 @@ func (i *Index) Stringify(tab string) string {
 
 func (i *Index) GetTok() tokens.Token {
 	return i.Tok
+}
+
+func (i *Index) Type() string {
+	return INDEX
 }

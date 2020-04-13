@@ -22,6 +22,10 @@ func (q *Quote) GetTok() tokens.Token {
 	return q.Tok
 }
 
+func (q *Quote) Type() string {
+	return QUOTE
+}
+
 //////////////////////////////////////////
 
 type UnQuote struct {
@@ -39,4 +43,8 @@ func (q *UnQuote) Stringify(tab string) string {
 
 func (q *UnQuote) GetTok() tokens.Token {
 	return q.Tok
+}
+
+func (q *UnQuote) Type() string {
+	return UNQUOTE 
 }

@@ -15,6 +15,7 @@ func (p *Parser) parseQuoteOrUnquote() ast.Node {
 	p.lxr.MoveUp()
 
 	expr := p.parseExpr(0)
+	expr.PrintAll("")
 
 	if p.lxr.CurTok.Alias != tokens.RPAREN {
 		p.raiseError("Syntax", "Expected '(' not '" + p.lxr.CurTok.Value + "'")

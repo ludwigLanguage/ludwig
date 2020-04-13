@@ -49,6 +49,10 @@ func (f *Function) GetTok() tokens.Token {
 	return f.Tok
 }
 
+func (f *Function) Type() string {
+	return FN
+}
+
 /////////////////////////////////////////////////
 
 type Call struct {
@@ -81,4 +85,8 @@ func (c *Call) Stringify(tab string) string {
 
 func (c *Call) GetTok() tokens.Token {
 	return c.Tok
+}
+
+func (c *Call) Type() string {
+	return CALL
 }

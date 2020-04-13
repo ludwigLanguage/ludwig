@@ -11,4 +11,25 @@ type Node interface {
 	PrintAll(string)
 	Stringify(string) string
 	GetTok() tokens.Token
+	Type() string
 }
+
+const (
+	FN = "<function>"
+	CALL = "<call>"
+	LIST = "<list>"
+	INDEX = "<index>"
+	QUOTE = "<quote>"
+	UNQUOTE = "<unquote>"
+	PREFIX = "<prefixExpression>"
+	INFIX = "<infixExpression>"
+	NUM = "<number>"
+	IDENT = "<identifier>"
+	STR = "<string"
+	NIL = "<nil>"
+	BOOL = "<boolean>"
+	BLOCK = "<block>"
+	IFEL = "<ifElse>"
+	IMPRT = "<import>"
+	STRCT = "<structure>"
+)

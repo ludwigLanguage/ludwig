@@ -26,6 +26,10 @@ func (p *PrefixExpr) GetTok() tokens.Token {
 	return p.Tok
 }
 
+func (p *PrefixExpr) Type() string {
+	return PREFIX
+}
+
 /////////////////////////////////////////////////
 
 type InfixExpr struct {
@@ -55,4 +59,8 @@ func (i *InfixExpr) Stringify(tab string) string {
 
 func (i *InfixExpr) GetTok() tokens.Token {
 	return i.Tok
+}
+
+func (i *InfixExpr) Type() string {
+	return INFIX
 }

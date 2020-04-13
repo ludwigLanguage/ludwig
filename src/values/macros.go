@@ -21,3 +21,7 @@ func (q *QuotedVal) Type() string {
 func (q *QuotedVal) GetTok() tokens.Token {
 	return q.Tok
 }
+
+func (q *QuotedVal) ConvertToAst() ast.Node {
+	return &ast.Quote {q.Node, q.Tok}
+}
