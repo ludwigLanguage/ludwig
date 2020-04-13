@@ -70,15 +70,12 @@ func evalFnCall(fn *values.Function, call *ast.Call, consts *values.SymTab) valu
 		newFnC.SetVal(id.Value, lst)
 	}
 
-<<<<<<< HEAD
 	rtrnVal := EvalExpr(fn.Expr, newFnC)
 	newFnC.RmVal("recurse")
 	consts.AddValsFromExcept(newFnC, fn.Args) //Remove all values that are not explicitly created in function
 
 	return rtrnVal
-=======
 	return EvalExpr(fn.Expr, newFnC)
->>>>>>> parent of 38d555b... Outlined Macro syntax and usage... implemented unscoped functions v0.0.5
 }
 
 func evalBuiltinCall(builtin *values.Builtin, call *ast.Call, consts *values.SymTab) values.Value {

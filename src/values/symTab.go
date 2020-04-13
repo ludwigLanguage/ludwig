@@ -18,6 +18,12 @@ func (s *SymTab) SetVal(name string, v Value) {
 	s.values[name] = v
 }
 
+func (s *SymTab) RmVal(name string) {
+	if s.GetVal(name) != nil {
+		delete(s.values, name)
+	}
+}
+
 func (s *SymTab) GetVal(name string) Value {
 	return s.values[name]
 }

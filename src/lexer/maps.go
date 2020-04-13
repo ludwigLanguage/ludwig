@@ -52,6 +52,4 @@ var keywords = map[string]byte{
 	"import": tokens.IMPORT,
 	"do"	: tokens.DO,
 	"end"	: tokens.END,
-	"quote" : tokens.QUOTE,
-	"unquote": tokens.UNQUOTE,
 }
