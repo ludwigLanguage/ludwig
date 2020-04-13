@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Ast Nodes & Manipulation Functions:
 Note: All arguments will be quoted upon input, and all returns will be quoted unless otherwise stated
 Syntax: <quotedExpr>.<call> 
@@ -169,3 +170,5 @@ Syntax:
                 default:
                     println("a != 10")
             end
+=======
+>>>>>>> parent of 38d555b... Outlined Macro syntax and usage... implemented unscoped functions v0.0.5

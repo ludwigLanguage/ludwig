@@ -1,6 +1,0 @@
-Blocks:
-    { ... }    || Scoped
-    do ... end || Unscoped
-
-All expressions will be scoped if the { ... } is used and unscoped if do ... end
-is used. Except for structs

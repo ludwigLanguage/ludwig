@@ -9,7 +9,7 @@ import (
 
 var (
 	TOK = tokens.Token{"", 0, 0, "", tokens.EOL}
-	NIL = &values.Nil{TOK}
+	NIL = &values.List{[]values.Value{}, TOK}
 )
 
 /* You may notice that in the parser we mapped the tokens to

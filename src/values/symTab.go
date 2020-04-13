@@ -22,16 +22,10 @@ func (s *SymTab) GetVal(name string) Value {
 	return s.values[name]
 }
 
-func(s *SymTab) RmVal(name string) {
-	if s.GetVal(name) != nil {
-		delete(s.values, name)
-	}
-}
-
 func (s *SymTab) PrintAll() {
 	fmt.Println("--------")
 	for k, v := range s.values {
-		fmt.Println(k, ":", v.Stringify())
+		fmt.Println(k, v.Stringify())
 	}
 }
 
