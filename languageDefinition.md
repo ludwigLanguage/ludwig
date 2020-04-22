@@ -89,6 +89,10 @@ arguments list<br/>
     stdout and stderr values from that command as strings
 6) `import(<string>)`
     Returns an object produced from the given file.
+7) `println(<string>)` 
+8) `print(<string>)`
+9) `read(<string>, <string>)`
+    prints first string and reads until second string is seen
 
 
 ## Compound Expression:
