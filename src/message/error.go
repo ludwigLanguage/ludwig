@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	shouldExit bool = true
+	ShouldExit bool = true
 
 	stderr = log.New(os.Stderr, "", 0)
 )
@@ -18,7 +18,7 @@ func Error(f, n, m string, ln, cn int) {
 	msg := f + " (" + strconv.Itoa(ln) + ":" + strconv.Itoa(cn) + ") -- " + n + "Error: " + m
 	stderr.Println(msg)
 
-	if shouldExit {
+	if ShouldExit {
 		os.Exit(2)
 	}
 }

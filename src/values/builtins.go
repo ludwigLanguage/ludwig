@@ -5,6 +5,7 @@ import (
 	"ludwig/src/tokens"
 	"ludwig/src/ast"
 	"fmt"
+	"bufio"
 	"os"
 	"os/exec"
 	"strconv"
@@ -59,7 +60,27 @@ func println(v []Value, tok tokens.Token) Value {
 	return print(values, tok)
 }
 ///////////////////////////////////
+func read(v []Value, tok tokens.Token) Value {
+	if len(v) != 2 {
+		message.RaiseError("Argument", "read() must have two arguments", tok)
+	}
 
+	if len(v[1].Stringify()) != 1 {
+		message.RaiseError("Argument", "read()'s second argument must be 1 character in length", tok)
+	}
+
+	print([]Value {v[0]}, tok)
+
+	reader := bufio.NewReader(os.Stdin)
+	text, err := reader.ReadString(v[1].Stringify()[0])
+
+	if err != nil {
+		message.RaiseError("Argument", "failed to read input", tok)
+	}
+
+	return &String {text, tok}
+}
+//////////////////////////////////
 func typeOf(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
 		message.RaiseError("Argument", "typeOf() Must have exactly one argument", tok)
@@ -186,6 +207,7 @@ func osExit(v []Value, tok tokens.Token) Value {
 var BuiltinsMap = map[string]Value { 
 	"print":   &Builtin{print},
 	"println": &Builtin{println},
+	"read":    &Builtin{read},
 	"typeOf":  &Builtin{typeOf},
 	"str":     &Builtin{str},
 	"num":     &Builtin{num},

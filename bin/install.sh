@@ -10,4 +10,4 @@ sudo mv ./src /usr/bin/ludwig
 echo "Compiled:"
 find . -name '*.go' | xargs wc -l
 
-cp -r ../lib ~/.kgo
+cp -r ../lib ~/.ludwig

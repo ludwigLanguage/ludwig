@@ -6,6 +6,7 @@ import (
 	"ludwig/src/parser"
 	"ludwig/src/values"
 	"ludwig/src/evaluator"
+	"ludwig/src/message"
 
 	"fmt"
 	"bufio"
@@ -19,6 +20,8 @@ const (
 func StartRepl() {
 	reader := bufio.NewReader(os.Stdin)
 	consts := values.NewSymTab()
+
+	message.ShouldExit = false
 
 	for {
 		fmt.Print(PROMPT)

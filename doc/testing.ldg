@@ -1,0 +1,10 @@
+
+
+mkGreeter = func(greeter) {
+	func(name) { println(greeter, name) }
+}
+
+sayHello = mkGreeter("Hello")
+name = read("Enter your name: ", "\n")
+
+sayHello(name)
