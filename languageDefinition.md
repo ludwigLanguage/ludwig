@@ -8,7 +8,7 @@
 ```
 
 ## Primitive Data Types:
-### Primitive data types include booleans, numbers, and strings. All basic opperators can be used with these types.
+Primitive data types include booleans, numbers, and strings. All basic opperators can be used with these types.
 
 Boolean:
 ```
@@ -27,7 +27,7 @@ Examples: "Hello, World"; 'Hello, World'
 ```
 
 ## Lists:
-### Lists are an array of values that can be accesed using standard slice syntax like you might see in python or go.
+Lists are an array of values that can be accesed using standard slice syntax like you might see in python or go.
 ```
 [<item>, <item>...]
 Examples: [1, 2, 3]; [1, 1, 2, 3, 5, 8, 13]
@@ -37,7 +37,7 @@ Examples: [1, 2, 3]; [1, 1, 2, 3, 5, 8, 13]
 ```
 
 ## Declarations:
-### Declarations are a way to assign an identifier to a value
+Declarations are a way to assign an identifier to a value
 ```
 <identifier> = <expression>
 Examples: pi = 3.14
@@ -45,7 +45,7 @@ Examples: pi = 3.14
 ```
 
 ## Functions:
-### Function do not contain their identifier in there intial declaration. One must use a declaration, like the ones displayed in the previous section, to name functions
+Function do not contain their identifier in there intial declaration. One must use a declaration, like the ones displayed in the previous section, to name functions
 Function expression:
 ```
     func (<identifier>, <identifier>) <expr>`

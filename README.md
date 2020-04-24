@@ -7,6 +7,9 @@ Dependacies: In order to install this program at this point, you must have the c
 
 Linux & MacOs
 ```
+$ mkdir ~/go
+$ cd go
+$ git clone https://github.com/ludwigLanguage/ludwig.git
 $ cd ./ludwig/bin
 $ bash ./install.sh
 ```
@@ -22,7 +25,16 @@ println("Hello, World!")
 ```
 A more advanced version of a greeter program might run as such:
 ```
-//TODO
+mkGreeting = func(greet) {
+	func(name) {
+		print(greet + ", " + name) #Newline given at the end of read() call
+	}
+}
+
+sayHello = mkGreeting("Hello")
+name = read("Enter your name: ", "\n")
+sayHello(name)
+
 ```
 
 ## License
