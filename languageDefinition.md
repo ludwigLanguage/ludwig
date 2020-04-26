@@ -124,13 +124,12 @@ while <expr> <expr>
 Example:
 ```
 i = 0
-listOfNumsUnder10 =
+listOfNumsUnder11 =
     while i < 10 {
-        i
         i = i + 1 
     }
 
-println(listOfNumsUnder10) ##[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+println(listOfNumsUnder10) ##[1, 2, 3, 4, 5, 6, 7, 8, 10]
 ```
 
 ## For Loops:
