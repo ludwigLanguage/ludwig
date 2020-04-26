@@ -1,10 +1,17 @@
+i = 0
+out =
+    while i < 10 {
+        i = i + 1
+    }
 
+println(out)
 
-mkGreeter = func(greeter) {
-	func(name) { println(greeter, name) }
-}
+out =
+    for j, i in out {
+        a = 100
+        [j, i]
+    }
 
-sayHello = mkGreeter("Hello")
-name = read("Enter your name: ", "\n")
+println(out)
 
-sayHello(name)
+println("help\n someother\t thing")

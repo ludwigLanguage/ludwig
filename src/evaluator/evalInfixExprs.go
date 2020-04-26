@@ -11,14 +11,11 @@ func evalInfix(n *ast.InfixExpr, consts *values.SymTab) values.Value {
 
 	if n.Op == "=" {
 		return evalAssignment(n, consts)
+	} else if n.Op == "." {
+		return evalObjInfix(n, consts)
 	}
-
 
 	leftVal := EvalExpr(n.Left, consts)
-	if leftVal.Type() == values.OBJ {
-		return evalObjInfix(leftVal, n.Right, n.Op)
-	}
-
 
 	rightVal := EvalExpr(n.Right, consts)
 	if leftVal.Type() == values.NIL || rightVal.Type() == values.NIL {
@@ -31,7 +28,6 @@ func evalInfix(n *ast.InfixExpr, consts *values.SymTab) values.Value {
 			message.RaiseError("Type", "Cannot evaluate an infix expression for these types", n.GetTok())
 		}
 	}
-	
 
 	switch leftVal.Type() {
 	case values.NUM:
@@ -151,13 +147,12 @@ func evalListInfix(l, r values.Value, op string) values.Value {
 	return NIL
 }
 
-func evalObjInfix(l values.Value, rightAst ast.Node, op string) values.Value {
-	switch op {
-	case ".":
-		return EvalExpr(rightAst, l.(*values.Object).Consts)
-	default:
-		message.RaiseError("Operator", "Cannot evaluate an abject with this operator", l.GetTok())
+func evalObjInfix(n *ast.InfixExpr, consts *values.SymTab) values.Value {
+	obj := EvalExpr(n.Left, consts)
+
+	if obj.Type() != values.OBJ {
+		message.RaiseError("Type", "Expected and object on the left side of '.'", n.GetTok())
 	}
 
-	return NIL 
+	return EvalExpr(n.Right, obj.(*values.Object).Consts)
 }

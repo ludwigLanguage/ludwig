@@ -14,7 +14,7 @@ TODO:
 
 
 
-print = func(args)... {
+prinf = func(args)... {
    (func(iter){
       if iter != len(args) {
          system(true, "prinf", "-n", args[iter] + " ")
@@ -23,7 +23,7 @@ print = func(args)... {
    })(0)
 }
 
-println = func(args)... {
+printfln = func(args)... {
     (func(iter) {
         if iter != len(args) {
             system(true, "printf", "-n", args[iter] + " ")

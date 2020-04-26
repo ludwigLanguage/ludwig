@@ -25,7 +25,7 @@ func (p *Parser) parseBlock() ast.Node {
 
 	for p.lxr.CurTok.Value != closer {
 		if p.lxr.CurTok.Alias == tokens.EOF {
-			p.raiseError("Syntax", "Expected '" + closer + "' before EOF")
+			p.raiseError("Syntax", "Expected '"+closer+"' before EOF")
 		}
 		body = append(body, p.parseExpr(0))
 		p.skipWhitespace()
@@ -34,6 +34,7 @@ func (p *Parser) parseBlock() ast.Node {
 
 	return &ast.Block{body, isScoped, tok}
 }
+
 // Syntax: if <expr> <expr> OR if <expr> <expr> else <expr>
 func (p *Parser) parseIfEl() ast.Node {
 	tok := p.lxr.CurTok
@@ -63,7 +64,7 @@ func (p *Parser) parseIfEl() ast.Node {
  * we are not parsing 'import' as a built in function because
  * it is impossible to execute all the code necessary to evaluate
  * imported file from 'builtins.go' in the evaluator without
- * creating circular package dependancies 
+ * creating circular package dependancies
  */
 func (p *Parser) parseImport() ast.Node {
 	tok := p.lxr.CurTok
@@ -82,4 +83,57 @@ func (p *Parser) parseImport() ast.Node {
 	p.lxr.MoveUp()
 
 	return &ast.Import{filename, tok}
+}
+
+//Syntax: for <ident>, <ident> in <expr> <expr>
+func (p *Parser) parseForLoop() ast.Node {
+	tok := p.lxr.CurTok
+	p.lxr.MoveUp()
+
+	if p.lxr.CurTok.Alias != tokens.IDENT {
+		p.raiseError("Syntax", "Expected an identifier, got '"+p.lxr.CurTok.Value+"'")
+	}
+	indexNumIdent := p.parseExpr(0).(*ast.Identifier)
+
+	if p.lxr.CurTok.Alias != tokens.COMMA {
+		p.raiseError("Syntax", "Expected ',' got '"+p.lxr.CurTok.Value+"'")
+	}
+	p.lxr.MoveUp()
+
+	if p.lxr.CurTok.Alias != tokens.IDENT {
+		p.raiseError("Syntax", "Expected an identifier, got '"+p.lxr.CurTok.Value+"'")
+	}
+	indexIdent := p.parseExpr(0).(*ast.Identifier)
+
+	if p.lxr.CurTok.Alias != tokens.IN {
+		p.raiseError("Syntax", "Expected 'in' got '"+p.lxr.CurTok.Value+"'")
+	}
+	p.lxr.MoveUp()
+
+	list := p.parseExpr(0)
+	doExpr := p.parseExpr(0)
+
+	isScoped := false
+	if doExpr.Type() == ast.BLOCK {
+		isScoped = doExpr.(*ast.Block).IsScoped
+	}
+
+	return &ast.For{indexNumIdent, indexIdent, list, doExpr, isScoped, tok}
+}
+
+///////////////////////////////////////////////////////
+// Syntax: while <condition> <expr>
+func (p *Parser) parseWhileLoop() ast.Node {
+	tok := p.lxr.CurTok
+	p.lxr.MoveUp()
+
+	cond := p.parseExpr(0)
+	do := p.parseExpr(0)
+	isScoped := false
+
+	if do.Type() == ast.BLOCK {
+		isScoped = do.(*ast.Block).IsScoped
+	}
+
+	return &ast.While{cond, do, isScoped, tok}
 }

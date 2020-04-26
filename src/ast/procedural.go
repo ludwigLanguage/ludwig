@@ -1,15 +1,15 @@
 package ast
 
 import (
-	"ludwig/src/tokens"
 	"fmt"
+	"ludwig/src/tokens"
 	"strconv"
 )
 
 type Block struct {
-	Body []Node
+	Body     []Node
 	IsScoped bool
-	Tok  tokens.Token
+	Tok      tokens.Token
 }
 
 func (b *Block) PrintAll(tab string) {
@@ -81,7 +81,7 @@ func (i *IfEl) Type() string {
 
 type Import struct {
 	Filename Node
-	Tok tokens.Token
+	Tok      tokens.Token
 }
 
 func (i *Import) PrintAll(tab string) {
@@ -89,17 +89,88 @@ func (i *Import) PrintAll(tab string) {
 }
 
 func (i *Import) Stringify(tab string) string {
- 	rtrnVal := ""
+	rtrnVal := ""
 	rtrnVal += tab + "<import>\n"
-	rtrnVal += i.Filename.Stringify("\t"+tab)
+	rtrnVal += i.Filename.Stringify("\t" + tab)
 	rtrnVal += "<\\import>\n"
 	return rtrnVal
 }
 
 func (i *Import) GetTok() tokens.Token {
-	return i.Tok 
+	return i.Tok
 }
 
 func (i *Import) Type() string {
 	return IMPRT
+}
+
+///////////////////////////////////////////
+
+type For struct {
+	IndexNumIdent *Identifier
+	IndexIdent    *Identifier
+	List          Node
+	DoExpr        Node
+	IsScoped      bool //This is necessary, trust me
+	Tok           tokens.Token
+}
+
+func (f *For) Stringify(tab string) string {
+	rtrnVal := tab + "<for " + f.IndexNumIdent.Stringify("")
+	rtrnVal += ", "
+
+	rtrnVal += f.IndexIdent.Stringify("")
+	rtrnVal += ">\n"
+
+	rtrnVal += tab + "<list>\n"
+	rtrnVal += f.List.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\list>\n"
+
+	rtrnVal += tab + "<Do>\n"
+	rtrnVal += f.DoExpr.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\Do>\n"
+	return rtrnVal + tab + "<\\for>\n"
+}
+
+func (f *For) PrintAll(tab string) {
+	fmt.Print(f.Stringify(tab))
+}
+
+func (f *For) GetTok() tokens.Token {
+	return f.Tok
+}
+
+func (f *For) Type() string {
+	return FOR
+}
+
+// While ///////////////////////////////////
+type While struct {
+	Cond     Node
+	Body     Node
+	IsScoped bool
+	Tok      tokens.Token
+}
+
+func (w *While) Stringify(tab string) string {
+	rtrnVal := tab + "<while>\n"
+	rtrnVal += tab + "<conditional>\n"
+	rtrnVal += w.Cond.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\conditional>\n"
+	rtrnVal += tab + "<body>\n"
+	rtrnVal += w.Body.Stringify(tab + "\t")
+	rtrnVal += tab + "<\\body>\n"
+	return rtrnVal
+}
+
+func (w *While) PrintAll(tab string) {
+	fmt.Print(w.Stringify(tab))
+}
+
+func (w *While) GetTok() tokens.Token {
+	return w.Tok
+}
+
+func (w *While) Type() string {
+	return WHILE
 }

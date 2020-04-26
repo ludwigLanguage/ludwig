@@ -11,7 +11,7 @@ import (
 	"ludwig/src/tokens"
 )
 
-/* This map associates various operators with the 
+/* This map associates various operators with the
  * proper precedence. The lower the number, the lower the
  * operator will be placed in the tree
  */
@@ -21,7 +21,7 @@ var precedence = map[byte]int{
 	tokens.OP3:    5,
 	tokens.OP4:    2,
 	tokens.LPAREN: 7,
-	tokens.LBRACK: 7, 
+	tokens.LBRACK: 7,
 	tokens.DOT:    8,
 	tokens.OP5:    1,
 }
@@ -51,13 +51,16 @@ func New(lexer *lexer.Lexer) *Parser {
 		tokens.LBRACK: p.parseList,
 		tokens.POP:    p.parsePrefix,
 		tokens.OP1:    p.parsePrefix,
-		tokens.DO: 	   p.parseBlock,
+		tokens.DO:     p.parseBlock,
 		tokens.NIL:    p.parseNil,
 		tokens.LCURL:  p.parseBlock,
+		tokens.LPAREN: p.parseLParen,
 		tokens.IF:     p.parseIfEl,
 		tokens.FN:     p.parseFunction,
 		tokens.STRUCT: p.parseStruct,
 		tokens.IMPORT: p.parseImport,
+		tokens.FOR:    p.parseForLoop,
+		tokens.WHILE:  p.parseWhileLoop,
 	}
 
 	p.infixParseFns = map[byte]infixFn{
@@ -104,6 +107,18 @@ func (p *Parser) parseExpr(prec int) ast.Node {
 	}
 
 	return leftExpr
+}
+
+func (p *Parser) parseLParen() ast.Node {
+	p.lxr.MoveUp()
+	expr := p.parseExpr(0)
+
+	if p.lxr.CurTok.Alias != tokens.RPAREN {
+		p.raiseError("Syntax", "Expected ')' got '"+p.lxr.CurTok.Value+"'")
+	}
+	p.lxr.MoveUp()
+
+	return expr
 }
 
 func (p *Parser) notDoneParsingExpr(prec int) bool {

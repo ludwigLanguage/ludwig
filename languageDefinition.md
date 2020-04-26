@@ -1,6 +1,6 @@
 # Ludwig Language Description
 ## Expressions:
-### Expressions are any complete statement in ludwig followed by a semicolon or a newline
+Expressions are any complete statement in ludwig followed by a semicolon or a newline
 ```
 <expr>; <expr>;...
 <expr>
@@ -25,6 +25,10 @@ Strings:
 "<text>" OR '<text>'
 Examples: "Hello, World"; 'Hello, World'
 ```
+Empty Value:
+```
+nil
+```
 
 ## Lists:
 Lists are an array of values that can be accesed using standard slice syntax like you might see in python or go.
@@ -35,14 +39,114 @@ Examples: [1, 2, 3]; [1, 1, 2, 3, 5, 8, 13]
 <list>[<number>] #Returns value
 [1, 2, 3][0]     #Returns the number one
 ```
+### Notes:
+Slicing from one index to another (i.e. `somelist[1:3]`) is not supported as a built in feature. Instead, one should import the "list" library, and use its `slice()` function.
+
+Example:
+```
+list_lib = import("list")
+
+someList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+someSlice = list_lib.slice(someList, 1, 3)
+println(someSlice) ##Prints out [2, 3, 4]
+```
 
 ## Declarations:
 Declarations are a way to assign an identifier to a value
 ```
 <identifier> = <expression>
-Examples: pi = 3.14
-         name = "John"
 ```
+Examples: 
+```
+pi = 3.14
+name = "John"
+```
+## Block Expression:
+### Note:
+The last expression evaluated in the block will become the return value of the block
+### Scoped Compound Expression:
+```
+{ 
+    <expr> 
+    <expr> 
+}
+```
+Example:
+```
+c = {
+    a = 10
+    b = 3
+    a + b
+}
+
+println(c) #prints 13
+```
+Note: Any variables created will NOT be available outside the block expression
+
+### Un-scoped Block Expression:
+```
+do <expr> <expr> end
+```
+Example:
+```
+do
+    a = 10
+    b = 2
+    a + b
+end
+```
+Note: Any variables created will be available outside the block expression
+
+
+## If - Else Expressions:
+The standard control-flow feature. Except the return a value!!!!
+```
+if <expr> <expr> else <expr>
+```
+Example:
+```
+someValue = 10
+
+division_statement =
+    if someValue == (100/10)
+        "Division Works!"
+    else
+        "Division Does Not Work :("
+
+println(division_statement) ##Prints out 'Division Works!'
+```
+
+## While Loops:
+Another standard control flow features, except it returns a list of the values evaluated
+```
+while <expr> <expr>
+```
+Example:
+```
+i = 0
+listOfNumsUnder10 =
+    while i < 10 {
+        i
+        i = i + 1 
+    }
+
+println(listOfNumsUnder10) ##[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+## For Loops:
+For looping through lists, this feature also returns a list containing the values evaluated.
+```
+for <ident>, <ident> in <list> <expr>
+```
+Example:
+```
+list_of_outputs =
+    for location, iter in numbers {
+        println(iter, "has location:", location, "in the list")
+    }
+```
+### Notes:
+The first identifier will be assigned the current index in the list that we are looping over. The second identifier will be assigned the value of that index in the list
 
 ## Functions:
 Function do not contain their identifier in there intial declaration. One must use a declaration, like the ones displayed in the previous section, to name functions
@@ -72,7 +176,7 @@ foreverPrint("Hello, World")
 ### Notes:
 1) A function returns the value of the expression immediately following the
 arguments list<br/>
-2) Every function will have the __recurse()__ function, which can be used for tail recursion
+2) Every function will have the __recurse()__ function, which can be used for tail recursion (see example).
 
 ## Built In Functions
 1) `typeOf(<expr>)`              
@@ -93,39 +197,6 @@ arguments list<br/>
 8) `print(<string>)`
 9) `read(<string>, <string>)`
     prints first string and reads until second string is seen
-
-
-## Compound Expression:
-### Scoped Compound Expression:
-```
-{ 
-    <expr> 
-    <expr> 
-}
-```
-Example:
-```
-{
-    a = 10
-    b = 3
-    a + b
-}
-```
-Note: Any variables created will NOT be available outside the compound expression
-
-### Un-scoped Compound Expression:
-```
-do <expr> <expr> end
-```
-Example:
-```
-do
-    a = 10
-    b = 2
-    a + b
-end
-```
-Note: Any variables created will be available outside the compound expression
 
 ## Structs:
 ```

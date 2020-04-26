@@ -81,7 +81,7 @@ func (l *Lexer) buildStr() string {
 
 	str := ""
 
-	for l.src.CurChar != quote  && l.src.CurChar != EOF {
+	for l.src.CurChar != quote && l.src.CurChar != EOF {
 
 		if l.src.CurChar == '\\' {
 			str += l.processEscapeChars()
@@ -103,14 +103,32 @@ func (l *Lexer) buildStr() string {
 
 func (l *Lexer) processEscapeChars() string {
 	l.src.MoveUp() //Move over '\'
-	if l.src.CurChar == 'n' {
+
+	switch l.src.CurChar {
+	case 'a':
+		return "\a"
+	case 'b':
+		return "\b"
+	case 'f':
+		return "\f"
+	case 'r':
+		return "\r"
+	case 'v':
+		return "\v"
+	case 'n':
 		return "\n"
-	} else if l.src.CurChar == 't' {
+	case 't':
 		return "\t"
-	} else if l.src.CurChar == '\\' {
+	case '\\':
 		return "\\"
+	case '\'':
+		return "'"
+	case '"':
+		return "\""
+	default:
+		message.Error(l.src.Filename, "Syntax", "Invalid escape char", l.src.LineNo, l.src.ColumnNo)
 	}
-	message.Error(l.src.Filename, "Syntax", "Invalid escape char", l.src.LineNo, l.src.ColumnNo)
+
 	return ""
 }
 

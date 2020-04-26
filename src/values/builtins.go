@@ -1,11 +1,11 @@
 package values
 
 import (
+	"bufio"
+	"fmt"
+	"ludwig/src/ast"
 	"ludwig/src/message"
 	"ludwig/src/tokens"
-	"ludwig/src/ast"
-	"fmt"
-	"bufio"
 	"os"
 	"os/exec"
 	"strconv"
@@ -30,7 +30,7 @@ func (b *Builtin) Type() string {
 }
 
 func (b *Builtin) ConvertToAst() ast.Node {
-	return &ast.Nil {tokens.Token{"ludwig/src/evaluator", 0, 0, "", tokens.RBRACK}}
+	return &ast.Nil{tokens.Token{"ludwig/src/evaluator", 0, 0, "", tokens.RBRACK}}
 }
 
 ////////////////////////////////////////////
@@ -38,27 +38,27 @@ func (b *Builtin) ConvertToAst() ast.Node {
 func print(v []Value, tok tokens.Token) Value {
 	if !(len(v) >= 1) {
 		message.RaiseError("Argument", "Must have at least one argument to 'print'", tok)
-	} 
+	}
 
 	var rtrn string
 	for j, i := range v {
 		rtrn += i.Stringify()
-		fmt.Print(i.Stringify())
 
 		if j != len(v)-1 {
 			rtrn += " "
-			fmt.Print(" ")
 		}
 	}
 
-	return &String {rtrn, tok}
+	fmt.Print(rtrn)
+	return &String{rtrn, tok}
 }
 
 ////////////////////////////////////
 func println(v []Value, tok tokens.Token) Value {
-	values := append(v, &String {"\n", tok})
+	values := append(v, &String{"\n", tok})
 	return print(values, tok)
 }
+
 ///////////////////////////////////
 func read(v []Value, tok tokens.Token) Value {
 	if len(v) != 2 {
@@ -69,7 +69,7 @@ func read(v []Value, tok tokens.Token) Value {
 		message.RaiseError("Argument", "read()'s second argument must be 1 character in length", tok)
 	}
 
-	print([]Value {v[0]}, tok)
+	print([]Value{v[0]}, tok)
 
 	reader := bufio.NewReader(os.Stdin)
 	text, err := reader.ReadString(v[1].Stringify()[0])
@@ -78,8 +78,9 @@ func read(v []Value, tok tokens.Token) Value {
 		message.RaiseError("Argument", "failed to read input", tok)
 	}
 
-	return &String {text, tok}
+	return &String{text, tok}
 }
+
 //////////////////////////////////
 func typeOf(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
@@ -132,7 +133,7 @@ func length(v []Value, tok tokens.Token) Value {
 		message.RaiseError("Type", "Expected list or string on 'len' call", val.GetTok())
 	}
 
-	return &Nil {tok}
+	return &Nil{tok}
 }
 
 /////////////////////////////////////////////////
@@ -140,9 +141,8 @@ func osCall(v []Value, tok tokens.Token) Value {
 	if len(v) < 2 {
 		message.RaiseError("Argument", "'system' must have two arguments", tok)
 	}
-	
-	typeOfArg1 := fmt.Sprintf("%T", v[0])
-	if typeOfArg1 != "*values.Boolean" {
+
+	if v[0].Type() != ast.BOOL {
 		message.RaiseError("Type", "First argument of 'system' must be a boolean", v[0].GetTok())
 	}
 	shouldDisplayOutput := v[0].(*Boolean).Value
@@ -150,8 +150,7 @@ func osCall(v []Value, tok tokens.Token) Value {
 	var commandName string
 	var commandArgs = []string{}
 	for j, i := range v[1:] {
-		typeOfArg := fmt.Sprintf("%T", i)
-		if typeOfArg != "*values.String" {
+		if i.Type() != STR {
 			message.RaiseError("Type", "Expected argument type 'String'", v[0].GetTok())
 		}
 
@@ -175,14 +174,14 @@ func osCall(v []Value, tok tokens.Token) Value {
 	}
 
 	objSymTab := NewSymTab()
-	objSymTab.SetVal("output", &String { out, v[0].GetTok() })
-	objSymTab.SetVal("error", &String { err, v[0].GetTok() })
+	objSymTab.SetVal("output", &String{out, v[0].GetTok()})
+	objSymTab.SetVal("error", &String{err, v[0].GetTok()})
 
 	if shouldDisplayOutput {
 		fmt.Print(out, err)
 	}
 
-	return &Object {objSymTab, v[0].GetTok()}
+	return &Object{objSymTab, v[0].GetTok()}
 }
 
 /////////////////////////////////////////////////
@@ -191,7 +190,7 @@ func osExit(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
 		message.RaiseError("Argument", "'exit' must have exactly one argument", tok)
 	}
-	
+
 	if v[0].Type() != "Number" {
 		message.RaiseError("Type", "First argument of 'exit' must be a number", v[0].GetTok())
 	}
@@ -204,7 +203,7 @@ func osExit(v []Value, tok tokens.Token) Value {
 ///////////////////////////////////////////////
 
 ///////////////////////////////////////////////
-var BuiltinsMap = map[string]Value { 
+var BuiltinsMap = map[string]Value{
 	"print":   &Builtin{print},
 	"println": &Builtin{println},
 	"read":    &Builtin{read},
@@ -213,5 +212,5 @@ var BuiltinsMap = map[string]Value {
 	"num":     &Builtin{num},
 	"len":     &Builtin{length},
 	"system":  &Builtin{osCall},
-	"exit":	   &Builtin{osExit},
+	"exit":    &Builtin{osExit},
 }

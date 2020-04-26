@@ -39,4 +39,7 @@ const (
 	IMPORT
 	DO
 	END
+	FOR
+	IN
+	WHILE
 )

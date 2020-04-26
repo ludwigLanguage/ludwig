@@ -3,8 +3,6 @@ package parser
 import (
 	"ludwig/src/ast"
 	"ludwig/src/tokens"
-
-	"fmt"
 )
 
 //Syntax: func(<args>) <expr>
@@ -24,7 +22,7 @@ func (p *Parser) parseFunction() ast.Node {
 	}
 
 	for _, i := range args {
-		if fmt.Sprintf("%T", i) != "*ast.Identifier" {
+		if i.Type() != ast.IDENT {
 			p.raiseError("Syntax", "Arguments must be identifiers")
 		}
 	}
@@ -39,7 +37,7 @@ func (p *Parser) parseFunction() ast.Node {
 	}
 	p.lxr.MoveUp()
 
-	isVariadic := false 
+	isVariadic := false
 	if p.lxr.CurTok.Alias == tokens.DOT {
 		p.lxr.MoveUp()
 		if p.lxr.CurTok.Alias != tokens.DOT {
@@ -63,7 +61,7 @@ func (p *Parser) parseFunction() ast.Node {
 }
 
 /////////////////////////////////////////////////
-//Syntax: <function>(<arguments>) 
+//Syntax: <function>(<arguments>)
 func (p *Parser) parseCall(callVal ast.Node) ast.Node {
 	tok := p.lxr.CurTok
 	p.lxr.MoveUp()

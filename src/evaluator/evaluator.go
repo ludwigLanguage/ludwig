@@ -13,9 +13,9 @@ var (
 )
 
 /* You may notice that in the parser we mapped the tokens to
- * their proper parsing functions. We did not use a similar 
+ * their proper parsing functions. We did not use a similar
  * tactic here because the 'n := n.(type)' statement is only
- * possible in a 'switch' statement. This allows us to pass it 
+ * possible in a 'switch' statement. This allows us to pass it
  * into the function as the proper type, and not the generic
  * 'ast.Node' type.
  */
@@ -51,6 +51,10 @@ func EvalExpr(n ast.Node, consts *values.SymTab) values.Value {
 		return evalStruct(n, consts)
 	case *ast.Import:
 		return evalImport(n, consts)
+	case *ast.For:
+		return evalForLoop(n, consts)
+	case *ast.While:
+		return evalWhileLoop(n, consts)
 	default:
 		message.RaiseError("Eval", "Cannot evaluate this expression", n.GetTok())
 	}

@@ -1,11 +1,12 @@
 /* This package creates a stream of single character strings out
- * of the contents of a given file name. 
- */ 
+ * of the contents of a given file name.
+ */
 package source
 
 import (
-	"ludwig/src/message"
 	"io/ioutil"
+	"ludwig/src/message"
+	"os/user"
 	"path/filepath"
 )
 
@@ -27,16 +28,31 @@ type Source struct {
 	NextChar byte
 }
 
-func New(filename string) *Source {
+func New(inFile string) *Source {
 
 	var contents string
 
-	filename, _ = filepath.Abs(filename)
+	filename, _ := filepath.Abs(inFile)
 	bytes, err := ioutil.ReadFile(filename)
 	if err == nil {
 		contents = string(bytes)
 	} else {
-		message.Error(filename, "File", "Could not open this file", 0, 0)
+
+		usr, err := user.Current()
+		if err != nil {
+			message.Error(filename, "System", "Could not obtain user information", 0, 0)
+		}
+
+		sep := string(filepath.Separator)
+		filename = usr.HomeDir + sep + ".ludwig" + sep + inFile
+		bytes, err = ioutil.ReadFile(filename)
+
+		if err != nil {
+			message.Error(filename, "File", "Could not open this file", 0, 0)
+		}
+
+		contents = string(bytes)
+
 	}
 
 	return NewWithStr(contents, filename)
@@ -46,11 +62,11 @@ func New(filename string) *Source {
  * evaluator when evaluating the "$" prefix
  */
 func NewWithStr(contents string, filename string) *Source {
-	s := &Source {}
+	s := &Source{}
 	s.Filename = filename
 
 	/* The addition of the do...end block serves two purposes
-	 * 1) It allows the parser to process the file as a 
+	 * 1) It allows the parser to process the file as a
 	 *    block of expressions so that we dont have to
 	 *    create any speacial protocol to process a program
 	 * 2) If the file is empty, it creates two characters to

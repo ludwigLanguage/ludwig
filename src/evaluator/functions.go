@@ -5,8 +5,6 @@ import (
 	"ludwig/src/message"
 	"ludwig/src/values"
 	"strconv"
-	"fmt"
-
 )
 
 func evalFunc(n *ast.Function, consts *values.SymTab) values.Value {
@@ -17,7 +15,7 @@ func evalFunc(n *ast.Function, consts *values.SymTab) values.Value {
 }
 
 func evalCall(n *ast.Call, consts *values.SymTab) values.Value {
-
+	//consts.PrintAll()
 	calledVal := EvalExpr(n.CalledVal, consts)
 
 	switch calledVal := calledVal.(type) {
@@ -28,8 +26,8 @@ func evalCall(n *ast.Call, consts *values.SymTab) values.Value {
 	case *values.Struct:
 		return evalStructCall(calledVal, n, consts)
 	default:
-		Type := fmt.Sprintf("%T", calledVal)
-		message.RaiseError("Type", "Cannot call type '" + Type + "'", calledVal.GetTok())
+		Type := calledVal.Type()
+		message.RaiseError("Type", "Cannot call type '"+Type+"'", calledVal.GetTok())
 	}
 	return NIL
 }
@@ -51,7 +49,7 @@ func evalFnCall(fn *values.Function, call *ast.Call, consts *values.SymTab) valu
 
 	if !fn.IsVariadic {
 		for c, i := range fn.Args {
-			newFnC.SetVal(i.Value, EvalExpr(call.Args[c],  consts))
+			newFnC.SetVal(i.Value, EvalExpr(call.Args[c], consts))
 		}
 	} else {
 		for c, i := range fn.Args[:len(fn.Args)-1] {
@@ -75,7 +73,6 @@ func evalFnCall(fn *values.Function, call *ast.Call, consts *values.SymTab) valu
 	consts.AddValsFromExcept(newFnC, fn.Args) //Remove all values that are not explicitly created in function
 
 	return rtrnVal
-	return EvalExpr(fn.Expr, newFnC)
 }
 
 func evalBuiltinCall(builtin *values.Builtin, call *ast.Call, consts *values.SymTab) values.Value {
@@ -86,18 +83,3 @@ func evalBuiltinCall(builtin *values.Builtin, call *ast.Call, consts *values.Sym
 
 	return builtin.Fn(vals, call.GetTok())
 }
-
-func evalStructCall(strct *values.Struct, call *ast.Call, consts *values.SymTab) values.Value {
-
-	initFn := strct.Consts.GetVal("__init__")
-	if initFn != nil {
-		initCall := call
-		initCall.CalledVal = &ast.Identifier {"__init__", call.GetTok()} 
-		evalCall(initCall, strct.Consts)
-	}
-
-
-	return &values.Object {strct.Consts, strct.GetTok()}
-}
-
-

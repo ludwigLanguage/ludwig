@@ -50,6 +50,9 @@ var keywords = map[string]byte{
 	"func":   tokens.FN,
 	"struct": tokens.STRUCT,
 	"import": tokens.IMPORT,
-	"do"	: tokens.DO,
-	"end"	: tokens.END,
+	"do":     tokens.DO,
+	"end":    tokens.END,
+	"for":    tokens.FOR,
+	"in":     tokens.IN,
+	"while":  tokens.WHILE,
 }

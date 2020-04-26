@@ -1,9 +1,9 @@
 
 #Returns a slice out of a list from a start point
 #to an end point
-slice = func(list, start, end) {
+slice = func(list, start, stop) {
     loop = func(currIter, builtList) {
-        if (currIter - 1 == end) {
+        if (currIter - 1 == stop) {
             builtList
         } else {
             recurse(currIter + 1, builtList + [list[currIter]])
