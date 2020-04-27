@@ -53,6 +53,8 @@ println(someSlice) ##Prints out [2, 3, 4]
 
 ## Declarations:
 Declarations are a way to assign an identifier to a value
+### Note:
+Declarations will return the value the compute on the right side (see example)
 ```
 <identifier> = <expression>
 ```
@@ -60,6 +62,7 @@ Examples:
 ```
 pi = 3.14
 name = "John"
+x = y = 10 ## Both x and y will be assigned the value 10
 ```
 ## Block Expression:
 ### Note:
@@ -129,7 +132,7 @@ listOfNumsUnder11 =
         i = i + 1 
     }
 
-println(listOfNumsUnder10) ##[1, 2, 3, 4, 5, 6, 7, 8, 10]
+println(listOfNumsUnder11) ##[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
 ## For Loops:
