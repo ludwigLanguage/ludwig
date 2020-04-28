@@ -35,4 +35,5 @@ const (
 	FOR     = "<for>"
 	WHILE   = "<while>"
 	SLICE   = "<slice>"
+	T_IDENT = "<type_identifier>"
 )

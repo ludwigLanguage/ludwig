@@ -54,7 +54,11 @@ func (l *Lexer) MoveUp() {
 		return
 	}
 
-	if isLetter(l.src.CurChar) {
+	if l.src.CurChar == '_' {
+		type_ident := l.buildTypeIdent()
+		l.setTok(type_ident, tokens.TYPE_INDENT)
+
+	} else if isLetter(l.src.CurChar) {
 		id := l.buildIdent()
 
 		alias, ok = keywords[id]

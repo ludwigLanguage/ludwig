@@ -174,7 +174,7 @@ arguments list<br/>
 2) Every function will have the __recurse()__ function, which can be used for tail recursion (see example).
 
 ## Built In Functions
-1) `typeOf(<expr>)`              
+1) `type_of(<expr>)`              
     Returns the type of a given value
 2) `str(<expr>)`   
     Converts the given expression into a string
@@ -192,6 +192,19 @@ arguments list<br/>
 8) `print(<string>)`
 9) `read(<string>, <string>)`
     prints first string and reads until second string is seen
+10) `type_check(<type_id>, <value>)`
+    panics if the type of the value does not match the type id.
+    The available type ids include:
+    Numbers:    "_num"
+	Strings:    "_str"
+	Booleans:   "_bool"
+	Nil:        "_nil"
+	Lists:      "_list"
+	Functions:  "_func"
+	Structures: "_struct"
+	Objects:    "_object"
+	Builtins:   "_builtin"
+	Type IDs:   "_type"
 
 ## Structs:
 ```

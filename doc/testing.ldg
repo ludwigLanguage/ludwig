@@ -14,4 +14,6 @@ out =
 
 println(out[1:4])
 
-panic("Random", "HELP")
+num = 10
+type_check(_num, num)
+type_check(_num, out)

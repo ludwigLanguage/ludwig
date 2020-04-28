@@ -2,7 +2,6 @@ package values
 
 import (
 	"ludwig/src/tokens"
-	"ludwig/src/ast"
 	"strconv"
 )
 
@@ -21,10 +20,6 @@ func (s *String) Type() string {
 
 func (s *String) GetTok() tokens.Token {
 	return s.Tok
-}
-
-func (s *String) ConvertToAst() ast.Node {
-	return &ast.String {s.Value, s.Tok}
 }
 
 /////////////////////////////////////////////////
@@ -46,9 +41,6 @@ func (n *Number) GetTok() tokens.Token {
 	return n.Tok
 }
 
-func (n *Number) ConvertToAst() ast.Node {
-	return &ast.Number {n.Value, n.Tok}
-}
 /////////////////////////////////////////////////
 
 type Boolean struct {
@@ -68,10 +60,6 @@ func (b *Boolean) GetTok() tokens.Token {
 	return b.Tok
 }
 
-func (b *Boolean) ConvertToAst() ast.Node {
-	return &ast.Boolean {b.Value, b.Tok}
-}
-
 /////////////////////////////////////////
 
 type Nil struct {
@@ -89,8 +77,3 @@ func (n *Nil) Type() string {
 func (n *Nil) GetTok() tokens.Token {
 	return n.Tok
 }
-
-func (n *Nil) ConvertToAst() ast.Node {
-	return &ast.Nil {n.Tok}
-}
-

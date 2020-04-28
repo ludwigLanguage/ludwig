@@ -26,10 +26,6 @@ func (f *Function) GetTok() tokens.Token {
 	return f.Tok
 }
 
-func (f *Function) ConvertToAst() ast.Node {
-	return &ast.Function{f.Args, f.Expr, f.IsVariadic, f.Tok}
-}
-
 //////////////////////////////////////////////////
 
 type Struct struct {
@@ -50,10 +46,6 @@ func (s *Struct) GetTok() tokens.Token {
 	return s.Tok
 }
 
-func (s *Struct) ConvertToAst() ast.Node {
-	return &ast.Struct{s.Tok, s.Body}
-}
-
 ///////////////////////////////////////////
 
 type Object struct {
@@ -71,9 +63,4 @@ func (o *Object) Type() string {
 
 func (o *Object) GetTok() tokens.Token {
 	return o.Tok
-}
-
-//There is no coresponding object AST
-func (o *Object) ConvertToAst() ast.Node {
-	return &ast.Nil{o.Tok}
 }

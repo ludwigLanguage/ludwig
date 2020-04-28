@@ -42,4 +42,6 @@ const (
 	FOR
 	IN
 	WHILE
+
+	TYPE_INDENT
 )

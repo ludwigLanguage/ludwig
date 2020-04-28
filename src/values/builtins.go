@@ -29,10 +29,6 @@ func (b *Builtin) Type() string {
 	return BUILTIN
 }
 
-func (b *Builtin) ConvertToAst() ast.Node {
-	return &ast.Nil{tokens.Token{"ludwig/src/evaluator", 0, 0, "", tokens.RBRACK}}
-}
-
 ////////////////////////////////////////////
 
 func print(v []Value, tok tokens.Token) Value {
@@ -84,9 +80,10 @@ func read(v []Value, tok tokens.Token) Value {
 //////////////////////////////////
 func typeOf(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "typeOf() Must have exactly one argument", tok)
+		message.RaiseError("Argument", "type_of() Must have exactly one argument", tok)
 	}
-	return &String{v[0].Type(), tok}
+	t := &TypeIdent{v[0].Type(), tok}
+	return t
 }
 
 /////////////////////////////////////////////////
@@ -211,16 +208,36 @@ func panic(v []Value, tok tokens.Token) Value {
 	return v[0]
 }
 
+////////////////////////////////////////////////
+
+func type_check(v []Value, tok tokens.Token) Value {
+	if len(v) != 2 {
+		message.RaiseError("Argument", "type_check must have 2 arguments", tok)
+	}
+
+	if v[0].Type() != TYPE_IDENT {
+		message.RaiseError("Type", "expected a type identifier as the first argument", tok)
+	}
+
+	expect := v[0].(*TypeIdent).Value
+	if expect != v[1].Type() {
+		message.RaiseError("Type", "Expected type '"+expect+"' got '"+v[1].Type()+"'", v[1].GetTok())
+	}
+
+	return &Nil{tok}
+}
+
 ///////////////////////////////////////////////
 var BuiltinsMap = map[string]Value{
-	"print":   &Builtin{print},
-	"println": &Builtin{println},
-	"read":    &Builtin{read},
-	"typeOf":  &Builtin{typeOf},
-	"str":     &Builtin{str},
-	"num":     &Builtin{num},
-	"len":     &Builtin{Length},
-	"system":  &Builtin{osCall},
-	"exit":    &Builtin{osExit},
-	"panic":   &Builtin{panic},
+	"print":      &Builtin{print},
+	"println":    &Builtin{println},
+	"read":       &Builtin{read},
+	"type_of":    &Builtin{typeOf},
+	"str":        &Builtin{str},
+	"num":        &Builtin{num},
+	"len":        &Builtin{Length},
+	"system":     &Builtin{osCall},
+	"exit":       &Builtin{osExit},
+	"panic":      &Builtin{panic},
+	"type_check": &Builtin{type_check},
 }

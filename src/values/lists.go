@@ -2,7 +2,6 @@ package values
 
 import (
 	"ludwig/src/tokens"
-	"ludwig/src/ast"
 )
 
 type List struct {
@@ -31,15 +30,6 @@ func (l *List) Type() string {
 
 func (l *List) GetTok() tokens.Token {
 	return l.Tok
-}
-
-func (l *List) ConvertToAst() ast.Node {
-	lst := []ast.Node {}
-	for _, i := range l.Values {
-		lst = append(lst, i.ConvertToAst())
-	}
-
-	return &ast.List { lst, l.Tok }
 }
 
 /////////////////////////////////////////////////
