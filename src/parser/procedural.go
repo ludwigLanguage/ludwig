@@ -12,26 +12,28 @@ import (
 func (p *Parser) parseBlock() ast.Node {
 
 	tok := p.lxr.CurTok
-	closer := "}"
+	closer := tokens.RCURL
 	if p.lxr.CurTok.Value == "do" {
-		closer = "end"
+		closer = tokens.END
 	}
+
 	isScoped := p.lxr.CurTok.Value == "{"
 
 	p.lxr.MoveUp()
+
 	p.skipWhitespace()
 
 	body := []ast.Node{}
 
-	for p.lxr.CurTok.Value != closer {
+	for p.lxr.CurTok.Alias != closer {
 		if p.lxr.CurTok.Alias == tokens.EOF {
-			p.raiseError("Syntax", "Expected '"+closer+"' before EOF")
+			p.raiseError("Syntax", "Expected block to close before EOF")
 		}
+
 		body = append(body, p.parseExpr(0))
 		p.skipWhitespace()
 	}
 	p.lxr.MoveUp()
-
 	return &ast.Block{body, isScoped, tok}
 }
 

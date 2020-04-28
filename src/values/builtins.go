@@ -210,9 +210,9 @@ func panic(v []Value, tok tokens.Token) Value {
 
 ////////////////////////////////////////////////
 
-func type_check(v []Value, tok tokens.Token) Value {
+func check_type(v []Value, tok tokens.Token) Value {
 	if len(v) != 2 {
-		message.RaiseError("Argument", "type_check must have 2 arguments", tok)
+		message.RaiseError("Argument", "check_type must have 2 arguments", tok)
 	}
 
 	if v[0].Type() != TYPE_IDENT {
@@ -239,5 +239,5 @@ var BuiltinsMap = map[string]Value{
 	"system":     &Builtin{osCall},
 	"exit":       &Builtin{osExit},
 	"panic":      &Builtin{panic},
-	"type_check": &Builtin{type_check},
+	"check_type": &Builtin{check_type},
 }

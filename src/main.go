@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-var version = "v0.1.2 -- Development"
+var version = "v0.1.3 -- Development"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -56,7 +56,7 @@ func printToks() {
 	lex := lexer.New(src)
 
 	for !lex.IsDone() {
-		fmt.Println(lex.CurTok)
+		fmt.Printf("%v -> %v\n", lex.CurTok.Alias, lex.CurTok)
 		lex.MoveUp()
 	}
 }

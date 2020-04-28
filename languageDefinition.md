@@ -192,7 +192,7 @@ arguments list<br/>
 8) `print(<string>)`
 9) `read(<string>, <string>)`
     prints first string and reads until second string is seen
-10) `type_check(<type_id>, <value>)`
+10) `check_type(<type_id>, <value>)`
     panics if the type of the value does not match the type id.
     The available type ids include:
     Numbers:    "_num"

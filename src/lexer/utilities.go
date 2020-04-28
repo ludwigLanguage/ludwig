@@ -46,7 +46,7 @@ func isLetter(ch byte) bool {
 }
 
 func isDigit(ch byte) bool {
-	return (ch >= '0' && ch <= '9') || ch == '-'
+	return (ch >= '0' && ch <= '9')
 }
 
 func isQuote(ch byte) bool {
@@ -130,13 +130,6 @@ func (l *Lexer) processEscapeChars() string {
 	}
 
 	return ""
-}
-
-func (l *Lexer) buildTypeIdent() string {
-	start := string(l.src.CurChar)
-	l.src.MoveUp()
-
-	return start + l.buildIdent()
 }
 
 func (l *Lexer) skipComments() {

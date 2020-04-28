@@ -55,4 +55,15 @@ var keywords = map[string]byte{
 	"for":    tokens.FOR,
 	"in":     tokens.IN,
 	"while":  tokens.WHILE,
+
+	"_num":     tokens.TYPE_INDENT,
+	"_str":     tokens.TYPE_INDENT,
+	"_bool":    tokens.TYPE_INDENT,
+	"_nil":     tokens.TYPE_INDENT,
+	"_list":    tokens.TYPE_INDENT,
+	"_func":    tokens.TYPE_INDENT,
+	"_struct":  tokens.TYPE_INDENT,
+	"_object":  tokens.TYPE_INDENT,
+	"_builtin": tokens.TYPE_INDENT,
+	"_type":    tokens.TYPE_INDENT,
 }

@@ -1,19 +1,13 @@
-i = 0
-out =
-    while i < 10 {
-        i = i + 1
-    }
+maps = import ("..\\lib\\maps")
 
-println(out)
+books = maps.Map()
+books.addEntry("To Kill A Mockingbird", "Harper Lee")
+println(books.getValueFor("To Kill A Mockingbird"), books.getKeyFor("Harper Lee"))
 
-out =
-    for j, i in out {
-        a = 100
-        [j, i]
-    }
+println(books.stringify())
+a = -19
+println(a)
 
-println(out[1:4])
-
-num = 10
-type_check(_num, num)
-type_check(_num, out)
+ages = maps.Typed_Map(_str, _num)
+ages.addEntry("Joe", 100)
+ages.addEntry(1, "Jim")
