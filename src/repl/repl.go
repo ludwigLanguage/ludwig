@@ -1,15 +1,14 @@
 package repl
 
 import (
-	"ludwig/src/source"
+	"ludwig/src/evaluator"
 	"ludwig/src/lexer"
 	"ludwig/src/parser"
+	"ludwig/src/source"
 	"ludwig/src/values"
-	"ludwig/src/evaluator"
-	"ludwig/src/message"
 
-	"fmt"
 	"bufio"
+	"fmt"
 	"os"
 )
 
@@ -20,8 +19,6 @@ const (
 func StartRepl() {
 	reader := bufio.NewReader(os.Stdin)
 	consts := values.NewSymTab()
-
-	message.ShouldExit = false
 
 	for {
 		fmt.Print(PROMPT)

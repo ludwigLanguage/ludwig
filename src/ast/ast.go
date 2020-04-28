@@ -34,4 +34,5 @@ const (
 	STRCT   = "<structure>"
 	FOR     = "<for>"
 	WHILE   = "<while>"
+	SLICE   = "<slice>"
 )

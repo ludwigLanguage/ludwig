@@ -11,6 +11,8 @@ import (
 	"os"
 )
 
+var version = "v0.1.2 -- Development"
+
 func main() {
 	if len(os.Args) < 2 {
 		printHelp()
@@ -32,6 +34,9 @@ func main() {
 
 func printHelp() {
 	msg := `
+Welcome to the Ludwid Programming Language
+Version Information: ` + version + `
+
     ludwig [option] | ludwig [option] [file]
     -h :: print this message and exit
     -l :: lex file, and print tokens

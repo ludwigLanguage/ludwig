@@ -119,7 +119,7 @@ func num(v []Value, tok tokens.Token) Value {
 
 /////////////////////////////////////////////////
 
-func length(v []Value, tok tokens.Token) Value {
+func Length(v []Value, tok tokens.Token) Value {
 	if len(v) != 1 {
 		message.RaiseError("Argument", "'len' must have one argument", tok)
 	}
@@ -202,6 +202,15 @@ func osExit(v []Value, tok tokens.Token) Value {
 
 ///////////////////////////////////////////////
 
+func panic(v []Value, tok tokens.Token) Value {
+	if len(v) != 2 {
+		message.RaiseError("Argument", "Panic must have 2 arguments", tok)
+	}
+
+	message.RaiseError(v[0].Stringify(), v[1].Stringify(), tok)
+	return v[0]
+}
+
 ///////////////////////////////////////////////
 var BuiltinsMap = map[string]Value{
 	"print":   &Builtin{print},
@@ -210,7 +219,8 @@ var BuiltinsMap = map[string]Value{
 	"typeOf":  &Builtin{typeOf},
 	"str":     &Builtin{str},
 	"num":     &Builtin{num},
-	"len":     &Builtin{length},
+	"len":     &Builtin{Length},
 	"system":  &Builtin{osCall},
 	"exit":    &Builtin{osExit},
+	"panic":   &Builtin{panic},
 }

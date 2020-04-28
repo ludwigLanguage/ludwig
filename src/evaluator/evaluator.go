@@ -55,6 +55,8 @@ func EvalExpr(n ast.Node, consts *values.SymTab) values.Value {
 		return evalForLoop(n, consts)
 	case *ast.While:
 		return evalWhileLoop(n, consts)
+	case *ast.Slice:
+		return evalSlice(n, consts)
 	default:
 		message.RaiseError("Eval", "Cannot evaluate this expression", n.GetTok())
 	}

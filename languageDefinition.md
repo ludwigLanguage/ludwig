@@ -39,16 +39,9 @@ Examples: [1, 2, 3]; [1, 1, 2, 3, 5, 8, 13]
 <list>[<number>] #Returns value
 [1, 2, 3][0]     #Returns the number one
 ```
-### Notes:
-Slicing from one index to another (i.e. `somelist[1:3]`) is not supported as a built in feature. Instead, one should import the "list" library, and use its `slice()` function.
-
-Example:
+Slicing:
 ```
-list_lib = import("list")
-
-someList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-someSlice = list_lib.slice(someList, 1, 3)
-println(someSlice) ##Prints out [2, 3, 4]
+<list>[<start>:<end>] OR <list>[<start>:] OR <list>[:<end>]
 ```
 
 ## Declarations:

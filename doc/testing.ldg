@@ -12,6 +12,6 @@ out =
         [j, i]
     }
 
-println(out)
+println(out[1:4])
 
-println("help\n someother\t thing")
+panic("Random", "HELP")
