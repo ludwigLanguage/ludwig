@@ -46,6 +46,8 @@ Slicing:
 
 ## Declarations:
 Declarations are a way to assign an identifier to a value
+### Note:
+Declarations will return the value the compute on the right side (see example)
 ```
 <identifier> = <expression>
 ```
@@ -53,6 +55,7 @@ Examples:
 ```
 pi = 3.14
 name = "John"
+x = y = 10 ## Both x and y will be assigned the value 10
 ```
 ## Block Expression:
 ### Note:
@@ -117,13 +120,12 @@ while <expr> <expr>
 Example:
 ```
 i = 0
-listOfNumsUnder10 =
+listOfNumsUnder11 =
     while i < 10 {
-        i
         i = i + 1 
     }
 
-println(listOfNumsUnder10) ##[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+println(listOfNumsUnder11) ##[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
 ## For Loops:
