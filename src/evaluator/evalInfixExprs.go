@@ -38,6 +38,8 @@ func evalInfix(n *ast.InfixExpr, consts *values.SymTab, log *message.Log) values
 		return evalStrInfix(leftVal, rightVal, n.Op, log)
 	case values.LIST:
 		return evalListInfix(leftVal, rightVal, n.Op, log)
+	case values.TYPE_IDENT:
+		return evalTypeInfix(leftVal, rightVal, n.Op, log)
 	default:
 		message.RuntimeErr("Type", "Cannot evaluate an infix expression for these types", n.GetTok(), log)
 	}
@@ -155,4 +157,21 @@ func evalObjInfix(n *ast.InfixExpr, consts *values.SymTab, log *message.Log) val
 	}
 
 	return EvalExpr(n.Right, obj.(*values.Object).Consts, log)
+}
+
+func evalTypeInfix(l, r values.Value, op string, log *message.Log) values.Value {
+	if l.Type() != r.Type() {
+		message.RuntimeErr("Type", "Expected type identifier on both sides of '"+op+"'", l.GetTok(), log)
+	}
+
+	switch op {
+	case "==":
+		return &values.Boolean{l.Stringify() == r.Stringify(), l.GetTok()}
+	case "!=":
+		return &values.Boolean{l.Stringify() != r.Stringify(), l.GetTok()}
+	default:
+		message.RuntimeErr("Type", "'"+op+"' is not defined for type identifiers", l.GetTok(), log)
+	}
+
+	return NIL
 }

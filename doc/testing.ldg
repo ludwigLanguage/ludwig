@@ -14,4 +14,4 @@ ages.addEntry("Jim", 22)
 println(ages.stringify())
 
 ages.rmEntry("Joe")
-println(ages.stringify(), ages.hasKey("Joe"), ages.hasKey("Jim"))
+println(.32)
