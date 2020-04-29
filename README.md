@@ -9,6 +9,8 @@ Linux & MacOs
 ```
 $ mkdir ~/go
 $ cd go
+$ mkdir src
+$ cd src
 $ git clone https://github.com/ludwigLanguage/ludwig.git
 $ cd ./ludwig/bin
 $ bash ./install.sh

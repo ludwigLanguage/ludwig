@@ -28,7 +28,7 @@ func RaiseError(n, m string, tok tokens.Token) {
 }
 
 func RuntimeErr(n, m string, tok tokens.Token, l *Log) {
-	stderr.Println("Traceback:")
+	stderr.Println("Calls Made:")
 	l.PrintStack()
 	RaiseError(n, m, tok)
 }
