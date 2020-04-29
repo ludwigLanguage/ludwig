@@ -2,6 +2,8 @@
 Ludwig Programming Language
 The ludwig programming language is a fun little project I started in 2018. The goal was to create and interpreter for a programming langauge in which everything is an expression.
 
+### Note: This implementation of Ludwig is still under heavy development. As a result, this interpreter may be buggy or hard to install. Note that at this point, there are very few contibutors to this project. Having fewer eyes on the project results in messier and more inconsistant code!
+
 ## Installation
 Dependacies: In order to install this program at this point, you must have the compiler for golang installed.
 
