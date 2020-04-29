@@ -3,6 +3,7 @@ package repl
 import (
 	"ludwig/src/evaluator"
 	"ludwig/src/lexer"
+	"ludwig/src/message"
 	"ludwig/src/parser"
 	"ludwig/src/source"
 	"ludwig/src/values"
@@ -29,6 +30,6 @@ func StartRepl() {
 		prs := parser.New(lex)
 		prs.ParseProgram()
 
-		evaluator.EvalExpr(prs.Tree, consts)
+		evaluator.EvalExpr(prs.Tree, consts, message.NewLog())
 	}
 }

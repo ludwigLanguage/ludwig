@@ -14,7 +14,7 @@ import (
 /////////////////////////////////////////////////
 
 type Builtin struct {
-	Fn func([]Value, tokens.Token) Value
+	Fn func([]Value, tokens.Token, *message.Log) Value
 }
 
 func (b *Builtin) GetTok() tokens.Token {
@@ -31,9 +31,9 @@ func (b *Builtin) Type() string {
 
 ////////////////////////////////////////////
 
-func print(v []Value, tok tokens.Token) Value {
+func print(v []Value, tok tokens.Token, l *message.Log) Value {
 	if !(len(v) >= 1) {
-		message.RaiseError("Argument", "Must have at least one argument to 'print'", tok)
+		message.RuntimeErr("Argument", "Must have at least one argument to 'print'", tok, l)
 	}
 
 	var rtrn string
@@ -50,37 +50,37 @@ func print(v []Value, tok tokens.Token) Value {
 }
 
 ////////////////////////////////////
-func println(v []Value, tok tokens.Token) Value {
+func println(v []Value, tok tokens.Token, l *message.Log) Value {
 	values := append(v, &String{"\n", tok})
-	return print(values, tok)
+	return print(values, tok, l)
 }
 
 ///////////////////////////////////
-func read(v []Value, tok tokens.Token) Value {
+func read(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) != 2 {
-		message.RaiseError("Argument", "read() must have two arguments", tok)
+		message.RuntimeErr("Argument", "read() must have two arguments", tok, l)
 	}
 
 	if len(v[1].Stringify()) != 1 {
-		message.RaiseError("Argument", "read()'s second argument must be 1 character in length", tok)
+		message.RuntimeErr("Argument", "read()'s second argument must be 1 character in length", tok, l)
 	}
 
-	print([]Value{v[0]}, tok)
+	print([]Value{v[0]}, tok, l)
 
 	reader := bufio.NewReader(os.Stdin)
 	text, err := reader.ReadString(v[1].Stringify()[0])
 
 	if err != nil {
-		message.RaiseError("Argument", "failed to read input", tok)
+		message.RuntimeErr("Argument", "failed to read input", tok, l)
 	}
 
 	return &String{text, tok}
 }
 
 //////////////////////////////////
-func typeOf(v []Value, tok tokens.Token) Value {
+func typeOf(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "type_of() Must have exactly one argument", tok)
+		message.RuntimeErr("Argument", "type_of() Must have exactly one argument", tok, l)
 	}
 	t := &TypeIdent{v[0].Type(), tok}
 	return t
@@ -88,9 +88,9 @@ func typeOf(v []Value, tok tokens.Token) Value {
 
 /////////////////////////////////////////////////
 
-func str(v []Value, tok tokens.Token) Value {
+func str(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "str() must have exactly one argument", tok)
+		message.RuntimeErr("Argument", "str() must have exactly one argument", tok, l)
 	}
 
 	return &String{v[0].Stringify(), tok}
@@ -98,17 +98,17 @@ func str(v []Value, tok tokens.Token) Value {
 
 /////////////////////////////////////////////////
 
-func num(v []Value, tok tokens.Token) Value {
+func num(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "num() must have exactly one argument", tok)
+		message.RuntimeErr("Argument", "num() must have exactly one argument", tok, l)
 	} else if v[0].Type() != STR {
-		message.RaiseError("Type", "num() must have a string as the argument", tok)
+		message.RuntimeErr("Type", "num() must have a string as the argument", tok, l)
 	}
 
 	flt, err := strconv.ParseFloat(v[0].(*String).Value, 64)
 
 	if err != nil {
-		message.RaiseError("Type", "Cannot convert this into a number", tok)
+		message.RuntimeErr("Type", "Cannot convert this into a number", tok, l)
 	}
 
 	return &Number{flt, tok}
@@ -116,9 +116,9 @@ func num(v []Value, tok tokens.Token) Value {
 
 /////////////////////////////////////////////////
 
-func Length(v []Value, tok tokens.Token) Value {
+func Length(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "'len' must have one argument", tok)
+		message.RuntimeErr("Argument", "'len' must have one argument", tok, l)
 	}
 
 	switch val := v[0].(type) {
@@ -127,20 +127,20 @@ func Length(v []Value, tok tokens.Token) Value {
 	case *List:
 		return &Number{float64(len(val.Values)), val.Tok}
 	default:
-		message.RaiseError("Type", "Expected list or string on 'len' call", val.GetTok())
+		message.RuntimeErr("Type", "Expected list or string on 'len' call", val.GetTok(), l)
 	}
 
 	return &Nil{tok}
 }
 
 /////////////////////////////////////////////////
-func osCall(v []Value, tok tokens.Token) Value {
+func osCall(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) < 2 {
-		message.RaiseError("Argument", "'system' must have two arguments", tok)
+		message.RuntimeErr("Argument", "'system' must have two arguments", tok, l)
 	}
 
 	if v[0].Type() != ast.BOOL {
-		message.RaiseError("Type", "First argument of 'system' must be a boolean", v[0].GetTok())
+		message.RuntimeErr("Type", "First argument of 'system' must be a boolean", v[0].GetTok(), l)
 	}
 	shouldDisplayOutput := v[0].(*Boolean).Value
 
@@ -148,7 +148,7 @@ func osCall(v []Value, tok tokens.Token) Value {
 	var commandArgs = []string{}
 	for j, i := range v[1:] {
 		if i.Type() != STR {
-			message.RaiseError("Type", "Expected argument type 'String'", v[0].GetTok())
+			message.RuntimeErr("Type", "Expected argument type 'String'", v[0].GetTok(), l)
 		}
 
 		if j == 0 {
@@ -183,13 +183,13 @@ func osCall(v []Value, tok tokens.Token) Value {
 
 /////////////////////////////////////////////////
 
-func osExit(v []Value, tok tokens.Token) Value {
+func osExit(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) != 1 {
-		message.RaiseError("Argument", "'exit' must have exactly one argument", tok)
+		message.RuntimeErr("Argument", "'exit' must have exactly one argument", tok, l)
 	}
 
 	if v[0].Type() != "Number" {
-		message.RaiseError("Type", "First argument of 'exit' must be a number", v[0].GetTok())
+		message.RuntimeErr("Type", "First argument of 'exit' must be a number", v[0].GetTok(), l)
 	}
 	var exitCode int = int(v[0].(*Number).Value)
 	os.Exit(exitCode)
@@ -199,29 +199,29 @@ func osExit(v []Value, tok tokens.Token) Value {
 
 ///////////////////////////////////////////////
 
-func panic(v []Value, tok tokens.Token) Value {
+func panic(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) != 2 {
-		message.RaiseError("Argument", "Panic must have 2 arguments", tok)
+		message.RuntimeErr("Argument", "Panic must have 2 arguments", tok, l)
 	}
 
-	message.RaiseError(v[0].Stringify(), v[1].Stringify(), tok)
+	message.RuntimeErr(v[0].Stringify(), v[1].Stringify(), tok, l)
 	return v[0]
 }
 
 ////////////////////////////////////////////////
 
-func check_type(v []Value, tok tokens.Token) Value {
+func check_type(v []Value, tok tokens.Token, l *message.Log) Value {
 	if len(v) != 2 {
-		message.RaiseError("Argument", "check_type must have 2 arguments", tok)
+		message.RuntimeErr("Argument", "check_type must have 2 arguments", tok, l)
 	}
 
 	if v[0].Type() != TYPE_IDENT {
-		message.RaiseError("Type", "expected a type identifier as the first argument", tok)
+		message.RuntimeErr("Type", "expected a type identifier as the first argument", tok, l)
 	}
 
 	expect := v[0].(*TypeIdent).Value
 	if expect != v[1].Type() {
-		message.RaiseError("Type", "Expected type '"+expect+"' got '"+v[1].Type()+"'", v[1].GetTok())
+		message.RuntimeErr("Type", "Expected type '"+expect+"' got '"+v[1].Type()+"'", v[1].GetTok(), l)
 	}
 
 	return &Nil{tok}

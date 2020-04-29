@@ -5,6 +5,6 @@ import (
 	"ludwig/src/values"
 )
 
-func evalTypeIdent(n *ast.TypeIdent, consts *values.SymTab) values.Value {
+func evalTypeIdent(n *ast.TypeIdent) values.Value {
 	return &values.TypeIdent{n.Assoc_Type, n.Tok}
 }

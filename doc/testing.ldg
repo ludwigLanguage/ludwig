@@ -10,4 +10,8 @@ println(a)
 
 ages = maps.Typed_Map(_str, _num)
 ages.addEntry("Joe", 100)
-ages.addEntry(1, "Jim")
+ages.addEntry("Jim", 22)
+println(ages.stringify())
+
+ages.rmEntry("Joe")
+println(ages.stringify(), ages.hasKey("Joe"), ages.hasKey("Jim"))

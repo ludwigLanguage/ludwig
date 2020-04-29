@@ -19,7 +19,7 @@ var (
  * into the function as the proper type, and not the generic
  * 'ast.Node' type.
  */
-func EvalExpr(n ast.Node, consts *values.SymTab) values.Value {
+func EvalExpr(n ast.Node, consts *values.SymTab, log *message.Log) values.Value {
 	switch n := n.(type) {
 	case *ast.Number:
 		return evalNum(n)
@@ -30,37 +30,37 @@ func EvalExpr(n ast.Node, consts *values.SymTab) values.Value {
 	case *ast.Nil:
 		return evalNil(n)
 	case *ast.Identifier:
-		return evalIdent(n, consts)
+		return evalIdent(n, consts, log)
 	case *ast.List:
-		return evalList(n, consts)
+		return evalList(n, consts, log)
 	case *ast.Index:
-		return evalIndex(n, consts)
+		return evalIndex(n, consts, log)
 	case *ast.InfixExpr:
-		return evalInfix(n, consts)
+		return evalInfix(n, consts, log)
 	case *ast.Block:
-		return evalBlock(n, consts)
+		return evalBlock(n, consts, log)
 	case *ast.IfEl:
-		return evalIfEl(n, consts)
+		return evalIfEl(n, consts, log)
 	case *ast.Function:
-		return evalFunc(n, consts)
+		return evalFunc(n, consts, log)
 	case *ast.Call:
-		return evalCall(n, consts)
+		return evalCall(n, consts, log)
 	case *ast.PrefixExpr:
-		return evalPrefix(n, consts)
+		return evalPrefix(n, consts, log)
 	case *ast.Struct:
-		return evalStruct(n, consts)
+		return evalStruct(n, consts, log)
 	case *ast.Import:
-		return evalImport(n, consts)
+		return evalImport(n, consts, log)
 	case *ast.For:
-		return evalForLoop(n, consts)
+		return evalForLoop(n, consts, log)
 	case *ast.While:
-		return evalWhileLoop(n, consts)
+		return evalWhileLoop(n, consts, log)
 	case *ast.Slice:
-		return evalSlice(n, consts)
+		return evalSlice(n, consts, log)
 	case *ast.TypeIdent:
-		return evalTypeIdent(n, consts)
+		return evalTypeIdent(n)
 	default:
-		message.RaiseError("Eval", "Cannot evaluate this expression", n.GetTok())
+		message.RuntimeErr("Eval", "Cannot evaluate this expression", n.GetTok(), log)
 	}
 
 	return NIL

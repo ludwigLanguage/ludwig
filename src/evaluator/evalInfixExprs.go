@@ -7,17 +7,17 @@ import (
 	"math"
 )
 
-func evalInfix(n *ast.InfixExpr, consts *values.SymTab) values.Value {
+func evalInfix(n *ast.InfixExpr, consts *values.SymTab, log *message.Log) values.Value {
 
 	if n.Op == "=" {
-		return evalAssignment(n, consts)
+		return evalAssignment(n, consts, log)
 	} else if n.Op == "." {
-		return evalObjInfix(n, consts)
+		return evalObjInfix(n, consts, log)
 	}
 
-	leftVal := EvalExpr(n.Left, consts)
+	leftVal := EvalExpr(n.Left, consts, log)
 
-	rightVal := EvalExpr(n.Right, consts)
+	rightVal := EvalExpr(n.Right, consts, log)
 	if leftVal.Type() == values.NIL || rightVal.Type() == values.NIL {
 		isTheSame := leftVal.Type() == rightVal.Type()
 		if n.Op == "==" {
@@ -25,28 +25,28 @@ func evalInfix(n *ast.InfixExpr, consts *values.SymTab) values.Value {
 		} else if n.Op == "!=" {
 			return &values.Boolean{!isTheSame, n.GetTok()}
 		} else {
-			message.RaiseError("Type", "Cannot evaluate an infix expression for these types", n.GetTok())
+			message.RuntimeErr("Type", "Cannot evaluate an infix expression for these types", n.GetTok(), log)
 		}
 	}
 
 	switch leftVal.Type() {
 	case values.NUM:
-		return evalNumInfix(leftVal, rightVal, n.Op)
+		return evalNumInfix(leftVal, rightVal, n.Op, log)
 	case values.BOOL:
-		return evalBoolInfix(leftVal, rightVal, n.Op)
+		return evalBoolInfix(leftVal, rightVal, n.Op, log)
 	case values.STR:
-		return evalStrInfix(leftVal, rightVal, n.Op)
+		return evalStrInfix(leftVal, rightVal, n.Op, log)
 	case values.LIST:
-		return evalListInfix(leftVal, rightVal, n.Op)
+		return evalListInfix(leftVal, rightVal, n.Op, log)
 	default:
-		message.RaiseError("Type", "Cannot evaluate an infix expression for these types", n.GetTok())
+		message.RuntimeErr("Type", "Cannot evaluate an infix expression for these types", n.GetTok(), log)
 	}
 	return NIL
 }
 
-func evalNumInfix(l, r values.Value, op string) values.Value {
+func evalNumInfix(l, r values.Value, op string, log *message.Log) values.Value {
 	if l.Type() != r.Type() {
-		message.RaiseError("Type", "Invalid right side type", r.GetTok())
+		message.RuntimeErr("Type", "Invalid right side type", r.GetTok(), log)
 	}
 	left := l.(*values.Number)
 	right := r.(*values.Number)
@@ -75,15 +75,15 @@ func evalNumInfix(l, r values.Value, op string) values.Value {
 	case "<=":
 		return &values.Boolean{left.Value <= right.Value, left.GetTok()}
 	default:
-		message.RaiseError("Operator", "This operator is not defined on numbers", left.GetTok())
+		message.RuntimeErr("Operator", "This operator is not defined on numbers", left.GetTok(), log)
 	}
 
 	return NIL
 }
 
-func evalBoolInfix(l, r values.Value, op string) values.Value {
+func evalBoolInfix(l, r values.Value, op string, log *message.Log) values.Value {
 	if l.Type() != r.Type() {
-		message.RaiseError("Type", "Invalid type on the right side", r.GetTok())
+		message.RuntimeErr("Type", "Invalid type on the right side", r.GetTok(), log)
 	}
 	left := l.(*values.Boolean)
 	right := r.(*values.Boolean)
@@ -98,14 +98,14 @@ func evalBoolInfix(l, r values.Value, op string) values.Value {
 	case "&&":
 		return &values.Boolean{left.Value && right.Value, l.GetTok()}
 	default:
-		message.RaiseError("Operator", "This operator is not defined on booleans", left.GetTok())
+		message.RuntimeErr("Operator", "This operator is not defined on booleans", left.GetTok(), log)
 	}
 	return NIL
 }
 
-func evalStrInfix(l, r values.Value, op string) values.Value {
+func evalStrInfix(l, r values.Value, op string, log *message.Log) values.Value {
 	if l.Type() != r.Type() {
-		message.RaiseError("Type", "Invalid type on right side", r.GetTok())
+		message.RuntimeErr("Type", "Invalid type on right side", r.GetTok(), log)
 	}
 	left := l.(*values.String)
 	right := r.(*values.String)
@@ -126,14 +126,14 @@ func evalStrInfix(l, r values.Value, op string) values.Value {
 	case ">":
 		return &values.Boolean{left.Value > right.Value, l.GetTok()}
 	default:
-		message.RaiseError("Operator", "Cannot eval string with this operator '"+op+"'", l.GetTok())
+		message.RuntimeErr("Operator", "Cannot eval string with this operator '"+op+"'", l.GetTok(), log)
 	}
 	return NIL
 }
 
-func evalListInfix(l, r values.Value, op string) values.Value {
+func evalListInfix(l, r values.Value, op string, log *message.Log) values.Value {
 	if l.Type() != r.Type() {
-		message.RaiseError("Type", "Invalid type on right side", r.GetTok())
+		message.RuntimeErr("Type", "Invalid type on right side", r.GetTok(), log)
 	}
 	left := l.(*values.List)
 	right := r.(*values.List)
@@ -142,17 +142,17 @@ func evalListInfix(l, r values.Value, op string) values.Value {
 	case "+":
 		return &values.List{append(left.Values, right.Values...), l.GetTok()}
 	default:
-		message.RaiseError("Operator", "Cannot eval list with this operator", l.GetTok())
+		message.RuntimeErr("Operator", "Cannot eval list with this operator", l.GetTok(), log)
 	}
 	return NIL
 }
 
-func evalObjInfix(n *ast.InfixExpr, consts *values.SymTab) values.Value {
-	obj := EvalExpr(n.Left, consts)
+func evalObjInfix(n *ast.InfixExpr, consts *values.SymTab, log *message.Log) values.Value {
+	obj := EvalExpr(n.Left, consts, log)
 
 	if obj.Type() != values.OBJ {
-		message.RaiseError("Type", "Expected and object on the left side of '.'", n.GetTok())
+		message.RuntimeErr("Type", "Expected and object on the left side of '.'", n.GetTok(), log)
 	}
 
-	return EvalExpr(n.Right, obj.(*values.Object).Consts)
+	return EvalExpr(n.Right, obj.(*values.Object).Consts, log)
 }

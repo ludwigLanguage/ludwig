@@ -19,10 +19,10 @@ func evalBool(n *ast.Boolean) values.Value {
 }
 
 func evalNil(n *ast.Nil) values.Value {
-	return &values.Nil {n.Tok}
+	return &values.Nil{n.Tok}
 }
 
-func evalIdent(n *ast.Identifier, consts *values.SymTab) values.Value {
+func evalIdent(n *ast.Identifier, consts *values.SymTab, log *message.Log) values.Value {
 	v := consts.GetVal(n.Value)
 	if v != nil {
 		return v
@@ -33,6 +33,6 @@ func evalIdent(n *ast.Identifier, consts *values.SymTab) values.Value {
 		return v
 	}
 
-	message.RaiseError("Ident", "No such identifier '"+n.Value+"'", n.Tok)
+	message.RuntimeErr("Ident", "No such identifier '"+n.Value+"'", n.Tok, log)
 	return NIL
 }

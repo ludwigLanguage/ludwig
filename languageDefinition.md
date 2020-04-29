@@ -172,6 +172,7 @@ foreverPrint("Hello, World")
 1) A function returns the value of the expression immediately following the
 arguments list<br/>
 2) Every function will have the __recurse()__ function, which can be used for tail recursion (see example).
+3) Variadic functions can be implemented using an elipses following the close of the function variables. The overflow arguments to the function will be placed in a list carrying the last identifier given. Example: `func(arg1, arg2)... arg1 + arg2[0]`.
 
 ## Built In Functions
 1) `type_of(<expr>)`              

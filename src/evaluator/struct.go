@@ -2,10 +2,11 @@ package evaluator
 
 import (
 	"ludwig/src/ast"
+	"ludwig/src/message"
 	"ludwig/src/values"
 )
 
-func evalStruct(n *ast.Struct, consts *values.SymTab) values.Value {
+func evalStruct(n *ast.Struct, consts *values.SymTab, log *message.Log) values.Value {
 
 	newSymTab := values.NewSymTab()
 	newSymTab.AddValsFrom(consts)
@@ -13,7 +14,7 @@ func evalStruct(n *ast.Struct, consts *values.SymTab) values.Value {
 	return &values.Struct{newSymTab, n.Body, n.GetTok()}
 }
 
-func evalStructCall(strct *values.Struct, call *ast.Call, consts *values.SymTab) values.Value {
+func evalStructCall(strct *values.Struct, call *ast.Call, consts *values.SymTab, log *message.Log) values.Value {
 
 	objSt := values.NewSymTab()
 	objSt.AddValsFrom(strct.Consts)
@@ -21,7 +22,7 @@ func evalStructCall(strct *values.Struct, call *ast.Call, consts *values.SymTab)
 	self := &values.Object{objSt, strct.GetTok()}
 	objSt.SetVal("self", self)
 
-	EvalExpr(strct.Body, objSt)
+	EvalExpr(strct.Body, objSt, log)
 
 	initFn := objSt.GetVal("__init__")
 	if initFn != nil {
@@ -41,7 +42,7 @@ func evalStructCall(strct *values.Struct, call *ast.Call, consts *values.SymTab)
 		initConsts := values.NewSymTab()
 		initConsts.AddValsFrom(consts)
 
-		evalCall(initCall, initConsts)
+		evalCall(initCall, initConsts, log)
 		consts.RmVal("__init__")
 	}
 

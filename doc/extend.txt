@@ -1,0 +1,4 @@
+TODO:
+
+1) Traceback on functions called for errors. Use text of
+function source from ast.

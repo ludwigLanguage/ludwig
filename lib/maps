@@ -5,11 +5,51 @@ Map = struct {
     } 
 
     addEntry = func(k, v) {
+
+        if self.hasKey(k) {
+            panic("Map", k + " is already in use as a key")
+        }
+
         self.keys = self.keys + [k]
         self.values = self.values + [v]
     }
 
+    rmEntry = func(k) {
+
+        loop = func(iter) {
+            if iter != self.len() {
+                if self.keys[iter] == k {
+                    iter
+                } else {
+                    recurse(iter + 1)
+                }
+            } else {
+                nil
+            }
+        }
+
+        iter_to_rm = loop(0)
+        if iter_to_rm == nil {
+            panic("Map", "No key matching '" + str(k) + "'")
+        }
+
+        self.keys = self.keys[iter_to_rm:] + self.keys[:iter_to_rm]
+        self.values = self.values[iter_to_rm:] + self.values[:iter_to_rm]
+    }
+
+    hasKey = func(key) {
+        rtrn = false
+        for _, val in self.keys do
+            if key == val do
+                rtrn = true
+            end
+        end
+
+        rtrn
+    }
+
     getValueFor = func(key) {
+
         getKeyIter = func(iter) {
             if (len(self.keys) == iter) {
                 nil
@@ -30,6 +70,7 @@ Map = struct {
     }
 
     getKeyFor = func(value) {
+
         getValueIter = func(iter) {
             if (len(self.values) == iter) {
                 nil
@@ -50,15 +91,7 @@ Map = struct {
     }
 
     printAll = func() {
-        loop = func(iter) {
-            if (iter < len(self.keys)) {
-                print(self.keys[iter])
-                print(" : ")
-                println(self.values[iter])
-                recurse(iter + 1)
-            }
-        }
-        loop(0)
+        println(self.stringify())
     }
 
     len = func() len(self.keys)
@@ -72,7 +105,7 @@ Map = struct {
             retVal = retVal + str(key) + ":" + str(val)
 
             retVal = retVal +
-                if self.len() <= iter-1 {
+                if self.len() > iter+1 {
                     ", "
                 } else {
                     "}"
@@ -99,8 +132,47 @@ Typed_Map = struct {
         check_type(self.key_type, k)
         check_type(self.value_type, v)
 
+        if self.hasKey(k) {
+            panic("Map", k + " is already in use as a key")
+        }
+
         self.keys = self.keys + [k]
         self.values = self.values + [v]
+    }
+
+    rmEntry = func(k) {
+        check_type(self.key_type, k)
+
+        loop = func(iter) {
+            if iter != self.len() {
+                if self.keys[iter] == k {
+                    iter
+                } else {
+                    recurse(iter + 1)
+                }
+            } else {
+                nil
+            }
+        }
+
+        iter_to_rm = loop(0)
+        if iter_to_rm == nil {
+            panic("Map", "No key matching '" + str(k) + "'")
+        }
+
+        self.keys = self.keys[iter_to_rm:] + self.keys[:iter_to_rm]
+        self.values = self.values[iter_to_rm:] + self.values[:iter_to_rm]
+    }
+
+    hasKey = func(key) {
+        rtrn = false
+        for _, val in self.keys do
+            if key == val do
+                rtrn = true
+            end
+        end
+
+        rtrn
     }
 
     getValueFor = func(key) {
@@ -148,21 +220,13 @@ Typed_Map = struct {
     }
 
     printAll = func() {
-        loop = func(iter) {
-            if (iter < len(self.keys)) {
-                print(self.keys[iter])
-                print(" : ")
-                println(self.values[iter])
-                recurse(iter + 1)
-            }
-        }
-        loop(0)
+        println(self.stringify())
     }
 
     len = func() len(self.keys)
 
     stringify = func() {
-        retVal = "{"
+        retVal = "[" + str(self.key_type) + ":" + str(self.value_type) + "]{"
 
         for iter, key in self.keys do
             val = self.values[iter]
@@ -170,7 +234,7 @@ Typed_Map = struct {
             retVal = retVal + str(key) + ":" + str(val)
 
             retVal = retVal +
-                if self.len() <= iter-1 {
+                if self.len() > iter+1 {
                     ", "
                 } else {
                     "}"

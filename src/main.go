@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"ludwig/src/evaluator"
 	"ludwig/src/lexer"
+	"ludwig/src/message"
 	"ludwig/src/parser"
 	"ludwig/src/repl"
 	"ludwig/src/source"
@@ -85,6 +86,6 @@ func evalFile() {
 	prs.ParseProgram()
 
 	consts := values.NewSymTab()
-	evaluator.EvalExpr(prs.Tree, consts)
+	evaluator.EvalExpr(prs.Tree, consts, message.NewLog())
 
 }
