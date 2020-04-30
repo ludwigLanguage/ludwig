@@ -78,7 +78,7 @@ func evalSlice(n *ast.Slice, consts *values.SymTab, log *message.Log) values.Val
 			message.RuntimeErr("Index", "Index out of range", n.GetTok(), log)
 		}
 
-		val := str[start:end]
+		val := str[start : end+1]
 		rtrnVal = &values.String{val, n.GetTok()}
 
 	} else if source.Type() == values.LIST {
@@ -87,7 +87,7 @@ func evalSlice(n *ast.Slice, consts *values.SymTab, log *message.Log) values.Val
 			message.RuntimeErr("Index", "Index out of range", n.GetTok(), log)
 		}
 
-		val := lst[start:end]
+		val := lst[start : end+1]
 		rtrnVal = &values.List{val, n.GetTok()}
 
 	} else {

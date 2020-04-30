@@ -14,4 +14,4 @@ ages.addEntry("Jim", 22)
 println(ages.stringify())
 
 ages.rmEntry("Joe")
-println(.32)
+println(_num == _str)
