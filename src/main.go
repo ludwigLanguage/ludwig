@@ -2,13 +2,9 @@ package main
 
 import (
 	"fmt"
-	"ludwig/src/evaluator"
 	"ludwig/src/lexer"
-	"ludwig/src/message"
 	"ludwig/src/parser"
-	"ludwig/src/repl"
 	"ludwig/src/source"
-	"ludwig/src/values"
 	"os"
 )
 
@@ -27,7 +23,7 @@ func main() {
 	case "-e":
 		evalFile()
 	case "-r":
-		repl.StartRepl()
+		printHelp()
 	default:
 		printHelp()
 	}
@@ -76,16 +72,5 @@ func printTree() {
 }
 
 func evalFile() {
-	if len(os.Args) < 3 {
-		printHelp()
-	}
-
-	src := source.New(os.Args[2])
-	lex := lexer.New(src)
-	prs := parser.New(lex)
-	prs.ParseProgram()
-
-	consts := values.NewSymTab()
-	evaluator.EvalExpr(prs.Tree, consts, message.NewLog())
-
+	printHelp()
 }

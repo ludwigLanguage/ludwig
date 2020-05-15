@@ -33,7 +33,7 @@ func (b *Block) GetTok() tokens.Token {
 	return b.Tok
 }
 
-func (b *Block) Type() string {
+func (b *Block) Type() byte {
 	return BLOCK
 }
 
@@ -73,35 +73,8 @@ func (i *IfEl) GetTok() tokens.Token {
 	return i.Tok
 }
 
-func (i *IfEl) Type() string {
+func (i *IfEl) Type() byte {
 	return IFEL
-}
-
-//////////////////////////////////////////////
-
-type Import struct {
-	Filename Node
-	Tok      tokens.Token
-}
-
-func (i *Import) PrintAll(tab string) {
-	fmt.Print(i.Stringify(tab))
-}
-
-func (i *Import) Stringify(tab string) string {
-	rtrnVal := ""
-	rtrnVal += tab + "<import>\n"
-	rtrnVal += i.Filename.Stringify("\t" + tab)
-	rtrnVal += "<\\import>\n"
-	return rtrnVal
-}
-
-func (i *Import) GetTok() tokens.Token {
-	return i.Tok
-}
-
-func (i *Import) Type() string {
-	return IMPRT
 }
 
 ///////////////////////////////////////////
@@ -140,7 +113,7 @@ func (f *For) GetTok() tokens.Token {
 	return f.Tok
 }
 
-func (f *For) Type() string {
+func (f *For) Type() byte {
 	return FOR
 }
 
@@ -171,6 +144,6 @@ func (w *While) GetTok() tokens.Token {
 	return w.Tok
 }
 
-func (w *While) Type() string {
+func (w *While) Type() byte {
 	return WHILE
 }

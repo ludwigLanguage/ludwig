@@ -13,7 +13,7 @@ func (p *Parser) parseList() ast.Node {
 	entries := []ast.Node{}
 
 	if p.lxr.CurTok.Alias != tokens.RBRACK {
-		entries = p.parseArgs()
+		entries = p.parseCommaSeparatedList()
 	}
 
 	if p.lxr.CurTok.Alias != tokens.RBRACK {

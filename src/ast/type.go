@@ -18,7 +18,7 @@ func (t *TypeIdent) PrintAll(tab string) {
 	fmt.Print(t.Stringify(tab))
 }
 
-func (t *TypeIdent) Type() string {
+func (t *TypeIdent) Type() byte {
 	return T_IDENT
 }
 

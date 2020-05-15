@@ -65,18 +65,14 @@ func NewWithStr(contents string, filename string) *Source {
 	s := &Source{}
 	s.Filename = filename
 
-	/* The addition of the do...end block serves two purposes
-	 * 1) It allows the parser to process the file as a
-	 *    block of expressions so that we dont have to
-	 *    create any speacial protocol to process a program
-	 * 2) If the file is empty, it creates two characters to
-	 *    become s.CurChar, and s.NextChar so that we do not
-	 *    fail out when we try to assign those
+	/* The extra spaces give curChar and nextChar
+	 * something to be
 	 */
-	s.contents = "do\n" + contents + "\nend"
+	s.contents = contents + "  "
 
 	s.curIter = -1
 	s.nextIter = 0
+	s.LineNo = 1
 
 	s.MoveUp()
 

@@ -35,13 +35,16 @@ const (
 	IF
 	ELSE
 	FN
-	STRUCT
 	IMPORT
 	DO
-	END
 	FOR
 	IN
 	WHILE
+	PROG
+	PACK
+	PRIV
+	PUB
+	CLASS
 
 	TYPE_INDENT
 )

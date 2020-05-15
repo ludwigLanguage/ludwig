@@ -53,15 +53,13 @@ func New(lexer *lexer.Lexer) *Parser {
 		tokens.OP1:         p.parsePrefix,
 		tokens.DO:          p.parseBlock,
 		tokens.NIL:         p.parseNil,
-		tokens.LCURL:       p.parseBlock,
 		tokens.LPAREN:      p.parseLParen,
 		tokens.IF:          p.parseIfEl,
 		tokens.FN:          p.parseFunction,
-		tokens.STRUCT:      p.parseStruct,
-		tokens.IMPORT:      p.parseImport,
 		tokens.FOR:         p.parseForLoop,
 		tokens.WHILE:       p.parseWhileLoop,
 		tokens.TYPE_INDENT: p.parseTypeIdent,
+		tokens.IMPORT:      p.parseImport,
 	}
 
 	p.infixParseFns = map[byte]infixFn{
@@ -83,8 +81,8 @@ func (p *Parser) raiseError(n, m string) {
 		p.lxr.Src().LineNo, p.lxr.Src().ColumnNo)
 }
 
-func (p *Parser) ParseProgram() {
-	p.Tree = p.parseExpr(0)
+func (p *Parser) raiseErrorWithTok(errorName, errorMessage string, token tokens.Token) {
+	message.RaiseError(errorName, errorMessage, token)
 }
 
 func (p *Parser) parseExpr(prec int) ast.Node {
@@ -93,7 +91,7 @@ func (p *Parser) parseExpr(prec int) ast.Node {
 	preFn := p.prefixParseFns[p.lxr.CurTok.Alias]
 	if preFn == nil {
 		p.raiseError("Syntax",
-			"No prefix parse fn for '"+p.lxr.CurTok.Value+"'")
+			"Cannot parse expression starting with: '"+p.lxr.CurTok.Value+"'")
 	}
 	leftExpr := preFn()
 

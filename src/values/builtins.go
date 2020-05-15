@@ -3,7 +3,6 @@ package values
 import (
 	"bufio"
 	"fmt"
-	"ludwig/src/ast"
 	"ludwig/src/message"
 	"ludwig/src/tokens"
 	"os"
@@ -139,7 +138,7 @@ func osCall(v []Value, tok tokens.Token, l *message.Log) Value {
 		message.RuntimeErr("Argument", "'system' must have two arguments", tok, l)
 	}
 
-	if v[0].Type() != ast.BOOL {
+	if v[0].Type() != BOOL {
 		message.RuntimeErr("Type", "First argument of 'system' must be a boolean", v[0].GetTok(), l)
 	}
 	shouldDisplayOutput := v[0].(*Boolean).Value

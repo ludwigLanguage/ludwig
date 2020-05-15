@@ -31,7 +31,7 @@ func (l *List) GetTok() tokens.Token {
 	return l.Tok
 }
 
-func (l *List) Type() string {
+func (l *List) Type() byte {
 	return LIST
 }
 
@@ -64,7 +64,7 @@ func (i *Index) GetTok() tokens.Token {
 	return i.Tok
 }
 
-func (i *Index) Type() string {
+func (i *Index) Type() byte {
 	return INDEX
 }
 
@@ -106,6 +106,6 @@ func (s *Slice) GetTok() tokens.Token {
 	return s.Tok
 }
 
-func (s *Slice) Type() string {
+func (s *Slice) Type() byte {
 	return SLICE
 }

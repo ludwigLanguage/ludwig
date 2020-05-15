@@ -1,8 +1,8 @@
 package ast
 
 import (
-	"ludwig/src/tokens"
 	"fmt"
+	"ludwig/src/tokens"
 )
 
 type Number struct {
@@ -21,7 +21,7 @@ func (n *Number) GetTok() tokens.Token {
 	return n.Tok
 }
 
-func (n *Number) Type() string {
+func (n *Number) Type() byte {
 	return NUM
 }
 
@@ -43,7 +43,7 @@ func (s *String) GetTok() tokens.Token {
 	return s.Tok
 }
 
-func (s *String) Type() string {
+func (s *String) Type() byte {
 	return STR
 }
 
@@ -65,9 +65,10 @@ func (b *Boolean) GetTok() tokens.Token {
 	return b.Tok
 }
 
-func (b *Boolean) Type() string {
+func (b *Boolean) Type() byte {
 	return BOOL
 }
+
 /////////////////////////////////////////////////
 
 type Identifier struct {
@@ -87,7 +88,7 @@ func (i *Identifier) GetTok() tokens.Token {
 	return i.Tok
 }
 
-func (i *Identifier) Type() string {
+func (i *Identifier) Type() byte {
 	return IDENT
 }
 
@@ -109,6 +110,6 @@ func (n *Nil) GetTok() tokens.Token {
 	return n.Tok
 }
 
-func (n *Nil) Type() string {
+func (n *Nil) Type() byte {
 	return NIL
 }

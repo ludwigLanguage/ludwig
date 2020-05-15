@@ -11,29 +11,31 @@ type Node interface {
 	PrintAll(string)
 	Stringify(string) string
 	GetTok() tokens.Token
-	Type() string
+	Type() byte
 }
 
+//TODO: Convert to bytes
 const (
-	FN      = "<function>"
-	CALL    = "<call>"
-	LIST    = "<list>"
-	INDEX   = "<index>"
-	QUOTE   = "<quote>"
-	UNQUOTE = "<unquote>"
-	PREFIX  = "<prefixExpression>"
-	INFIX   = "<infixExpression>"
-	NUM     = "<number>"
-	IDENT   = "<identifier>"
-	STR     = "<string"
-	NIL     = "<nil>"
-	BOOL    = "<boolean>"
-	BLOCK   = "<block>"
-	IFEL    = "<ifElse>"
-	IMPRT   = "<import>"
-	STRCT   = "<structure>"
-	FOR     = "<for>"
-	WHILE   = "<while>"
-	SLICE   = "<slice>"
-	T_IDENT = "<type_identifier>"
+	FN byte = iota
+	CALL
+	LIST
+	INDEX
+	QUOTE
+	PREFIX
+	INFIX
+	NUM
+	IDENT
+	STR
+	NIL
+	BOOL
+	BLOCK
+	IFEL
+	IMPRT
+	STRCT
+	FOR
+	WHILE
+	SLICE
+	T_IDENT
+	PROG
+	PACK
 )

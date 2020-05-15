@@ -4,6 +4,7 @@ import (
 	"ludwig/src/ast"
 	"ludwig/src/tokens"
 )
+
 /* There is no ast node that is produced by this function,
  * and this function does not show in the ParseFns maps in
  * the Parser{} struct. This is instead used as a utility function
@@ -12,7 +13,7 @@ import (
  * This function is used in the parsing of lists, call arguments,
  * and function declaration arguments.
  */
-func (p *Parser) parseArgs() []ast.Node {
+func (p *Parser) parseCommaSeparatedList() []ast.Node {
 	lst := []ast.Node{p.parseExpr(0)}
 
 	for p.lxr.CurTok.Alias == tokens.COMMA {

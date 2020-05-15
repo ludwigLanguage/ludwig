@@ -10,6 +10,24 @@ func (p *Parser) parseFunction() ast.Node {
 	tok := p.lxr.CurTok
 	p.lxr.MoveUp()
 
+	argv := p.parseFnArgs()
+
+	if p.lxr.CurTok.Alias != tokens.RPAREN {
+		p.raiseError("Syntax", "Expected ')' after function arguments")
+	}
+	p.lxr.MoveUp()
+
+	isVariadic := p.determineIfFuncIsVariadic()
+	if isVariadic {
+		p.checkVariadicArgLen(argv)
+	}
+
+	expr := p.parseExpr(0)
+
+	return &ast.Function{argv, expr, isVariadic, tok}
+}
+
+func (p *Parser) parseFnArgs() []*ast.Identifier {
 	if p.lxr.CurTok.Alias != tokens.LPAREN {
 		p.raiseError("Syntax", "Expected '(' before function arguments")
 	}
@@ -18,25 +36,29 @@ func (p *Parser) parseFunction() ast.Node {
 	args := []ast.Node{}
 
 	if p.lxr.CurTok.Alias != tokens.RPAREN {
-		args = p.parseArgs()
+		args = p.parseCommaSeparatedList()
 	}
 
-	for _, i := range args {
-		if i.Type() != ast.IDENT {
-			p.raiseError("Syntax", "Arguments must be identifiers")
-		}
-	}
+	argv := p.ensureNodesAreIdents(args)
 
+	return argv
+}
+
+func (p *Parser) ensureNodesAreIdents(nodes []ast.Node) []*ast.Identifier {
 	argv := []*ast.Identifier{}
-	for _, i := range args {
+
+	for _, i := range nodes {
+		if i.Type() != ast.IDENT {
+			p.raiseError("Syntax", "Expected identifiers in function arguments")
+		}
+
 		argv = append(argv, i.(*ast.Identifier))
 	}
 
-	if p.lxr.CurTok.Alias != tokens.RPAREN {
-		p.raiseError("Syntax", "Expected ')' after function arguments")
-	}
-	p.lxr.MoveUp()
+	return argv
+}
 
+func (p *Parser) determineIfFuncIsVariadic() bool {
 	isVariadic := false
 	if p.lxr.CurTok.Alias == tokens.DOT {
 		p.lxr.MoveUp()
@@ -51,30 +73,11 @@ func (p *Parser) parseFunction() ast.Node {
 		isVariadic = true
 	}
 
-	if isVariadic && (len(argv) == 0) {
-		p.raiseError("Syntax", "Cannot have variadic function with no arguments")
-	}
-
-	expr := p.parseExpr(0)
-
-	return &ast.Function{argv, expr, isVariadic, tok}
+	return isVariadic
 }
 
-/////////////////////////////////////////////////
-//Syntax: <function>(<arguments>)
-func (p *Parser) parseCall(callVal ast.Node) ast.Node {
-	tok := p.lxr.CurTok
-	p.lxr.MoveUp()
-
-	args := []ast.Node{}
-	if p.lxr.CurTok.Alias != tokens.RPAREN {
-		args = p.parseArgs()
+func (p *Parser) checkVariadicArgLen(args []*ast.Identifier) {
+	if len(args) == 0 {
+		p.raiseError("Syntax", "Cannot have variadic function with no arguments")
 	}
-
-	if p.lxr.CurTok.Alias != tokens.RPAREN {
-		p.raiseError("Syntax", "Expected ')' at the end of a call")
-	}
-	p.lxr.MoveUp()
-
-	return &ast.Call{callVal, args, tok}
 }

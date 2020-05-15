@@ -1,8 +1,8 @@
 package ast
 
 import (
-	"ludwig/src/tokens"
 	"fmt"
+	"ludwig/src/tokens"
 )
 
 type PrefixExpr struct {
@@ -26,7 +26,7 @@ func (p *PrefixExpr) GetTok() tokens.Token {
 	return p.Tok
 }
 
-func (p *PrefixExpr) Type() string {
+func (p *PrefixExpr) Type() byte {
 	return PREFIX
 }
 
@@ -61,6 +61,6 @@ func (i *InfixExpr) GetTok() tokens.Token {
 	return i.Tok
 }
 
-func (i *InfixExpr) Type() string {
+func (i *InfixExpr) Type() byte {
 	return INFIX
 }
