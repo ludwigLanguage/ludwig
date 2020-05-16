@@ -10,8 +10,13 @@ type Definition struct {
 }
 
 var definitions = map[OpCode]*Definition{
-	LOADCONST: {"LoadConst", []int{2}},
+	LOADCONST: {"load constant", []int{2}},
+	POP:       {"pop stack", []int{}},
 	ADD:       {"add", []int{}},
+	SUB:       {"subtract", []int{}},
+	MULT:      {"multiply", []int{}},
+	DIV:       {"divide", []int{}},
+	POW:       {"power", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {

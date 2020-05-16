@@ -1,33 +1,47 @@
 package values
 
-import "ludwig/src/tokens"
-
 const (
-	NUM        string = "_num"
-	STR        string = "_str"
-	BOOL       string = "_bool"
-	NIL        string = "_nil"
-	LIST       string = "_list"
-	FUNC       string = "_func"
-	STRUCT     string = "_struct"
-	OBJ        string = "_object"
-	BUILTIN    string = "_builtin"
-	TYPE_IDENT string = "_type"
+	NUM byte = iota
+	STR
+	BOOL
+	NIL
+	LIST
+	FUNC
+	STRUCT
+	OBJ
+	BUILTIN
+	TYPE_IDENT
 )
 
 type TypeIdent struct {
-	Value string
-	Tok   tokens.Token
+	Value byte
 }
 
-func (t *TypeIdent) Stringify() string {
-	return t.Value
+func (t TypeIdent) Stringify() string {
+	switch t.Value {
+	case STR:
+		return "<string>"
+	case BOOL:
+		return "<bool>"
+	case NIL:
+		return "<nil>"
+	case LIST:
+		return "<list>"
+	case FUNC:
+		return "<function>"
+	case STRUCT:
+		return "<struct>"
+	case OBJ:
+		return "<object>"
+	case BUILTIN:
+		return "<builtin>"
+	case TYPE_IDENT:
+		return "<type_identifier>"
+	}
+
+	return "<unknown_type>"
 }
 
-func (t *TypeIdent) Type() string {
+func (t TypeIdent) Type() byte {
 	return TYPE_IDENT
-}
-
-func (t *TypeIdent) GetTok() tokens.Token {
-	return t.Tok
 }

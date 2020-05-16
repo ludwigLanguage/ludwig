@@ -6,21 +6,21 @@ import (
 )
 
 type Package struct {
-	Id          *Identifier
-	PublicBody  []*InfixExpr
-	PrivateBody []*InfixExpr
+	Id          Identifier
+	PublicBody  []InfixExpr
+	PrivateBody []InfixExpr
 	Tok         tokens.Token
 }
 
-func (p *Package) Type() byte {
+func (p Package) Type() byte {
 	return PACK
 }
 
-func (p *Package) GetTok() tokens.Token {
+func (p Package) GetTok() tokens.Token {
 	return p.Tok
 }
 
-func (p *Package) Stringify(tab string) string {
+func (p Package) Stringify(tab string) string {
 	rtrnVal := tab + "<package>\n"
 	rtrnVal += p.Id.Stringify(tab + "\t")
 
@@ -39,6 +39,6 @@ func (p *Package) Stringify(tab string) string {
 	return rtrnVal + tab + "<\\package>\n"
 }
 
-func (p *Package) PrintAll(tab string) {
+func (p Package) PrintAll(tab string) {
 	fmt.Print(p.Stringify(tab))
 }

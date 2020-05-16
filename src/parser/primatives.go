@@ -4,6 +4,7 @@ import (
 	"ludwig/src/ast"
 	"strconv"
 )
+
 /* <number> OR <number>.<number>
  * Note: all numbers, whether they appear in the
  * source text as floats of intergers will be stored
@@ -17,7 +18,7 @@ func (p *Parser) parseNum() ast.Node {
 			"Could not parse number '"+p.lxr.CurTok.Value+"'")
 	}
 
-	n := &ast.Number{v, p.lxr.CurTok}
+	n := ast.Number{v, p.lxr.CurTok}
 	p.lxr.MoveUp()
 	return n
 }
@@ -26,7 +27,7 @@ func (p *Parser) parseNum() ast.Node {
 // "<text>" or '<text>
 func (p *Parser) parseStr() ast.Node {
 	v := p.lxr.CurTok.Value
-	n := &ast.String{v, p.lxr.CurTok}
+	n := ast.String{v, p.lxr.CurTok}
 
 	p.lxr.MoveUp()
 	return n
@@ -41,7 +42,7 @@ func (p *Parser) parseBool() ast.Node {
 		p.raiseError("Syntax", "Could not parse boolean '"+p.lxr.CurTok.Value+"'")
 	}
 
-	n := &ast.Boolean{v, p.lxr.CurTok}
+	n := ast.Boolean{v, p.lxr.CurTok}
 	p.lxr.MoveUp()
 	return n
 }
@@ -52,14 +53,14 @@ func (p *Parser) parseNil() ast.Node {
 	tok := p.lxr.CurTok
 	p.lxr.MoveUp()
 
-	return &ast.Nil{tok}
+	return ast.Nil{tok}
 }
 
 /////////////////////////////////////////////////
 //Syntax: <ident>
 func (p *Parser) parseIdent() ast.Node {
 	v := p.lxr.CurTok.Value
-	n := &ast.Identifier{v, p.lxr.CurTok}
+	n := ast.Identifier{v, p.lxr.CurTok}
 	p.lxr.MoveUp()
 
 	return n

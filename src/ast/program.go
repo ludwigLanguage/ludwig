@@ -6,16 +6,16 @@ import (
 )
 
 type Program struct {
-	Id   *Identifier
+	Id   Identifier
 	Body []Node //TODO: Convert to []*ast.InfixExpr
 	Tok  tokens.Token
 }
 
-func (p *Program) Type() byte {
+func (p Program) Type() byte {
 	return PROG
 }
 
-func (p *Program) Stringify(tab string) string {
+func (p Program) Stringify(tab string) string {
 	rtrnVal := tab + "<program>\n"
 	rtrnVal += p.Id.Stringify(tab + "\t")
 
@@ -25,10 +25,10 @@ func (p *Program) Stringify(tab string) string {
 	return rtrnVal + tab + "<\\program>\n"
 }
 
-func (p *Program) PrintAll(tab string) {
+func (p Program) PrintAll(tab string) {
 	fmt.Print(p.Stringify(tab))
 }
 
-func (p *Program) GetTok() tokens.Token {
+func (p Program) GetTok() tokens.Token {
 	return p.Tok
 }

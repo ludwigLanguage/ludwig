@@ -1,56 +1,7 @@
-list_mod = import("list")
-
-
-mkGreeting = func(greet) {
-	func(name)
-		print(greet + ", " + name)
-}
-sayHello = mkGreeting("Hello")
-name = read("Enter your name: ", "\n")
-sayHello(name)
-
-
-profile = struct {
-	__init__ = func(name, age, children, spouse) {
-			self.name = name
-			self.age = age
-			self.children = children
-			self.spouse = spouse
+package math
+public:
+	add = func(x, y) do {
+		x + y
 	}
-
-	printFamily = func(tab) {
-		if self.spouse != nil {
-			println(tab, self.info(), "is married to", self.spouse.info())
-		} else {
-			println(tab, self.info())
-		}
-
-		for j, i in self.children {
-			i.printFamily(tab + "\t|")
-		}
-	}
-
-	info = func() {
-		self.name + " who is " + str(self.age)
-	}
-}
-
-
-child1 = profile("Son", 2, [], nil)
-child2 = profile("Daughter", 5, [], nil)
-
-children = [child1, child2]
-parent1 = profile("Jill", 32, children, nil)
-parent = profile("Father", 33, children, parent1)
-
-parent.printFamily("|")
-
-
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-slice = list_mod.slice(numbers, 2, 5)
-
-someList =
-	for j, i in slice {
-		[j, i]
-	}
-println(someList)
+private:
+	not_important = 0

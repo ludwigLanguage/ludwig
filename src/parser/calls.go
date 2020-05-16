@@ -20,5 +20,5 @@ func (p *Parser) parseCall(callVal ast.Node) ast.Node {
 	}
 	p.lxr.MoveUp()
 
-	return &ast.Call{callVal, args, tok}
+	return ast.Call{callVal, args, tok}
 }

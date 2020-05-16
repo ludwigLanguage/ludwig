@@ -10,18 +10,18 @@ type TypeIdent struct {
 	Tok        tokens.Token
 }
 
-func (t *TypeIdent) Stringify(tab string) string {
+func (t TypeIdent) Stringify(tab string) string {
 	return tab + "<type_ident=" + t.Assoc_Type + ">\n"
 }
 
-func (t *TypeIdent) PrintAll(tab string) {
+func (t TypeIdent) PrintAll(tab string) {
 	fmt.Print(t.Stringify(tab))
 }
 
-func (t *TypeIdent) Type() byte {
+func (t TypeIdent) Type() byte {
 	return T_IDENT
 }
 
-func (t *TypeIdent) GetTok() tokens.Token {
+func (t TypeIdent) GetTok() tokens.Token {
 	return t.Tok
 }

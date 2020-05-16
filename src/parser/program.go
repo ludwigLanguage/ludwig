@@ -12,7 +12,7 @@ func (p *Parser) ParseProgram() {
 	id := p.getProgramOrPackageId()
 	programExprs := p.getProgramExprs()
 
-	p.Tree = &ast.Program{id, programExprs, tok}
+	p.Tree = ast.Program{id, programExprs, tok}
 }
 
 func (p *Parser) getProgramTok() tokens.Token {
@@ -25,12 +25,12 @@ func (p *Parser) getProgramTok() tokens.Token {
 	return tok
 }
 
-func (p *Parser) getProgramOrPackageId() *ast.Identifier {
+func (p *Parser) getProgramOrPackageId() ast.Identifier {
 	if p.lxr.CurTok.Alias != tokens.IDENT {
 		p.raiseError("Syntax", "Expcted identifier after 'program' or 'package'")
 	}
 
-	id := &ast.Identifier{p.lxr.CurTok.Value, p.lxr.CurTok}
+	id := ast.Identifier{p.lxr.CurTok.Value, p.lxr.CurTok}
 	p.lxr.MoveUp()
 	return id
 }
@@ -45,20 +45,20 @@ func (p *Parser) getProgramExprs() []ast.Node {
 	return exprs
 }
 
-func (p *Parser) castAsAssignments(nodes []ast.Node) []*ast.InfixExpr {
-	assignments := []*ast.InfixExpr{}
+func (p *Parser) castAsAssignments(nodes []ast.Node) []ast.InfixExpr {
+	assignments := []ast.InfixExpr{}
 	for _, i := range nodes {
 		if i.Type() != ast.INFIX {
 			tok := i.GetTok()
 			p.raiseErrorWithTok("Procedural", "Cannot have non-assignment statements outside function body", tok)
 		}
 
-		if i.(*ast.InfixExpr).Op != "=" {
+		if i.(ast.InfixExpr).Op != "=" {
 			tok := i.GetTok()
 			p.raiseErrorWithTok("Procedural", "Cannot have non-assignment statements outside function body", tok)
 		}
 
-		assignments = append(assignments, i.(*ast.InfixExpr))
+		assignments = append(assignments, i.(ast.InfixExpr))
 	}
 
 	return assignments

@@ -33,6 +33,13 @@ func RuntimeErr(n, m string, tok tokens.Token, l *Log) {
 	RaiseError(n, m, tok)
 }
 
+func VmError(n, m string, file string, lineNo int) {
+	msg := file + " (" + strconv.Itoa(lineNo) + ") -- " + n + "Error: " + m
+	stderr.Println(msg)
+
+	os.Exit(2)
+}
+
 type Log struct {
 	vals map[string]tokens.Token
 }

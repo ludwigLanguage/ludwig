@@ -17,7 +17,7 @@ func (p *Parser) ParsePackage() ast.Node {
 	tok := p.getPackageTok()
 	id := p.getProgramOrPackageId()
 	pubExprs := p.getPublicExprs()
-	privExprs := []*ast.InfixExpr{}
+	privExprs := []ast.InfixExpr{}
 
 	if !p.lxr.IsDone() {
 		privExprs = p.getPrivateExprs()
@@ -38,7 +38,7 @@ func (p *Parser) getPackageTok() tokens.Token {
 	return tok
 }
 
-func (p *Parser) getPublicExprs() []*ast.InfixExpr {
+func (p *Parser) getPublicExprs() []ast.InfixExpr {
 	p.skipWhitespace()
 
 	if p.lxr.CurTok.Alias != tokens.PUB {
@@ -60,7 +60,7 @@ func (p *Parser) getPublicExprs() []*ast.InfixExpr {
 	return p.castAsAssignments(exprs)
 }
 
-func (p *Parser) getPrivateExprs() []*ast.InfixExpr {
+func (p *Parser) getPrivateExprs() []ast.InfixExpr {
 	p.skipWhitespace()
 
 	if p.lxr.CurTok.Alias != tokens.PRIV {

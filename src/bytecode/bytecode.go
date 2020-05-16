@@ -6,6 +6,9 @@ import (
 	"fmt"
 )
 
+/* Instructions will be formatted in the following way
+ * <uint16_lineNo> <byte_opcode> <operands>
+ */
 type Instructions []byte
 
 func (i Instructions) String() string {
@@ -20,7 +23,7 @@ func (i Instructions) String() string {
 		}
 
 		args, read := ReadArgs(def, i[iter+1:])
-		fmt.Fprintf(&out, "%04d %s\n", iter, i.fmtInstruction(def, args))
+		fmt.Fprintf(&out, "%s; ", i.fmtInstruction(def, args))
 		iter += 1 + read
 	}
 

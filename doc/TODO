@@ -1,0 +1,21 @@
+TODO:
+    1) When vm can interpret assignments, enforce assignments only rule
+    in parser under p.ParseProgram()
+
+    2) Implement parsing for classes:
+        Syntax:
+            class 
+                public: <expression>
+                private: <epxression>
+
+    3) Alter block syntax:
+        do {} -> {}
+        do () -> ()
+
+    4) Implement Hash Maps
+        Syntax: %{<key>:<value>}
+
+    5) Write Language Definition Once Impelementation Complete
+
+    6) Set values.Value objects to be created as actual objects rather
+    than pointers. Also, see about doing that for the AST too.

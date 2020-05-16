@@ -12,3 +12,8 @@ func (v *VM) evalOpConst(location int) int {
 
 	return location
 }
+
+func (v *VM) evalPop(location int) int {
+	v.pop()
+	return location
+}

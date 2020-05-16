@@ -1,15 +1,10 @@
 package values
 
-import (
-	"ludwig/src/tokens"
-)
-
 type List struct {
 	Values []Value
-	Tok    tokens.Token
 }
 
-func (l *List) Stringify() string {
+func (l List) Stringify() string {
 
 	str := "["
 
@@ -24,12 +19,8 @@ func (l *List) Stringify() string {
 	return str + "]"
 }
 
-func (l *List) Type() string {
+func (l List) Type() byte {
 	return LIST
-}
-
-func (l *List) GetTok() tokens.Token {
-	return l.Tok
 }
 
 /////////////////////////////////////////////////

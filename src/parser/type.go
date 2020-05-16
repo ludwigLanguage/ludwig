@@ -6,5 +6,5 @@ func (p *Parser) parseTypeIdent() ast.Node {
 	tok := p.lxr.CurTok
 	p.lxr.MoveUp()
 
-	return &ast.TypeIdent{tok.Value, tok}
+	return ast.TypeIdent{tok.Value, tok}
 }

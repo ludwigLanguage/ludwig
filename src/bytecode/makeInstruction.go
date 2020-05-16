@@ -16,6 +16,7 @@ func MakeInstruction(op OpCode, args ...int) []byte {
 	}
 
 	instruction := make([]byte, lengthOfInstructions)
+
 	instruction[0] = byte(op)
 	offset := 1
 	for argNumber, arg := range args {

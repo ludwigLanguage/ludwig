@@ -22,7 +22,7 @@ func (p *Parser) parseList() ast.Node {
 	}
 	p.lxr.MoveUp()
 
-	return &ast.List{entries, tok}
+	return ast.List{entries, tok}
 
 }
 
@@ -50,7 +50,7 @@ func (p *Parser) parseIndex(src ast.Node) ast.Node {
 	}
 	p.lxr.MoveUp()
 
-	return &ast.Index{src, val, tok}
+	return ast.Index{src, val, tok}
 }
 
 func (p *Parser) parseSlice(startVal, src ast.Node) ast.Node {
@@ -70,5 +70,5 @@ func (p *Parser) parseSlice(startVal, src ast.Node) ast.Node {
 	}
 	p.lxr.MoveUp()
 
-	return &ast.Slice{src, startVal, endVal, tok}
+	return ast.Slice{src, startVal, endVal, tok}
 }

@@ -25,7 +25,7 @@ func (p *Parser) parseBlock() ast.Node {
 	}
 	p.lxr.MoveUp() //Move over closing bracket
 
-	return &ast.Block{body, isScoped, tok}
+	return ast.Block{body, isScoped, tok}
 }
 
 func (p *Parser) getBlockEnding() byte {

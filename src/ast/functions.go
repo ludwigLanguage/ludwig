@@ -7,13 +7,13 @@ import (
 )
 
 type Function struct {
-	Args       []*Identifier
+	Args       []Identifier
 	DoExpr     Node
 	IsVariadic bool
 	Tok        tokens.Token
 }
 
-func (f *Function) Stringify(tab string) string {
+func (f Function) Stringify(tab string) string {
 	rtrnStr := ""
 
 	rtrnStr += tab + "<Function>\n"
@@ -41,15 +41,15 @@ func (f *Function) Stringify(tab string) string {
 	return rtrnStr
 }
 
-func (f *Function) PrintAll(tab string) {
+func (f Function) PrintAll(tab string) {
 	fmt.Print(f.Stringify(tab))
 }
 
-func (f *Function) GetTok() tokens.Token {
+func (f Function) GetTok() tokens.Token {
 	return f.Tok
 }
 
-func (f *Function) Type() byte {
+func (f Function) Type() byte {
 	return FN
 }
 
@@ -61,10 +61,10 @@ type Call struct {
 	Tok       tokens.Token
 }
 
-func (c *Call) PrintAll(tab string) {
+func (c Call) PrintAll(tab string) {
 	fmt.Print(c.Stringify(tab))
 }
-func (c *Call) Stringify(tab string) string {
+func (c Call) Stringify(tab string) string {
 	rtrnStr := ""
 
 	rtrnStr += tab + "<Call>\n"
@@ -83,10 +83,10 @@ func (c *Call) Stringify(tab string) string {
 	return rtrnStr
 }
 
-func (c *Call) GetTok() tokens.Token {
+func (c Call) GetTok() tokens.Token {
 	return c.Tok
 }
 
-func (c *Call) Type() byte {
+func (c Call) Type() byte {
 	return CALL
 }

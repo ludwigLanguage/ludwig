@@ -1,17 +1,3 @@
-maps = import ("..\\lib\\maps")
+program HelloWorld
 
-books = maps.Map()
-books.addEntry("To Kill A Mockingbird", "Harper Lee")
-println(books.getValueFor("To Kill A Mockingbird"), books.getKeyFor("Harper Lee"))
-
-println(books.stringify())
-a = -19
-println(a)
-
-ages = maps.Typed_Map(_str, _num)
-ages.addEntry("Joe", 100)
-ages.addEntry("Jim", 22)
-println(ages.stringify())
-
-ages.rmEntry("Joe")
-println(_num == _str)
+1 + 2

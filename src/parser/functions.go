@@ -24,10 +24,10 @@ func (p *Parser) parseFunction() ast.Node {
 
 	expr := p.parseExpr(0)
 
-	return &ast.Function{argv, expr, isVariadic, tok}
+	return ast.Function{argv, expr, isVariadic, tok}
 }
 
-func (p *Parser) parseFnArgs() []*ast.Identifier {
+func (p *Parser) parseFnArgs() []ast.Identifier {
 	if p.lxr.CurTok.Alias != tokens.LPAREN {
 		p.raiseError("Syntax", "Expected '(' before function arguments")
 	}
@@ -44,15 +44,15 @@ func (p *Parser) parseFnArgs() []*ast.Identifier {
 	return argv
 }
 
-func (p *Parser) ensureNodesAreIdents(nodes []ast.Node) []*ast.Identifier {
-	argv := []*ast.Identifier{}
+func (p *Parser) ensureNodesAreIdents(nodes []ast.Node) []ast.Identifier {
+	argv := []ast.Identifier{}
 
 	for _, i := range nodes {
 		if i.Type() != ast.IDENT {
 			p.raiseError("Syntax", "Expected identifiers in function arguments")
 		}
 
-		argv = append(argv, i.(*ast.Identifier))
+		argv = append(argv, i.(ast.Identifier))
 	}
 
 	return argv
@@ -76,7 +76,7 @@ func (p *Parser) determineIfFuncIsVariadic() bool {
 	return isVariadic
 }
 
-func (p *Parser) checkVariadicArgLen(args []*ast.Identifier) {
+func (p *Parser) checkVariadicArgLen(args []ast.Identifier) {
 	if len(args) == 0 {
 		p.raiseError("Syntax", "Cannot have variadic function with no arguments")
 	}

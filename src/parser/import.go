@@ -47,7 +47,7 @@ func (p *Parser) getPkgFrom(path string) ast.Node {
 
 func (p *Parser) assignPackageToGivenId(pkg ast.Node) ast.Node {
 	id := pkg.(*ast.Package).Id
-	assignment := &ast.InfixExpr{id, pkg, "=", pkg.GetTok()}
+	assignment := ast.InfixExpr{id, pkg, "=", pkg.GetTok()}
 
 	return assignment
 }

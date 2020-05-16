@@ -13,7 +13,7 @@ func (p *Parser) parseIfEl() ast.Node {
 	cond := p.parseExpr(0)
 	expr := p.parseExpr(0)
 
-	ifel := &ast.IfEl{}
+	ifel := ast.IfEl{}
 	ifel.Tok = tok
 	ifel.Cond = cond
 	ifel.Do = expr
@@ -23,7 +23,7 @@ func (p *Parser) parseIfEl() ast.Node {
 		p.lxr.MoveUp()
 		ifel.ElseExpr = p.parseExpr(0)
 	} else {
-		ifel.ElseExpr = &ast.Block{[]ast.Node{}, false, p.lxr.CurTok}
+		ifel.ElseExpr = ast.Block{[]ast.Node{}, false, p.lxr.CurTok}
 	}
 
 	return ifel
@@ -59,7 +59,7 @@ func (p *Parser) parseForLoop() ast.Node {
 
 	isScoped := false
 	if doExpr.Type() == ast.BLOCK {
-		isScoped = doExpr.(*ast.Block).IsScoped
+		isScoped = doExpr.(ast.Block).IsScoped
 	}
 
 	return &ast.For{indexNumIdent, indexIdent, list, doExpr, isScoped, tok}
@@ -76,8 +76,8 @@ func (p *Parser) parseWhileLoop() ast.Node {
 	isScoped := false
 
 	if do.Type() == ast.BLOCK {
-		isScoped = do.(*ast.Block).IsScoped
+		isScoped = do.(ast.Block).IsScoped
 	}
 
-	return &ast.While{cond, do, isScoped, tok}
+	return ast.While{cond, do, isScoped, tok}
 }

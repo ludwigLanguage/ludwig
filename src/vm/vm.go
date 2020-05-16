@@ -4,7 +4,6 @@ import (
 	"ludwig/src/bytecode"
 	"ludwig/src/compiler"
 	"ludwig/src/message"
-	"ludwig/src/tokens"
 	"ludwig/src/values"
 	"strconv"
 )
@@ -25,6 +24,9 @@ type VM struct {
 
 	executeFnMap map[bytecode.OpCode]executeFn
 
+	curLineNo int
+	curFile   string
+
 	stack []values.Value
 
 	/* A note on conventions:
@@ -44,9 +46,13 @@ func New(program *compiler.CompiledProg) *VM {
 		stackPointer: 0,
 	}
 
+	vm.curFile = "unknown.ldg //FIXME"
+	vm.curLineNo = 0
 	vm.executeFnMap = map[bytecode.OpCode]executeFn{
 		bytecode.LOADCONST: vm.evalOpConst,
-		bytecode.ADD:       vm.add,
+		bytecode.ADD:       vm.evalAdd,
+		bytecode.POP:       vm.evalPop,
+		bytecode.SUB:       vm.evalSubtract,
 	}
 
 	return vm
@@ -54,12 +60,7 @@ func New(program *compiler.CompiledProg) *VM {
 
 //FIXME
 func (v *VM) raiseError(errtype, errmsg string) {
-	tok := tokens.Token{"", 0, 0, "", 0}
-	if len(v.stack) != 0 {
-		tok = v.stack[v.stackPointer-1].GetTok()
-	}
-
-	message.RaiseError(errtype, errmsg, tok)
+	message.VmError(errtype, errmsg, v.curFile, v.curLineNo)
 }
 
 func (v *VM) StackTop() values.Value {
@@ -68,6 +69,10 @@ func (v *VM) StackTop() values.Value {
 	}
 
 	return v.stack[v.stackPointer-1]
+}
+
+func (v *VM) LastPopped() values.Value {
+	return v.stack[v.stackPointer]
 }
 
 func (v *VM) push(val values.Value) {
@@ -87,6 +92,7 @@ func (v *VM) pop() values.Value {
 
 func (v *VM) Run() {
 	for insPos := 0; insPos < len(v.instructions); insPos++ {
+
 		opcode := v.instructions[insPos]
 		executeFn := v.executeFnMap[bytecode.OpCode(opcode)]
 

@@ -11,11 +11,11 @@ type List struct {
 	Tok     tokens.Token
 }
 
-func (l *List) PrintAll(tab string) {
+func (l List) PrintAll(tab string) {
 	fmt.Print(l.Stringify(tab))
 }
 
-func (l *List) Stringify(tab string) string {
+func (l List) Stringify(tab string) string {
 	rtrnStr := ""
 	rtrnStr += tab + "<List>\n"
 
@@ -27,11 +27,11 @@ func (l *List) Stringify(tab string) string {
 	return rtrnStr
 }
 
-func (l *List) GetTok() tokens.Token {
+func (l List) GetTok() tokens.Token {
 	return l.Tok
 }
 
-func (l *List) Type() byte {
+func (l List) Type() byte {
 	return LIST
 }
 
@@ -43,10 +43,10 @@ type Index struct {
 	Tok   tokens.Token
 }
 
-func (i *Index) PrintAll(tab string) {
+func (i Index) PrintAll(tab string) {
 	fmt.Print(i.Stringify(tab))
 }
-func (i *Index) Stringify(tab string) string {
+func (i Index) Stringify(tab string) string {
 	rtrnStr := ""
 	rtrnStr += tab + "<Index>\n"
 	rtrnStr += tab + "<Source>\n"
@@ -60,11 +60,11 @@ func (i *Index) Stringify(tab string) string {
 	return rtrnStr
 }
 
-func (i *Index) GetTok() tokens.Token {
+func (i Index) GetTok() tokens.Token {
 	return i.Tok
 }
 
-func (i *Index) Type() byte {
+func (i Index) Type() byte {
 	return INDEX
 }
 
@@ -77,11 +77,11 @@ type Slice struct {
 	Tok   tokens.Token
 }
 
-func (s *Slice) PrintAll(tab string) {
+func (s Slice) PrintAll(tab string) {
 	fmt.Print(s.Stringify(tab))
 }
 
-func (s *Slice) Stringify(tab string) string {
+func (s Slice) Stringify(tab string) string {
 	rtrnStr := ""
 	rtrnStr += tab + "<Slice>\n"
 	rtrnStr += tab + "<Source>\n"
@@ -102,10 +102,10 @@ func (s *Slice) Stringify(tab string) string {
 	return rtrnStr
 }
 
-func (s *Slice) GetTok() tokens.Token {
+func (s Slice) GetTok() tokens.Token {
 	return s.Tok
 }
 
-func (s *Slice) Type() byte {
+func (s Slice) Type() byte {
 	return SLICE
 }

@@ -12,10 +12,10 @@ type Block struct {
 	Tok      tokens.Token
 }
 
-func (b *Block) PrintAll(tab string) {
+func (b Block) PrintAll(tab string) {
 	fmt.Print(b.Stringify(tab))
 }
-func (b *Block) Stringify(tab string) string {
+func (b Block) Stringify(tab string) string {
 	rtrnVal := ""
 	rtrnVal += tab + "<Block>\n"
 
@@ -29,11 +29,11 @@ func (b *Block) Stringify(tab string) string {
 	return rtrnVal
 }
 
-func (b *Block) GetTok() tokens.Token {
+func (b Block) GetTok() tokens.Token {
 	return b.Tok
 }
 
-func (b *Block) Type() byte {
+func (b Block) Type() byte {
 	return BLOCK
 }
 
@@ -46,11 +46,11 @@ type IfEl struct {
 	Tok      tokens.Token
 }
 
-func (i *IfEl) PrintAll(tab string) {
+func (i IfEl) PrintAll(tab string) {
 	fmt.Print(i.Stringify(tab))
 }
 
-func (i *IfEl) Stringify(tab string) string {
+func (i IfEl) Stringify(tab string) string {
 	rtrnVal := ""
 	rtrnVal += tab + "<IfEl>\n"
 
@@ -69,11 +69,11 @@ func (i *IfEl) Stringify(tab string) string {
 	return rtrnVal + tab + "<\\IfEl>\n"
 }
 
-func (i *IfEl) GetTok() tokens.Token {
+func (i IfEl) GetTok() tokens.Token {
 	return i.Tok
 }
 
-func (i *IfEl) Type() byte {
+func (i IfEl) Type() byte {
 	return IFEL
 }
 
@@ -88,7 +88,7 @@ type For struct {
 	Tok           tokens.Token
 }
 
-func (f *For) Stringify(tab string) string {
+func (f For) Stringify(tab string) string {
 	rtrnVal := tab + "<for " + f.IndexNumIdent.Stringify("")
 	rtrnVal += ", "
 
@@ -105,15 +105,15 @@ func (f *For) Stringify(tab string) string {
 	return rtrnVal + tab + "<\\for>\n"
 }
 
-func (f *For) PrintAll(tab string) {
+func (f For) PrintAll(tab string) {
 	fmt.Print(f.Stringify(tab))
 }
 
-func (f *For) GetTok() tokens.Token {
+func (f For) GetTok() tokens.Token {
 	return f.Tok
 }
 
-func (f *For) Type() byte {
+func (f For) Type() byte {
 	return FOR
 }
 
@@ -125,7 +125,7 @@ type While struct {
 	Tok      tokens.Token
 }
 
-func (w *While) Stringify(tab string) string {
+func (w While) Stringify(tab string) string {
 	rtrnVal := tab + "<while>\n"
 	rtrnVal += tab + "<conditional>\n"
 	rtrnVal += w.Cond.Stringify(tab + "\t")
@@ -136,14 +136,14 @@ func (w *While) Stringify(tab string) string {
 	return rtrnVal
 }
 
-func (w *While) PrintAll(tab string) {
+func (w While) PrintAll(tab string) {
 	fmt.Print(w.Stringify(tab))
 }
 
-func (w *While) GetTok() tokens.Token {
+func (w While) GetTok() tokens.Token {
 	return w.Tok
 }
 
-func (w *While) Type() byte {
+func (w While) Type() byte {
 	return WHILE
 }

@@ -7,8 +7,8 @@ import (
 )
 
 func (c *Compiler) compileNumber(node ast.Node) {
-	number := node.(*ast.Number)
+	number := node.(ast.Number)
 
-	val := &values.Number{number.Value, number.Tok}
+	val := values.Number{number.Value}
 	c.emit(bytecode.LOADCONST, c.addToPool(val))
 }

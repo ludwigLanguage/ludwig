@@ -29,30 +29,35 @@ func TestNumMath(t *testing.T) {
 func runVmTest(t *testing.T, tests []vmTest) {
 	t.Helper()
 
-	for _, test := range tests {
+	for iter, test := range tests {
 		tree := parse(test.input)
 
 		comp := compiler.New()
 		comp.Compile(tree)
 
-		vm := New(comp.GetCompiled())
+		compiled := comp.GetCompiled()
+		fmt.Println(compiled)
+
+		vm := New(compiled)
 		vm.Run()
 
-		stackElement := vm.StackTop()
+		stackElement := vm.LastPopped()
 		err := testExpectedVal(t, test.expected, stackElement)
 		if err != nil {
 			t.Errorf("%s", err)
+		} else {
+			fmt.Printf("Passed test %v\n", iter+1)
 		}
 	}
 }
 
-func parse(input string) *ast.Program {
+func parse(input string) ast.Program {
 	src := source.NewWithStr(input, "TEST CASE")
 	lex := lexer.New(src)
 	prs := parser.New(lex)
 	prs.ParseProgram()
 
-	return prs.Tree.(*ast.Program)
+	return prs.Tree.(ast.Program)
 }
 
 func testExpectedVal(t *testing.T, expected interface{}, got values.Value) error {
@@ -67,7 +72,7 @@ func testExpectedVal(t *testing.T, expected interface{}, got values.Value) error
 }
 
 func testNumObj(expected float64, got values.Value) error {
-	result, ok := got.(*values.Number)
+	result, ok := got.(values.Number)
 	if !ok {
 		return fmt.Errorf("Expected Number Value.\nGot: %T (%+v)", got, got)
 	}

@@ -26,6 +26,51 @@ func TestIntMath(t *testing.T) {
 				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
 				bytecode.MakeInstruction(bytecode.LOADCONST, 1),
 				bytecode.MakeInstruction(bytecode.ADD),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+
+		{
+			input:        "program main\n1-2",
+			expectedPool: []interface{}{1.0, 2.0},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 1),
+				bytecode.MakeInstruction(bytecode.SUB),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+
+		{
+			input:        "program main\n1*2",
+			expectedPool: []interface{}{1.0, 2.0},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 1),
+				bytecode.MakeInstruction(bytecode.MULT),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+
+		{
+			input:        "program main\n1/2",
+			expectedPool: []interface{}{1.0, 2.0},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 1),
+				bytecode.MakeInstruction(bytecode.DIV),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+
+		{
+			input:        "program main\n1^2",
+			expectedPool: []interface{}{1.0, 2.0},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 1),
+				bytecode.MakeInstruction(bytecode.POW),
+				bytecode.MakeInstruction(bytecode.POP),
 			},
 		},
 	}
@@ -56,13 +101,13 @@ func runCompilerTests(t *testing.T, tests []compilerTest) {
 	}
 }
 
-func parse(input string) *ast.Program {
+func parse(input string) ast.Program {
 	src := source.NewWithStr(input, "TEST CASE")
 	lex := lexer.New(src)
 	prs := parser.New(lex)
 	prs.ParseProgram()
 
-	return prs.Tree.(*ast.Program)
+	return prs.Tree.(ast.Program)
 }
 
 func testInstructions(expected []bytecode.Instructions, got bytecode.Instructions) error {
@@ -107,7 +152,7 @@ func testPool(t *testing.T, expected []interface{}, got []values.Value) error {
 }
 
 func testNumObj(expected float64, got values.Value) error {
-	result, ok := got.(*values.Number)
+	result, ok := got.(values.Number)
 	if !ok {
 		return fmt.Errorf("Expected Number Value.\nGot: %T (%+v)", got, got)
 	}

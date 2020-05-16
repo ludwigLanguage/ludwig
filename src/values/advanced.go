@@ -2,7 +2,6 @@ package values
 
 import (
 	"ludwig/src/ast"
-	"ludwig/src/tokens"
 	"strconv"
 )
 
@@ -11,19 +10,14 @@ type Function struct {
 	Expr       ast.Node
 	Consts     *SymTab
 	IsVariadic bool
-	Tok        tokens.Token
 }
 
-func (f *Function) Stringify() string {
+func (f Function) Stringify() string {
 	return "fn(" + strconv.Itoa(len(f.Args)) + ")"
 }
 
-func (f *Function) Type() string {
+func (f Function) Type() byte {
 	return FUNC
-}
-
-func (f *Function) GetTok() tokens.Token {
-	return f.Tok
 }
 
 //////////////////////////////////////////////////
@@ -31,36 +25,26 @@ func (f *Function) GetTok() tokens.Token {
 type Struct struct {
 	Consts *SymTab
 	Body   ast.Node
-	Tok    tokens.Token
 }
 
-func (s *Struct) Stringify() string {
+func (s Struct) Stringify() string {
 	return "struct()"
 }
 
-func (s *Struct) Type() string {
+func (s Struct) Type() byte {
 	return STRUCT
-}
-
-func (s *Struct) GetTok() tokens.Token {
-	return s.Tok
 }
 
 ///////////////////////////////////////////
 
 type Object struct {
 	Consts *SymTab
-	Tok    tokens.Token
 }
 
-func (o *Object) Stringify() string {
+func (o Object) Stringify() string {
 	return "object()"
 }
 
-func (o *Object) Type() string {
+func (o Object) Type() byte {
 	return OBJ
-}
-
-func (o *Object) GetTok() tokens.Token {
-	return o.Tok
 }
