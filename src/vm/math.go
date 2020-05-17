@@ -5,12 +5,22 @@ import (
 	"math"
 )
 
+func (v *VM) getType(left, right values.Value) byte {
+	if left.Type() == values.NIL || right.Type() == values.NIL {
+		return values.NIL
+	} else if left.Type() != right.Type() {
+		v.raiseError("Type", "Expected similar types on both sides of the operator")
+	}
+
+	return left.Type()
+}
+
 func (v *VM) evalAdd(location int) int {
 	right := v.pop()
 	left := v.pop()
 	var result values.Value
 
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = addNumbers(left, right)
 	default:
@@ -34,7 +44,7 @@ func (v *VM) evalSubtract(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = subtractNumbers(left, right)
 	default:
@@ -57,7 +67,7 @@ func (v *VM) evalMultiply(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = multiplyNumbers(left, right)
 	default:
@@ -80,7 +90,7 @@ func (v *VM) evalDivide(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = divideNumbers(left, right)
 	default:
@@ -103,7 +113,7 @@ func (v *VM) evalPower(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = powerNumbers(left, right)
 	default:
@@ -153,16 +163,13 @@ func (v *VM) evalEqualTo(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	if right.Type() == values.NIL ||
-		left.Type() == values.NIL {
-		result = equalToNil(left, right)
-	}
-
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = equalToNumbers(left, right)
 	case values.BOOL:
 		result = equalToBooleans(left, right)
+	case values.NIL:
+		result = equalToNil(left, right)
 	default:
 		v.raiseError("Operator", "Cannot apply '==' these types")
 	}
@@ -195,16 +202,13 @@ func (v *VM) evalNotEqual(location int) int {
 
 	var result values.Value
 
-	if right.Type() == values.NIL ||
-		left.Type() == values.NIL {
-		result = notEqualNil(right, left)
-	}
-
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = notEqualNumbers(left, right)
 	case values.BOOL:
 		result = notEqualBooleans(left, right)
+	case values.NIL:
+		result = notEqualNil(left, right)
 	default:
 		v.raiseError("Operator", "Cannot apply this type to '!='")
 	}
@@ -232,7 +236,7 @@ func (v *VM) evalLessThan(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = lessThanNumbers(left, right)
 	default:
@@ -255,7 +259,7 @@ func (v *VM) evalGreaterThan(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = greaterThanNumbers(left, right)
 	default:
@@ -278,7 +282,7 @@ func (v *VM) evalLessEquals(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = lessEqualsNumbers(left, right)
 	default:
@@ -301,7 +305,7 @@ func (v *VM) evalGreaterLessEquals(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.NUM:
 		result = greaterEqualsNumbers(left, right)
 	default:
@@ -324,7 +328,7 @@ func (v *VM) evalOr(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.BOOL:
 		result = orBooleans(left, right)
 	default:
@@ -347,7 +351,7 @@ func (v *VM) evalAnd(location int) int {
 	left := v.pop()
 
 	var result values.Value
-	switch right.Type() {
+	switch v.getType(left, right) {
 	case values.BOOL:
 		result = andBooleans(left, right)
 	default:
