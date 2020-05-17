@@ -50,9 +50,29 @@ func New(program *compiler.CompiledProg) *VM {
 	vm.curLineNo = 0
 	vm.executeFnMap = map[bytecode.OpCode]executeFn{
 		bytecode.LOADCONST: vm.evalOpConst,
-		bytecode.ADD:       vm.evalAdd,
 		bytecode.POP:       vm.evalPop,
-		bytecode.SUB:       vm.evalSubtract,
+
+		bytecode.ADD:  vm.evalAdd,
+		bytecode.SUB:  vm.evalSubtract,
+		bytecode.MULT: vm.evalMultiply,
+		bytecode.DIV:  vm.evalDivide,
+		bytecode.POW:  vm.evalPower,
+
+		bytecode.EQUALTO:       vm.evalEqualTo,
+		bytecode.NOTEQUAL:      vm.evalNotEqual,
+		bytecode.LESSTHAN:      vm.evalLessThan,
+		bytecode.GREATERTHAN:   vm.evalGreaterThan,
+		bytecode.LESSEREQUALS:  vm.evalLessEquals,
+		bytecode.GREATEREQUALS: vm.evalGreaterLessEquals,
+
+		bytecode.OR:  vm.evalOr,
+		bytecode.AND: vm.evalAnd,
+
+		bytecode.NOT:      vm.evalNot,
+		bytecode.NEGATIVE: vm.evalNegative,
+
+		bytecode.JUMP:   vm.evalJump,
+		bytecode.JUMPNT: vm.evalJumpIfNotTrue,
 	}
 
 	return vm

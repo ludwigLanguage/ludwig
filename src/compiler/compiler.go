@@ -25,9 +25,14 @@ func New() *Compiler {
 	}
 
 	c.mapNodesToCompileFn = map[byte]compileFn{
-		ast.PROG:  c.compileProgram,
-		ast.INFIX: c.compileInfix,
-		ast.NUM:   c.compileNumber,
+		ast.PROG:   c.compileProgram,
+		ast.INFIX:  c.compileInfix,
+		ast.PREFIX: c.compilePrefix,
+		ast.NUM:    c.compileNumber,
+		ast.BOOL:   c.compileBool,
+		ast.BLOCK:  c.compileBlock,
+		ast.IFEL:   c.compileIfElse,
+		ast.NIL:    c.compileNil,
 	}
 
 	return c
@@ -71,4 +76,17 @@ func (c *Compiler) addInstruction(instruction []byte) int {
 	location := len(c.instructions)
 	c.instructions = append(c.instructions, instruction...)
 	return location
+}
+
+func (c *Compiler) changeArg(arg int, opPos int) {
+	op := bytecode.OpCode(c.instructions[opPos])
+	newInstruction := bytecode.MakeInstruction(op, arg)
+
+	c.backpatch(newInstruction, opPos)
+}
+
+func (c *Compiler) backpatch(instruction []byte, pos int) {
+	for i := 0; i < len(instruction); i++ {
+		c.instructions[pos+i] = instruction[i]
+	}
 }

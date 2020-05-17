@@ -73,6 +73,60 @@ func TestIntMath(t *testing.T) {
 				bytecode.MakeInstruction(bytecode.POP),
 			},
 		},
+
+		{
+			input:        "program main\ntrue",
+			expectedPool: []interface{}{true},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+
+		{
+			input:        "program main\n!true",
+			expectedPool: []interface{}{true},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.NOT),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+
+		{
+			input:        "program main\n-10",
+			expectedPool: []interface{}{10.0},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.NEGATIVE),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+	}
+
+	runCompilerTests(t, tests)
+}
+
+func TestIfEl(t *testing.T) {
+	tests := []compilerTest{
+		{
+			input: `program main
+			if true
+				10
+			333`,
+			expectedPool: []interface{}{true, 10, 333},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				//Jumps to byte we want, adjusts for different instruction widths
+				bytecode.MakeInstruction(bytecode.JUMPNT, 12),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 1),
+				bytecode.MakeInstruction(bytecode.JUMP, 12),
+				//Empty Else Branch
+				bytecode.MakeInstruction(bytecode.POP),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 2),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
 	}
 
 	runCompilerTests(t, tests)
@@ -145,6 +199,8 @@ func testPool(t *testing.T, expected []interface{}, got []values.Value) error {
 		switch constant := constant.(type) {
 		case float64:
 			return testNumObj(constant, got[i])
+		case bool:
+			return testBoolObj(constant, got[i])
 		}
 	}
 
@@ -159,6 +215,19 @@ func testNumObj(expected float64, got values.Value) error {
 
 	if result.Value != expected {
 		return fmt.Errorf("Number Has Incorrect Value.\nGot: %v\nWant: %v", result.Value, expected)
+	}
+
+	return nil
+}
+
+func testBoolObj(expected bool, got values.Value) error {
+	result, ok := got.(values.Boolean)
+	if !ok {
+		return fmt.Errorf("Expected boolean value\nGot: %T (%+v)", got, got)
+	}
+
+	if result.Value != expected {
+		return fmt.Errorf("Boolean has incorrect value.\nGot: %v\nWant: %v", result.Value, expected)
 	}
 
 	return nil
