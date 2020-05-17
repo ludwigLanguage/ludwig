@@ -31,6 +31,13 @@ func TestNumMath(t *testing.T) {
 	runVmTest(t, tests)
 }
 
+func TestStringConcat(t *testing.T) {
+	tests := []vmTest{
+		{"program main; 'Hello, ' + 'World!'", "Hello, World!"},
+	}
+	runVmTest(t, tests)
+}
+
 func TestBooleanLogic(t *testing.T) {
 	tests := []vmTest{
 		{"program main\ntrue", true},
@@ -92,6 +99,21 @@ func TestConditionals(t *testing.T) {
 	runVmTest(t, tests)
 }
 
+func TestBindings(t *testing.T) {
+	tests := []vmTest{
+		{"program main; a = 10; a", 10.0},
+		{"program main; a = 10; b = 10 * a", 100.0},
+		{"program main; a = if true; 100", 100.0},
+		//Lists are stored in the wrong order
+		{"program main; a = [1, 2, 3, 4, 5, 6, 7, 8][3:6]; a", []float64{4, 5, 6, 7}},
+		{"program main; a = 'Hello, World!'[3:7]; a", "lo, "},
+		{"program main; a = [1, 2, 3, 4, 5, 6, 7][1]; a", 2},
+		{"program main; a = 'Hello'[0]; a", "H"},
+	}
+
+	runVmTest(t, tests)
+}
+
 func runVmTest(t *testing.T, tests []vmTest) {
 	t.Helper()
 
@@ -102,7 +124,7 @@ func runVmTest(t *testing.T, tests []vmTest) {
 		comp.Compile(tree)
 
 		compiled := comp.GetCompiled()
-		fmt.Println(compiled) //Debug print statement, use it if you want
+		//fmt.Println(compiled) //Debug print statement, use it if you want
 
 		vm := New(compiled)
 		vm.Run()
@@ -140,6 +162,10 @@ func testExpectedVal(t *testing.T, expected interface{}, got values.Value) error
 		return testNumObj(float64(expected), got)
 	case bool:
 		return testBoolObj(bool(expected), got)
+	case string:
+		return testStrObj(string(expected), got)
+	case []float64:
+		return testListObj(t, []float64(expected), got)
 	}
 
 	return nil
@@ -174,6 +200,35 @@ func testBoolObj(expected bool, got values.Value) error {
 func testNilObj(got values.Value) error {
 	if got.Type() != values.NIL {
 		return fmt.Errorf("Expected nil, Got: %T", got)
+	}
+
+	return nil
+}
+
+func testStrObj(expected string, got values.Value) error {
+	result, ok := got.(values.String)
+	if !ok {
+		return fmt.Errorf("Expected string, got: %T", got)
+	}
+
+	if result.Value != expected {
+		return fmt.Errorf("String has incorrect value\nGot: %T%+v\nWant: %v", result, result, expected)
+	}
+
+	return nil
+}
+
+func testListObj(t *testing.T, expected []float64, got values.Value) error {
+	result, ok := got.(values.List)
+	if !ok {
+		return fmt.Errorf("Expected list, got %T", got)
+	}
+
+	for iter, i := range result.Values {
+		err := testExpectedVal(t, expected[iter], i)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

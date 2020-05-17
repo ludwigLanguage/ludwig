@@ -19,3 +19,5 @@ TODO:
 
     6) Set values.Value objects to be created as actual objects rather
     than pointers. Also, see about doing that for the AST too.
+
+    7) Fix end after whitespace bug in parser

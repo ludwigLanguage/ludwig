@@ -9,6 +9,7 @@ import (
 )
 
 const STACK_SIZE = 2048
+const GLOBAL_HEAP_SIZE = 65536
 
 /*These functions will take in an int
  * that points to the instructions, and
@@ -20,6 +21,7 @@ type executeFn func(int) int
 
 type VM struct {
 	pool         []values.Value
+	globals      []values.Value
 	instructions bytecode.Instructions
 
 	executeFnMap map[bytecode.OpCode]executeFn
@@ -28,7 +30,6 @@ type VM struct {
 	curFile   string
 
 	stack []values.Value
-
 	/* A note on conventions:
 	 * stackPointer will always point to the next
 	 * empty slot in the stack, if the stack is empty,
@@ -42,6 +43,7 @@ func New(program *compiler.CompiledProg) *VM {
 	vm := &VM{
 		instructions: program.Instructions,
 		pool:         program.Pool,
+		globals:      make([]values.Value, GLOBAL_HEAP_SIZE),
 		stack:        make([]values.Value, STACK_SIZE),
 		stackPointer: 0,
 	}
@@ -73,6 +75,13 @@ func New(program *compiler.CompiledProg) *VM {
 
 		bytecode.JUMP:   vm.evalJump,
 		bytecode.JUMPNT: vm.evalJumpIfNotTrue,
+
+		bytecode.SETG: vm.evalSetg,
+		bytecode.GETG: vm.evalGetg,
+
+		bytecode.BUILDLIST: vm.evalBuildList,
+		bytecode.SLICE:     vm.evalSlice,
+		bytecode.INDEX:     vm.evalIndex,
 	}
 
 	return vm
@@ -112,7 +121,6 @@ func (v *VM) pop() values.Value {
 
 func (v *VM) Run() {
 	for insPos := 0; insPos < len(v.instructions); insPos++ {
-
 		opcode := v.instructions[insPos]
 		executeFn := v.executeFnMap[bytecode.OpCode(opcode)]
 

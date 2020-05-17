@@ -6,9 +6,9 @@ import (
 )
 
 type Function struct {
-	Args       []*ast.Identifier
-	Expr       ast.Node
-	Consts     *SymTab
+	Args []*ast.Identifier
+	Expr ast.Node
+	//Consts     *SymTab
 	IsVariadic bool
 }
 
@@ -23,8 +23,8 @@ func (f Function) Type() byte {
 //////////////////////////////////////////////////
 
 type Struct struct {
-	Consts *SymTab
-	Body   ast.Node
+	//Consts *SymTab
+	Body ast.Node
 }
 
 func (s Struct) Stringify() string {
@@ -38,7 +38,7 @@ func (s Struct) Type() byte {
 ///////////////////////////////////////////
 
 type Object struct {
-	Consts *SymTab
+	//Consts *SymTab
 }
 
 func (o Object) Stringify() string {

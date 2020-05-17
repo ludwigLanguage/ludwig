@@ -14,8 +14,14 @@ func (c *Compiler) compileNumber(node ast.Node) {
 }
 
 func (c *Compiler) compileBool(node ast.Node) {
-	bool := node.(ast.Boolean)
-	val := values.Boolean{bool.Value}
+	boolean := node.(ast.Boolean).Value
+	val := values.Boolean{boolean}
+	c.emit(bytecode.LOADCONST, c.addToPool(val))
+}
+
+func (c *Compiler) compileStr(node ast.Node) {
+	str := node.(ast.String).Value
+	val := values.String{str}
 	c.emit(bytecode.LOADCONST, c.addToPool(val))
 }
 

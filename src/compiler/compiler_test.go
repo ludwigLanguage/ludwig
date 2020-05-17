@@ -114,22 +114,78 @@ func TestIfEl(t *testing.T) {
 			if true
 				10
 			333`,
-			expectedPool: []interface{}{true, 10, 333},
+			expectedPool: []interface{}{true, 10, nil, 333},
 			expectedInstructions: []bytecode.Instructions{
 				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
 				//Jumps to byte we want, adjusts for different instruction widths
 				bytecode.MakeInstruction(bytecode.JUMPNT, 12),
 				bytecode.MakeInstruction(bytecode.LOADCONST, 1),
-				bytecode.MakeInstruction(bytecode.JUMP, 12),
-				//Empty Else Branch
+				bytecode.MakeInstruction(bytecode.JUMP, 15),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 2), //Empty Else Branch
 				bytecode.MakeInstruction(bytecode.POP),
-				bytecode.MakeInstruction(bytecode.LOADCONST, 2),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 3),
 				bytecode.MakeInstruction(bytecode.POP),
 			},
 		},
 	}
 
 	runCompilerTests(t, tests)
+}
+
+func TestGlobals(t *testing.T) {
+	tests := []compilerTest{
+		{
+			input: `program main
+			a = 10
+			a`,
+			expectedPool: []interface{}{10},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.SETG, 0),
+				bytecode.MakeInstruction(bytecode.POP), //Pop off value made by a = 10 expression
+				bytecode.MakeInstruction(bytecode.GETG, 0),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+	}
+
+	runCompilerTests(t, tests)
+}
+
+func TestList(t *testing.T) {
+	tests := []compilerTest{
+		{
+			input:        "program main; [1, 2, 3]",
+			expectedPool: []interface{}{1, 2, 3},
+			expectedInstructions: []bytecode.Instructions{
+				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 1),
+				bytecode.MakeInstruction(bytecode.LOADCONST, 2),
+				bytecode.MakeInstruction(bytecode.BUILDLIST, 3),
+				bytecode.MakeInstruction(bytecode.POP),
+			},
+		},
+	}
+
+	runCompilerTests(t, tests)
+}
+
+func TestSymTab(t *testing.T) {
+	expected := map[string]Symbol{
+		"x": Symbol{GLOBAL_SCOPE, 0},
+		"y": Symbol{GLOBAL_SCOPE, 1},
+	}
+
+	symtab := NewST()
+	x := symtab.Define("x")
+	if x != expected["x"] {
+		t.Errorf("Did not get expected value binded")
+	}
+
+	y := symtab.Define("y")
+	if y != expected["y"] {
+		t.Errorf("Did not get expected value binded")
+	}
 }
 
 func runCompilerTests(t *testing.T, tests []compilerTest) {

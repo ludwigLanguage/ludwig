@@ -11,7 +11,6 @@ func (v *VM) getType(left, right values.Value) byte {
 	} else if left.Type() != right.Type() {
 		v.raiseError("Type", "Expected similar types on both sides of the operator")
 	}
-
 	return left.Type()
 }
 
@@ -23,6 +22,8 @@ func (v *VM) evalAdd(location int) int {
 	switch v.getType(left, right) {
 	case values.NUM:
 		result = addNumbers(left, right)
+	case values.STR:
+		result = addStrings(left, right)
 	default:
 		v.raiseError("Operator", "Cannot apply '+' operator to these types")
 	}
@@ -36,7 +37,14 @@ func addNumbers(left values.Value, right values.Value) values.Value {
 	rVal := right.(values.Number).Value
 	lVal := left.(values.Number).Value
 
-	return values.Number{rVal + lVal}
+	return values.Number{lVal + rVal}
+}
+
+func addStrings(left, right values.Value) values.Value {
+	rVal := right.(values.String).Value
+	lVal := left.(values.String).Value
+
+	return values.String{lVal + rVal}
 }
 
 func (v *VM) evalSubtract(location int) int {

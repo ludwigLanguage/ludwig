@@ -12,9 +12,9 @@ import (
 type compileFn func(ast.Node)
 
 type Compiler struct {
-	instructions bytecode.Instructions
-	pool         []values.Value
-
+	instructions        bytecode.Instructions
+	pool                []values.Value
+	symbols             *SymTab
 	mapNodesToCompileFn map[byte]compileFn
 }
 
@@ -22,6 +22,7 @@ func New() *Compiler {
 	c := &Compiler{
 		instructions: bytecode.Instructions{},
 		pool:         []values.Value{},
+		symbols:      NewST(),
 	}
 
 	c.mapNodesToCompileFn = map[byte]compileFn{
@@ -33,6 +34,11 @@ func New() *Compiler {
 		ast.BLOCK:  c.compileBlock,
 		ast.IFEL:   c.compileIfElse,
 		ast.NIL:    c.compileNil,
+		ast.IDENT:  c.compileIdent,
+		ast.STR:    c.compileStr,
+		ast.LIST:   c.compileList,
+		ast.SLICE:  c.compileSlice,
+		ast.INDEX:  c.compileIndex,
 	}
 
 	return c

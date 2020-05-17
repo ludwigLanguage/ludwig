@@ -27,4 +27,11 @@ const (
 
 	JUMPNT
 	JUMP
+
+	GETG
+	SETG
+
+	BUILDLIST
+	SLICE
+	INDEX
 )

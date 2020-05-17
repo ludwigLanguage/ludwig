@@ -7,6 +7,11 @@ import (
 
 func (c *Compiler) compileInfix(node ast.Node) {
 	infix := node.(ast.InfixExpr)
+	if infix.Op == "=" {
+		c.compileAssignment(infix)
+		return
+	}
+
 	c.Compile(infix.Left)
 	c.Compile(infix.Right)
 
