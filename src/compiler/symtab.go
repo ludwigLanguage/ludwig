@@ -11,7 +11,7 @@ type Symbol struct {
 
 type SymTab struct {
 	values              map[string]Symbol
-	numberOfDefinitions int
+	NumberOfDefinitions int
 }
 
 func NewST() *SymTab {
@@ -20,13 +20,21 @@ func NewST() *SymTab {
 }
 
 func (s *SymTab) Define(id string) Symbol {
-	symbol := Symbol{GLOBAL_SCOPE, s.numberOfDefinitions}
+	symbol := Symbol{GLOBAL_SCOPE, s.NumberOfDefinitions}
 	s.values[id] = symbol
-	s.numberOfDefinitions++
+	s.NumberOfDefinitions++
 	return symbol
 }
 
 func (s *SymTab) Resolve(id string) (Symbol, bool) {
 	symbol, ok := s.values[id]
 	return symbol, ok
+}
+
+func (s *SymTab) ClearDefsBackTo(num int) {
+	for k, v := range s.values {
+		if v.Index >= num {
+			delete(s.values, k)
+		}
+	}
 }

@@ -79,6 +79,7 @@ func TestBlocks(t *testing.T) {
 		{"program main; do ( 1 + 2 )", 3.0},
 		{"program main; do { 1 + 1; 1 + 2 }", 3.0},
 		{"program main; do ( 1 + 1; 1 + 2 )", 3.0},
+		{"program main; do ( a = 10 ); a", 10},
 	}
 
 	runVmTest(t, tests)
