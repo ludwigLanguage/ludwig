@@ -62,7 +62,7 @@ func (p *Parser) parseForLoop() ast.Node {
 		isScoped = doExpr.(ast.Block).IsScoped
 	}
 
-	return &ast.For{indexNumIdent, indexIdent, list, doExpr, isScoped, tok}
+	return ast.For{indexNumIdent, indexIdent, list, doExpr, isScoped, tok}
 }
 
 ///////////////////////////////////////////////////////

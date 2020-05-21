@@ -17,14 +17,9 @@ func (p *Parser) parseFunction() ast.Node {
 	}
 	p.lxr.MoveUp()
 
-	isVariadic := p.determineIfFuncIsVariadic()
-	if isVariadic {
-		p.checkVariadicArgLen(argv)
-	}
-
 	expr := p.parseExpr(0)
 
-	return ast.Function{argv, expr, isVariadic, tok}
+	return ast.Function{argv, expr, tok}
 }
 
 func (p *Parser) parseFnArgs() []ast.Identifier {
@@ -56,28 +51,4 @@ func (p *Parser) ensureNodesAreIdents(nodes []ast.Node) []ast.Identifier {
 	}
 
 	return argv
-}
-
-func (p *Parser) determineIfFuncIsVariadic() bool {
-	isVariadic := false
-	if p.lxr.CurTok.Alias == tokens.DOT {
-		p.lxr.MoveUp()
-		if p.lxr.CurTok.Alias != tokens.DOT {
-			p.raiseError("Syntax", "Expected '.'")
-		}
-		p.lxr.MoveUp()
-		if p.lxr.CurTok.Alias != tokens.DOT {
-			p.raiseError("Syntax", "Expected '.'")
-		}
-		p.lxr.MoveUp()
-		isVariadic = true
-	}
-
-	return isVariadic
-}
-
-func (p *Parser) checkVariadicArgLen(args []ast.Identifier) {
-	if len(args) == 0 {
-		p.raiseError("Syntax", "Cannot have variadic function with no arguments")
-	}
 }

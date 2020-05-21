@@ -7,22 +7,15 @@ import (
 )
 
 type Function struct {
-	Args       []Identifier
-	DoExpr     Node
-	IsVariadic bool
-	Tok        tokens.Token
+	Args   []Identifier
+	DoExpr Node
+	Tok    tokens.Token
 }
 
 func (f Function) Stringify(tab string) string {
 	rtrnStr := ""
 
 	rtrnStr += tab + "<Function>\n"
-
-	if f.IsVariadic {
-		rtrnStr += tab + "<Is Variadic=true>\n"
-	} else {
-		rtrnStr += tab + "<Is Variadic=false>\n"
-	}
 
 	rtrnStr += tab + "<Args>\n"
 

@@ -15,7 +15,7 @@ import (
 func (p *Parser) ParsePackage() ast.Node {
 
 	tok := p.getPackageTok()
-	id := p.getProgramOrPackageId()
+	id := p.getPackageId()
 	pubExprs := p.getPublicExprs()
 	privExprs := []ast.InfixExpr{}
 
@@ -23,7 +23,7 @@ func (p *Parser) ParsePackage() ast.Node {
 		privExprs = p.getPrivateExprs()
 	}
 
-	return &ast.Package{id, pubExprs, privExprs, tok}
+	return ast.Package{id, pubExprs, privExprs, tok}
 }
 
 func (p *Parser) getPackageTok() tokens.Token {
@@ -36,6 +36,15 @@ func (p *Parser) getPackageTok() tokens.Token {
 	p.lxr.MoveUp()
 
 	return tok
+}
+
+func (p *Parser) getPackageId() ast.Identifier {
+	expr := p.parseExpr(0)
+
+	if expr.Type() != ast.IDENT {
+		p.raiseError("Syntax", "Expected identifier")
+	}
+	return expr.(ast.Identifier)
 }
 
 func (p *Parser) getPublicExprs() []ast.InfixExpr {

@@ -11,7 +11,6 @@ import (
  */
 func (p *Parser) parseBlock() ast.Node {
 	tok := p.lxr.CurTok
-	p.lxr.MoveUp()
 
 	ending := p.getBlockEnding()
 	isScoped := p.getScope()

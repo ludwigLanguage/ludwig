@@ -1,52 +1,13 @@
-program HelloWorld
+program
 
-mkGreeting = func() do {
-    func() do {
-        print "Hello, World"
+mkGreeting = func(prefix) {
+    func(suffix) {
+        print prefix suffix
     }
 }
 
-sayHello = mkGreeting()
-a = sayHello()
-print a
-
-three = func() do { fluff = 3 }
-two = func() do { three() }
-one = func() do { two() }
-
-ten = func() do {
-    10
-}
-
-print ten()
-print one()
-#print fluff
-print a
-
-do {
-    do (
-        do (
-            a = 10
-        )
-    )
-
-    print a
-}
-
-print a #TODO: NOT RESOLVING CORRECTLY?
-
-
-add = func(x, y) do {
-    print "x:" x x == 1
-    print "y:" y y == 2
-    x + y
-}
-
-print add(1, 2)
-
-mkGreeting = func(prefix); func(suffix); print prefix suffix
-
 sayHello = mkGreeting("Hello")
-sayHello("John")
 
-print
+__main__ = func(args) {
+    sayHello(args[1])
+}

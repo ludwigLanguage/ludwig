@@ -51,9 +51,9 @@ func New(lexer *lexer.Lexer) *Parser {
 		tokens.LBRACK:      p.parseList,
 		tokens.POP:         p.parsePrefix,
 		tokens.OP1:         p.parsePrefix,
-		tokens.DO:          p.parseBlock,
 		tokens.NIL:         p.parseNil,
-		tokens.LPAREN:      p.parseLParen,
+		tokens.LPAREN:      p.parseBlock,
+		tokens.LCURL:       p.parseBlock,
 		tokens.IF:          p.parseIfEl,
 		tokens.FN:          p.parseFunction,
 		tokens.FOR:         p.parseForLoop,
@@ -111,18 +111,6 @@ func (p *Parser) parseExpr(prec int) ast.Node {
 	}
 
 	return leftExpr
-}
-
-func (p *Parser) parseLParen() ast.Node {
-	p.lxr.MoveUp()
-	expr := p.parseExpr(0)
-
-	if p.lxr.CurTok.Alias != tokens.RPAREN {
-		p.raiseError("Syntax", "Expected ')' got '"+p.lxr.CurTok.Value+"'")
-	}
-	p.lxr.MoveUp()
-
-	return expr
 }
 
 func (p *Parser) notDoneParsingExpr(prec int) bool {

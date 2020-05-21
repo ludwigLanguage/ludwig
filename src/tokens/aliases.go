@@ -36,7 +36,6 @@ const (
 	ELSE
 	FN
 	IMPORT
-	DO
 	FOR
 	IN
 	WHILE

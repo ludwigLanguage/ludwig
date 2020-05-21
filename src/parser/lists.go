@@ -34,7 +34,7 @@ func (p *Parser) parseIndex(src ast.Node) ast.Node {
 	p.lxr.MoveUp()
 
 	if p.lxr.CurTok.Alias == tokens.COLON {
-		val := &ast.Number{0, src.GetTok()}
+		val := ast.Number{0, src.GetTok()}
 		return p.parseSlice(val, src)
 	}
 
@@ -59,7 +59,7 @@ func (p *Parser) parseSlice(startVal, src ast.Node) ast.Node {
 
 	if p.lxr.CurTok.Alias == tokens.RBRACK {
 		p.lxr.MoveUp()
-		return &ast.Slice{src, startVal, nil, tok}
+		return ast.Slice{src, startVal, nil, tok}
 	}
 
 	endVal := p.parseExpr(0)

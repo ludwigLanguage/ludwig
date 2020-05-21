@@ -29,7 +29,7 @@ func (v *VM) evalSlice(location int) int {
 	start := v.pop()
 	list := v.pop()
 
-	startIndex, endIndex := v.checkedSliceIndices(start, end)
+	startIndex, endIndex := v.checkedSliceIndices(list, start, end)
 
 	var result values.Value
 	switch list.Type() {
@@ -45,13 +45,21 @@ func (v *VM) evalSlice(location int) int {
 	return location
 }
 
-func (v *VM) checkedSliceIndices(start, end values.Value) (int, int) {
-	if start.Type() != values.NUM || end.Type() != values.NUM {
+func (v *VM) checkedSliceIndices(list, start, end values.Value) (int, int) {
+
+	if start.Type() != values.NUM {
 		v.raiseError("Type", "Can only slice from number to number")
 	}
-
 	startIndex := start.(values.Number).Value
-	endIndex := end.(values.Number).Value
+
+	var endIndex float64
+	if end.Type() == values.NIL {
+		endIndex = v.itemLength(list)
+	} else if end.Type() != values.NUM {
+		v.raiseError("Type", "Must slice to another number")
+	} else {
+		endIndex = end.(values.Number).Value
+	}
 
 	if math.Floor(startIndex) != startIndex || math.Floor(endIndex) != endIndex {
 		v.raiseError("Index", "Start and end indices of slices must be whole numbers")
@@ -68,10 +76,23 @@ func (v *VM) checkedSliceIndices(start, end values.Value) (int, int) {
 	return int(startIndex), int(endIndex)
 }
 
+func (v *VM) itemLength(item values.Value) float64 {
+	var result float64
+	switch item.Type() {
+	case values.LIST:
+		return float64(len(item.(values.List).Values))
+	case values.STR:
+		return float64(len(item.(values.String).Value))
+	default:
+		v.raiseError("Type", "Can only slice list or string")
+	}
+	return result
+}
+
 func (v *VM) sliceList(list values.Value, start, end int) values.Value {
 	listEntries := list.(values.List).Values
 
-	if end > len(listEntries)-1 {
+	if end > len(listEntries) {
 		v.raiseError("Index", "Index out of range")
 	}
 
@@ -82,7 +103,7 @@ func (v *VM) sliceList(list values.Value, start, end int) values.Value {
 func (v *VM) sliceStr(str values.Value, start, end int) values.Value {
 	strVal := str.(values.String).Value
 
-	if end > len(strVal)-1 {
+	if end > len(strVal) {
 		v.raiseError("Index", "Index out of range")
 	}
 

@@ -20,7 +20,11 @@ func (c *Compiler) compileSlice(node ast.Node) {
 	slice := node.(ast.Slice)
 	c.Compile(slice.Src)
 	c.Compile(slice.Start)
-	c.Compile(slice.End)
+	if slice.End == nil {
+		c.compileNil(slice.End)
+	} else {
+		c.Compile(slice.End)
+	}
 	c.emit(bytecode.SLICE)
 }
 

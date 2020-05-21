@@ -9,10 +9,10 @@ func (p *Parser) ParseProgram() {
 	p.skipWhitespace()
 
 	tok := p.getProgramTok()
-	id := p.getProgramOrPackageId()
 	programExprs := p.getProgramExprs()
+	exprs := p.castAsAssignments(programExprs)
 
-	p.Tree = ast.Program{id, programExprs, tok}
+	p.Tree = ast.Program{exprs, tok}
 }
 
 func (p *Parser) getProgramTok() tokens.Token {
@@ -23,16 +23,6 @@ func (p *Parser) getProgramTok() tokens.Token {
 	p.lxr.MoveUp()
 
 	return tok
-}
-
-func (p *Parser) getProgramOrPackageId() ast.Identifier {
-	if p.lxr.CurTok.Alias != tokens.IDENT {
-		p.raiseError("Syntax", "Expcted identifier after 'program' or 'package'")
-	}
-
-	id := ast.Identifier{p.lxr.CurTok.Value, p.lxr.CurTok}
-	p.lxr.MoveUp()
-	return id
 }
 
 func (p *Parser) getProgramExprs() []ast.Node {
