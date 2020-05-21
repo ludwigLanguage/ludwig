@@ -42,7 +42,7 @@ var definitions = map[OpCode]*Definition{
 	SLICE:     {"build list", []int{}},
 	INDEX:     {"index list", []int{}},
 
-	CALL:  {"Call", []int{}},
+	CALL:  {"Call", []int{2}},
 	PRINT: {"print", []int{}},
 }
 

@@ -20,7 +20,7 @@ ten = func() do {
 
 print ten()
 print one()
-print fluff
+#print fluff
 print a
 
 do {
@@ -33,4 +33,20 @@ do {
     print a
 }
 
-print a
+print a #TODO: NOT RESOLVING CORRECTLY?
+
+
+add = func(x, y) do {
+    print "x:" x x == 1
+    print "y:" y y == 2
+    x + y
+}
+
+print add(1, 2)
+
+mkGreeting = func(prefix); func(suffix); print prefix suffix
+
+sayHello = mkGreeting("Hello")
+sayHello("John")
+
+print

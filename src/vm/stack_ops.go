@@ -10,6 +10,7 @@ func (v *VM) evalOpConst(location int) int {
 	location += 2
 
 	v.push(v.pool[constIndex])
+	v.pool[constIndex] = nil //Clear out object
 
 	return location
 }

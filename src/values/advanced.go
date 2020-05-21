@@ -7,6 +7,7 @@ import (
 
 type Function struct {
 	Instructions bytecode.Instructions
+	NumOfArgs    int
 }
 
 func (f Function) Stringify() string {

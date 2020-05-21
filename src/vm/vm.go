@@ -60,7 +60,7 @@ func New(program *compiler.CompiledProg) *VM {
 		variables: make([]values.Value, GLOBAL_HEAP_SIZE),
 	}
 
-	globalFrameFn := values.Function{program.Instructions}
+	globalFrameFn := values.Function{program.Instructions, 0}
 	globalFrame := NewFrame(globalFrameFn, nil)
 	vm.pushFrame(globalFrame)
 
