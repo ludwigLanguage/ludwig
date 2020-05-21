@@ -12,17 +12,23 @@ import (
 type compileFn func(ast.Node)
 
 type Compiler struct {
-	instructions        bytecode.Instructions
 	pool                []values.Value
 	symbols             *SymTab
 	mapNodesToCompileFn map[byte]compileFn
+
+	scopeStack   []Scope
+	scopePointer int
 }
 
 func New() *Compiler {
+	mainScope := Scope{bytecode.Instructions{}}
+
 	c := &Compiler{
-		instructions: bytecode.Instructions{},
-		pool:         []values.Value{},
-		symbols:      NewST(),
+		pool:    []values.Value{},
+		symbols: NewST(),
+
+		scopeStack:   []Scope{mainScope},
+		scopePointer: 0,
 	}
 
 	c.mapNodesToCompileFn = map[byte]compileFn{
@@ -39,6 +45,9 @@ func New() *Compiler {
 		ast.LIST:   c.compileList,
 		ast.SLICE:  c.compileSlice,
 		ast.INDEX:  c.compileIndex,
+		ast.FN:     c.compileFunctions,
+		ast.PRINT:  c.compilePrint,
+		ast.CALL:   c.compileCall,
 	}
 
 	return c
@@ -59,9 +68,26 @@ func (c *Compiler) Compile(node ast.Node) {
 	fn(node)
 }
 
+func (c *Compiler) getCurScopeInstructions() bytecode.Instructions {
+	return c.scopeStack[c.scopePointer].instructions
+}
+
+func (c *Compiler) addScope() {
+	sub := Scope{bytecode.Instructions{}}
+	c.scopeStack = append(c.scopeStack, sub)
+	c.scopePointer++
+}
+
+func (c *Compiler) popScope() bytecode.Instructions {
+	ins := c.getCurScopeInstructions()
+	c.scopeStack = c.scopeStack[:len(c.scopeStack)-1]
+	c.scopePointer--
+	return ins
+}
+
 func (c *Compiler) GetCompiled() *CompiledProg {
 	return &CompiledProg{
-		Instructions: c.instructions,
+		Instructions: c.getCurScopeInstructions(),
 		Pool:         c.pool,
 	}
 }
@@ -79,13 +105,16 @@ func (c *Compiler) emit(op bytecode.OpCode, args ...int) int {
 }
 
 func (c *Compiler) addInstruction(instruction []byte) int {
-	location := len(c.instructions)
-	c.instructions = append(c.instructions, instruction...)
+	location := len(c.getCurScopeInstructions())
+
+	c.scopeStack[c.scopePointer].instructions =
+		append(c.getCurScopeInstructions(), instruction...)
+
 	return location
 }
 
 func (c *Compiler) changeArg(arg int, opPos int) {
-	op := bytecode.OpCode(c.instructions[opPos])
+	op := bytecode.OpCode(c.getCurScopeInstructions()[opPos])
 	newInstruction := bytecode.MakeInstruction(op, arg)
 
 	c.backpatch(newInstruction, opPos)
@@ -93,6 +122,6 @@ func (c *Compiler) changeArg(arg int, opPos int) {
 
 func (c *Compiler) backpatch(instruction []byte, pos int) {
 	for i := 0; i < len(instruction); i++ {
-		c.instructions[pos+i] = instruction[i]
+		c.scopeStack[c.scopePointer].instructions[pos+i] = instruction[i]
 	}
 }

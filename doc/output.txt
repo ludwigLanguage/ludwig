@@ -1,0 +1,109 @@
+load constant 2; //Load MkGreeting fn
+set value 0; //Set it
+pop stack; //Pop MkGreeting from stack 
+get value 0; //Push mkGreeting to stack
+Call; //Call it
+set value 0; //Set it's return value 
+pop stack; 
+load constant 4; 
+set value 0; 
+pop stack; 
+load constant 5;
+set value 0; 
+pop stack; 
+load constant 6; 
+set value 0; 
+pop stack; 
+load constant 7; 
+load constant 8; 
+load constant 9; 
+load constant 10; 
+load constant 11; 
+load constant 12; 
+build list 3; 
+load constant 13; 
+build list 5; print; 
+pop stack; 
+get value 1; 
+Call; 
+set value 0; 
+pop stack; 
+get value 5; 
+Call; print; 
+pop stack; 
+
+
+
+
+[
+    0: {Hello, World} 
+    1: {load constant 0; print; } 
+    2: {load constant 1; } 
+    3: {3} 
+    4: {load constant 3; set value 0; } 
+    5: {get value 3; Call; } 
+    6: {get value 4; Call; } 
+    7: {1} 
+    8: {2} 
+    9: {3} 
+    10: {1} 
+    11: {2} 
+    12: {3} 
+    13: {4}
+]
+
+Frame 0:
+    num_above: 0
+    num_locals: 5
+
+[0:0, 1:1, 2:2, 3:3, 4:4]
+
+Frame 1:
+    num_above: 5
+    num_locals: 0
+
+[]
+
+Frame 2:
+    num_above: 5
+    num_locals: 4
+
+[0:5, 1:6, 2:7, 3:8]
+
+Frame 3:
+    num_above: 9
+    num_locals: 3
+
+[0:9, 1:10, 2:11]
+
+Frame 4:
+    num_above: 12
+    num_locals: 2
+
+[0:12, 1:13]
+
+
+Want 12 --> Frame 4: is greater equal num_above;  12 >= (12)
+            is lesser to num_above + num_locals; 12 < (14)
+            Should pull 0 from locals;
+
+Want 0 ---> Frame 4: 0 >\= 12
+                     0 < 14
+            Frame 3: 0 >\= 9
+                     0 < 12
+            Frame 2: 0 >\= 5
+                     0 < 9
+            Frame 1: 0 >\= 5
+                     0 < 5
+            Frame 0: 0 >= 0
+                     0 < 5 
+            Should Pull 0 from locals
+
+Want 8 ---> Frame 4: 8 >\= 12
+                     8 < 14
+            Frame 3: 8 >\= 9
+                     8 < 12
+            Frame 2: 8 >= 5
+                     8 < 9
+            Should pull 3 from locals
+            

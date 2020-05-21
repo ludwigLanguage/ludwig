@@ -6,7 +6,7 @@ import (
 )
 
 func (v *VM) evalJump(location int) int {
-	target := bytecode.ReadUint16(v.instructions[location+1:])
+	target := bytecode.ReadUint16(v.currentFrame().Instructions()[location+1:])
 	location = int(target) - 1
 
 	return location
@@ -22,7 +22,7 @@ func (v *VM) evalJumpIfNotTrue(location int) int {
 	if val.(values.Boolean).Value {
 		location += 2
 	} else {
-		target := bytecode.ReadUint16(v.instructions[location+1:])
+		target := bytecode.ReadUint16(v.currentFrame().Instructions()[location+1:])
 		location = int(target) - 1
 	}
 

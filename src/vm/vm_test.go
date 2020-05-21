@@ -110,6 +110,7 @@ func TestBindings(t *testing.T) {
 		{"program main; a = 'Hello, World!'[3:7]; a", "lo, "},
 		{"program main; a = [1, 2, 3, 4, 5, 6, 7][1]; a", 2},
 		{"program main; a = 'Hello'[0]; a", "H"},
+		{"program main; ten = func() do { a =10 }; ten()", 10},
 	}
 
 	runVmTest(t, tests)

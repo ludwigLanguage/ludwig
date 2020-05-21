@@ -4,20 +4,21 @@ import (
 	"ludwig/src/bytecode"
 )
 
-func (v *VM) evalSetg(location int) int {
-	valIndex := bytecode.ReadUint16(v.instructions[location+1:])
+func (v *VM) evalSaveVal(location int) int {
+	valIndex := bytecode.ReadUint16(v.currentFrame().Instructions()[location+1:])
 	location += 2
 
 	val := v.pop()
-	v.globals[valIndex] = val
+	v.variables[valIndex] = val
 	v.push(val)
 
 	return location
 }
 
-func (v *VM) evalGetg(location int) int {
-	valIndex := bytecode.ReadUint16(v.instructions[location+1:])
+func (v *VM) evalGetVal(location int) int {
+	valIndex := bytecode.ReadUint16(v.currentFrame().Instructions()[location+1:])
 	location += 2
-	v.push(v.globals[valIndex])
+	val := v.variables[valIndex]
+	v.push(val)
 	return location
 }

@@ -60,6 +60,7 @@ func New(lexer *lexer.Lexer) *Parser {
 		tokens.WHILE:       p.parseWhileLoop,
 		tokens.TYPE_INDENT: p.parseTypeIdent,
 		tokens.IMPORT:      p.parseImport,
+		tokens.PRINT:       p.parsePrint,
 	}
 
 	p.infixParseFns = map[byte]infixFn{
@@ -87,6 +88,10 @@ func (p *Parser) raiseErrorWithTok(errorName, errorMessage string, token tokens.
 
 func (p *Parser) parseExpr(prec int) ast.Node {
 	p.skipWhitespace()
+
+	if p.lxr.CurTok.Alias == tokens.EOF {
+		return ast.Nil{p.lxr.CurTok}
+	}
 
 	preFn := p.prefixParseFns[p.lxr.CurTok.Alias]
 	if preFn == nil {

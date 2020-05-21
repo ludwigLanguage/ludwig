@@ -35,12 +35,15 @@ var definitions = map[OpCode]*Definition{
 	JUMP:   {"jump", []int{2}},
 	JUMPNT: {"jump if not true", []int{2}},
 
-	SETG: {"set global", []int{2}},
-	GETG: {"get global", []int{2}},
+	SAVEV: {"set value", []int{2}},
+	GETV:  {"get value", []int{2}},
 
 	BUILDLIST: {"build list", []int{2}},
 	SLICE:     {"build list", []int{}},
 	INDEX:     {"index list", []int{}},
+
+	CALL:  {"Call", []int{}},
+	PRINT: {"print", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {

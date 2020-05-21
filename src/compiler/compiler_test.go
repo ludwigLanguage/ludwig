@@ -141,9 +141,9 @@ func TestGlobals(t *testing.T) {
 			expectedPool: []interface{}{10},
 			expectedInstructions: []bytecode.Instructions{
 				bytecode.MakeInstruction(bytecode.LOADCONST, 0),
-				bytecode.MakeInstruction(bytecode.SETG, 0),
+				bytecode.MakeInstruction(bytecode.SAVEV),
 				bytecode.MakeInstruction(bytecode.POP), //Pop off value made by a = 10 expression
-				bytecode.MakeInstruction(bytecode.GETG, 0),
+				bytecode.MakeInstruction(bytecode.GETV, 0),
 				bytecode.MakeInstruction(bytecode.POP),
 			},
 		},
@@ -171,15 +171,15 @@ func TestList(t *testing.T) {
 }
 
 func TestSymTab(t *testing.T) {
-	expected := map[string]Symbol{
-		"x": Symbol{GLOBAL_SCOPE, 0},
-		"y": Symbol{GLOBAL_SCOPE, 1},
+	expected := map[string]int{
+		"x": 0,
+		"y": 1,
 	}
 
 	symtab := NewST()
 	x := symtab.Define("x")
 	if x != expected["x"] {
-		t.Errorf("Did not get expected value binded")
+		t.Errorf("Did not get expected value binded\nGot=%v", x)
 	}
 
 	y := symtab.Define("y")

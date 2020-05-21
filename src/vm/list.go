@@ -7,7 +7,7 @@ import (
 )
 
 func (v *VM) evalBuildList(location int) int {
-	listLength := int(bytecode.ReadUint16(v.instructions[location+1:]))
+	listLength := int(bytecode.ReadUint16(v.currentFrame().Instructions()[location+1:]))
 	location += 2
 
 	listEntries := []values.Value{}

@@ -38,4 +38,5 @@ const (
 	T_IDENT
 	PROG
 	PACK
+	PRINT
 )

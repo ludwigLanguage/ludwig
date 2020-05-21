@@ -6,11 +6,11 @@ import (
 )
 
 func (c *Compiler) compileAssignment(expr ast.InfixExpr) {
-	c.Compile(expr.Right)
+	c.Compile(expr.Right) //The value of the right will become the topmost value on the stack
 	id := expr.Left.(ast.Identifier).Value
 
 	symbol := c.symbols.Define(id)
-	c.emit(bytecode.SETG, symbol.Index)
+	c.emit(bytecode.SAVEV, symbol) //This bytecode saves the topmost value on the stack
 }
 
 func (c *Compiler) compileIdent(expr ast.Node) {
@@ -18,8 +18,8 @@ func (c *Compiler) compileIdent(expr ast.Node) {
 
 	symbol, ok := c.symbols.Resolve(id)
 	if !ok {
-		c.raiseError("Identifier", "Could not resolve this identifier", expr.GetTok())
+		c.raiseError("Identifier", "Could not resolve this identifier '"+id+"'", expr.GetTok())
 	}
 
-	c.emit(bytecode.GETG, symbol.Index)
+	c.emit(bytecode.GETV, symbol)
 }

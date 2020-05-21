@@ -58,6 +58,7 @@ var keywords = map[string]byte{
 	"private": tokens.PRIV,
 	"public":  tokens.PUB,
 	"class":   tokens.CLASS,
+	"print":   tokens.PRINT,
 
 	"_num":     tokens.TYPE_INDENT,
 	"_str":     tokens.TYPE_INDENT,

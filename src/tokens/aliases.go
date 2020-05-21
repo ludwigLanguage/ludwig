@@ -47,4 +47,5 @@ const (
 	CLASS
 
 	TYPE_INDENT
+	PRINT
 )
