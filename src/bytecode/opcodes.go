@@ -36,5 +36,5 @@ const (
 	INDEX
 
 	CALL
-	PRINT
+	CALLBUILTIN
 )

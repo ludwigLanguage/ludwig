@@ -93,11 +93,11 @@ func New(program *compiler.CompiledProg) *VM {
 		bytecode.SAVEV: vm.evalSaveVal,
 		bytecode.GETV:  vm.evalGetVal,
 
-		bytecode.BUILDLIST: vm.evalBuildList,
-		bytecode.SLICE:     vm.evalSlice,
-		bytecode.INDEX:     vm.evalIndex,
-		bytecode.PRINT:     vm.evalPrint,
-		bytecode.CALL:      vm.evalCall,
+		bytecode.BUILDLIST:   vm.evalBuildList,
+		bytecode.SLICE:       vm.evalSlice,
+		bytecode.INDEX:       vm.evalIndex,
+		bytecode.CALL:        vm.evalCall,
+		bytecode.CALLBUILTIN: vm.evalBuiltin,
 	}
 
 	return vm

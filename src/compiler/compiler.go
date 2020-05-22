@@ -32,22 +32,22 @@ func New() *Compiler {
 	}
 
 	c.mapNodesToCompileFn = map[byte]compileFn{
-		ast.PROG:   c.compileProgram,
-		ast.INFIX:  c.compileInfix,
-		ast.PREFIX: c.compilePrefix,
-		ast.NUM:    c.compileNumber,
-		ast.BOOL:   c.compileBool,
-		ast.BLOCK:  c.compileBlock,
-		ast.IFEL:   c.compileIfElse,
-		ast.NIL:    c.compileNil,
-		ast.IDENT:  c.compileIdent,
-		ast.STR:    c.compileStr,
-		ast.LIST:   c.compileList,
-		ast.SLICE:  c.compileSlice,
-		ast.INDEX:  c.compileIndex,
-		ast.FN:     c.compileFunctions,
-		ast.PRINT:  c.compilePrint,
-		ast.CALL:   c.compileCall,
+		ast.PROG:    c.compileProgram,
+		ast.INFIX:   c.compileInfix,
+		ast.PREFIX:  c.compilePrefix,
+		ast.NUM:     c.compileNumber,
+		ast.BOOL:    c.compileBool,
+		ast.BLOCK:   c.compileBlock,
+		ast.IFEL:    c.compileIfElse,
+		ast.NIL:     c.compileNil,
+		ast.IDENT:   c.compileIdent,
+		ast.STR:     c.compileStr,
+		ast.LIST:    c.compileList,
+		ast.SLICE:   c.compileSlice,
+		ast.INDEX:   c.compileIndex,
+		ast.FN:      c.compileFunctions,
+		ast.CALL:    c.compileCall,
+		ast.BUILTIN: c.compileBuiltinCall,
 	}
 
 	return c

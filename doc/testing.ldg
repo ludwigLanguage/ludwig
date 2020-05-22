@@ -2,7 +2,7 @@ program
 
 mkGreeting = func(prefix) {
     func(suffix) {
-        print prefix suffix
+        println(prefix, suffix)
     }
 }
 

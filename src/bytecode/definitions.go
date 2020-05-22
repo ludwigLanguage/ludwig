@@ -10,7 +10,7 @@ type Definition struct {
 }
 
 var definitions = map[OpCode]*Definition{
-	LOADCONST: {"load constant", []int{2}},
+	LOADCONST: {"load constant", []int{2}}, //Argument indicates the index the constant holds in []pool
 	POP:       {"pop stack", []int{}},
 
 	ADD:  {"add", []int{}},
@@ -32,18 +32,18 @@ var definitions = map[OpCode]*Definition{
 	NOT:      {"not", []int{}},
 	NEGATIVE: {"negative", []int{}},
 
-	JUMP:   {"jump", []int{2}},
-	JUMPNT: {"jump if not true", []int{2}},
+	JUMP:   {"jump", []int{2}},             //Argument indicates location to jump to
+	JUMPNT: {"jump if not true", []int{2}}, //Argument indicates the location to jump to
 
-	SAVEV: {"set value", []int{2}},
-	GETV:  {"get value", []int{2}},
+	SAVEV: {"set value", []int{2}}, //Argument indicates the index in the []values the value takes
+	GETV:  {"get value", []int{2}}, //Argument indicates which index in []values to find the value
 
-	BUILDLIST: {"build list", []int{2}},
+	BUILDLIST: {"build list", []int{2}}, //Argument indicates list length
 	SLICE:     {"build list", []int{}},
 	INDEX:     {"index list", []int{}},
 
-	CALL:  {"Call", []int{2}},
-	PRINT: {"print", []int{}},
+	CALL:        {"call", []int{2}}, //Argument indicates length of call args
+	CALLBUILTIN: {"call builtin function", []int{2}},
 }
 
 func Lookup(op byte) (*Definition, error) {

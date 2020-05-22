@@ -17,10 +17,10 @@ func (p *Parser) parseBlock() ast.Node {
 	p.lxr.MoveUp()
 
 	body := []ast.Node{}
+	p.skipWhitespace()
 	for p.notDoneParsingBlock(ending) {
 		expr := p.parseExpr(0)
 		body = append(body, expr)
-		p.skipWhitespace()
 	}
 	p.lxr.MoveUp() //Move over closing bracket
 
@@ -43,6 +43,7 @@ func (p *Parser) getScope() bool {
 }
 
 func (p *Parser) notDoneParsingBlock(ending byte) bool {
+	p.skipWhitespace()
 	if p.lxr.CurTok.Alias == tokens.EOF {
 		p.raiseError("Syntax", "Expected '}' or ')' before EOF")
 	}
